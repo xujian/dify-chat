@@ -87,10 +87,17 @@ export type IChatItem = {
   message_files?: VisionFile[]
 }
 
+export type ChatItemFormat = 'text' | 'json'
+
 export type ChatItem = IChatItem & {
   isError?: boolean
   workflow_run_id?: string
   workflowProcess?: WorkflowProcess
+  format?: ChatItemFormat
+  /**
+   * 用来表示 form/card 类型的内容
+   */
+  customContent?: Record<string, any>
 }
 
 export type ResponseHolder = {}

@@ -551,6 +551,7 @@ const Main: FC<IMainProps> = () => {
         }))
       },
       onWorkflowFinished: ({ data }) => {
+        console.log('onWorkflowFinished', data)
         responseItem.workflowProcess!.status = data.status as WorkflowRunningStatus
         setChatList(produce(getChatList(), (draft) => {
           const currentIndex = draft.findIndex(item => item.id === responseItem.id)
@@ -571,8 +572,14 @@ const Main: FC<IMainProps> = () => {
         }))
       },
       onNodeFinished: ({ data }) => {
+        console.log('onNodeFinished', data, responseItem)
         const currentIndex = responseItem.workflowProcess!.tracing!.findIndex(item => item.node_id === data.node_id)
         responseItem.workflowProcess!.tracing[currentIndex] = data as any
+        if (data.node_type === 'code' && data.outputs.format === 'json') {
+          responseItem.format = 'json'
+          responseItem.customContent = data.outputs.result
+        }
+        console.log('onNodeFinished------', data, responseItem)
         setChatList(produce(getChatList(), (draft) => {
           const currentIndex = draft.findIndex(item => item.id === responseItem.id)
           draft[currentIndex] = {
