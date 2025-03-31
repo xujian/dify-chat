@@ -6,7 +6,7 @@ import {
   PencilSquareIcon,
 } from '@heroicons/react/24/outline'
 import { ChatBubbleOvalLeftEllipsisIcon as ChatBubbleOvalLeftEllipsisSolidIcon } from '@heroicons/react/24/solid'
-import Button from '@/app/components/base/button'
+import { Button } from '@/app/components/ui'
 // import Card from './card'
 import type { ConversationItem } from '@/types/app'
 

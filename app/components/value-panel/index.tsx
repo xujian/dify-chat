@@ -5,7 +5,7 @@ import cn from 'classnames'
 import { useTranslation } from 'react-i18next'
 import s from './style.module.css'
 import { StarIcon } from '@/app/components//welcome/massive-component'
-import Button from '@/app/components/base/button'
+import { Button } from '@/app/components/ui'
 
 export type ITemplateVarPanelProps = {
   className?: string

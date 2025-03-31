@@ -1,7 +1,7 @@
 import type { FC } from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import Button from '@/app/components/base/button'
+import { Button } from '@/app/components/ui'
 import type { ImageFile } from '@/types/app'
 import { TransferMethod } from '@/types/app'
 
