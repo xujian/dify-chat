@@ -22,6 +22,7 @@ import AppUnavailable from '@/app/components/app-unavailable'
 import { API_KEY, APP_ID, APP_INFO, isShowPrompt, promptTemplate } from '@/config'
 import type { Annotation as AnnotationType } from '@/types/log'
 import { addFileInfos, sortAgentSorts } from '@/utils/tools'
+import { toJson } from '@/lib/utils'
 
 export type IMainProps = {
   params: any
@@ -131,6 +132,7 @@ const Main: FC<IMainProps> = () => {
         const newChatList: ChatItem[] = generateNewChatListWithOpenStatement(notSyncToStateIntroduction, notSyncToStateInputs)
 
         data.forEach((item: any) => {
+          const customContent = toJson(item.answer)
           newChatList.push({
             id: `question-${item.id}`,
             content: item.query,
@@ -141,6 +143,8 @@ const Main: FC<IMainProps> = () => {
           newChatList.push({
             id: item.id,
             content: item.answer,
+            format: customContent ? 'json' : 'text',
+            customContent,
             agent_thoughts: addFileInfos(item.agent_thoughts ? sortAgentSorts(item.agent_thoughts) : item.agent_thoughts, item.message_files),
             feedback: item.feedback,
             isAnswer: true,
