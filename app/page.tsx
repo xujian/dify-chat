@@ -1,15 +1,17 @@
 import type { FC } from 'react'
 import React from 'react'
 
-import type { IMainProps } from '@/app/components'
-import Main from '@/app/components'
-
-const App: FC<IMainProps> = ({
+import type { AppProps } from './app'
+import App from './app'
+import { StoreProvider } from './store/index'
+const Page: FC<AppProps> = ({
   params,
 }: any) => {
   return (
-    <Main params={params} />
+    <StoreProvider>
+      <App params={params} />
+    </StoreProvider>
   )
 }
 
-export default React.memo(App)
+export default React.memo(Page)
