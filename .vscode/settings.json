@@ -1,5 +1,4 @@
 {
-  "typescript.tsdk": ".yarn/cache/typescript-patch-72dc6f164f-ab417a2f39.zip/node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "prettier.enable": false,
   "editor.formatOnSave": true,
@@ -28,5 +27,7 @@
     "i18n",
     "i18n/lang",
     "app/api/messages"
-  ]
+  ],
+  "javascript.preferences.quoteStyle": "single",
+  "typescript.preferences.quoteStyle": "single"
 }
