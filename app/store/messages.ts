@@ -2,6 +2,7 @@ import { MessageItem } from '@/types/app'
 import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit'
 import { fetchChatList } from '@/service'
 import Toast from '@/app/components/base/toast'
+import { toJson } from '@/lib/utils'
 
 export interface MessagesState {
   value: MessageItem[]
@@ -61,6 +62,7 @@ export const fetchMessages = createAsyncThunk(
       const result: MessageItem[] = []
 
       data.forEach((item: any) => {
+        const customContent = toJson(item.answer)
         result.push({
           id: `question-${item.id}`,
           content: item.query,
@@ -73,6 +75,8 @@ export const fetchMessages = createAsyncThunk(
         result.push({
           id: item.id,
           content: item.answer,
+          format: customContent ? 'json' : 'text',
+          customContent,
           isAnswer: true,
           feedback: item.feedback,
           message_files: item.message_files?.filter((file: any) => file.belongs_to === 'assistant') || [],
