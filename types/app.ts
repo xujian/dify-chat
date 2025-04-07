@@ -227,3 +227,14 @@ export enum CodeLanguage {
   javascript = 'javascript',
   json = 'json',
 }
+
+export type MessageItem = {
+  id: string
+  content: string
+  isAnswer: boolean
+  message_files?: any[]
+  agent_thoughts?: any[]
+  feedback?: any
+  format?: 'text' | 'json'
+  customContent?: any
+}
