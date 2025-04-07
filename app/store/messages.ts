@@ -1,6 +1,6 @@
 import { MessageItem } from '@/types/app'
 import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit'
-import { fetchChatList } from '@/service'
+import { deleteMessage, getMessages } from '@/service'
 import Toast from '@/app/components/base/toast'
 import { toJson } from '@/lib/utils'
 
@@ -48,6 +48,9 @@ export const messagesSlice = createSlice({
         state.error = action.error.message || 'Failed to fetch messages'
         Toast.notify({ type: 'error', message: state.error })
       })
+      .addCase(removeMessage.fulfilled, (state, action) => {
+        state.value = state.value.filter(item => item.id !== action.payload)
+      })
   },
 })
 
@@ -57,7 +60,7 @@ export const fetchMessages = createAsyncThunk(
   'messages/fetchMessages',
   async (conversationId: string, { rejectWithValue }) => {
     try {
-      const response = await fetchChatList(conversationId)
+      const response = await getMessages(conversationId)
       const { data } = response as { data: any[] }
       const result: MessageItem[] = []
 
@@ -85,6 +88,18 @@ export const fetchMessages = createAsyncThunk(
       return result
     } catch (error: any) {
       return rejectWithValue(error.message || 'Failed to fetch messages')
+    }
+  }
+)
+
+export const removeMessage = createAsyncThunk(
+  'messages/removeMessage',
+  async (messageId: string, { rejectWithValue }) => {
+    try {
+      const response = await deleteMessage(messageId)
+      return response
+    } catch (error: any) {
+      return rejectWithValue(error.message || 'Failed to delete message')
     }
   }
 )

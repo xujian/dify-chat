@@ -21,7 +21,7 @@ import {
   SidebarRail,
 } from '@/app/components/ui/sidebar'
 import { useEffect } from 'react'
-import { fetchConversations } from '@/app/store/conversations'
+import { deleteConversation, fetchConversations } from '@/app/store/conversations'
 import { ConversationItem } from '@/types/app'
 import { MessageSquare, PlusIcon, MoreHorizontalIcon } from 'lucide-react'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui'
@@ -33,6 +33,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   const handleConversationIdChange = (conversation: ConversationItem) => {
     dispatch(setCurrentConversation(conversation))
+  }
+
+  const handleDeleteConversation = (conversationId: string) => {
+    dispatch(deleteConversation(conversationId))
   }
 
   // init
@@ -76,7 +80,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       <DropdownMenuItem>
                         <span>Edit Project</span>
                       </DropdownMenuItem>
-                      <DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleDeleteConversation(c.id)}>
                         <span>Delete Project</span>
                       </DropdownMenuItem>
                     </DropdownMenuContent>

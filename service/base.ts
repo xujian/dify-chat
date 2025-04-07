@@ -432,6 +432,6 @@ export const put = (url: string, options = {}, otherOptions?: IOtherOptions) => 
   return request(url, Object.assign({}, options, { method: 'PUT' }), otherOptions)
 }
 
-export const del = (url: string, options = {}, otherOptions?: IOtherOptions) => {
+export const remove = (url: string, options = {}, otherOptions?: IOtherOptions) => {
   return request(url, Object.assign({}, options, { method: 'DELETE' }), otherOptions)
 }

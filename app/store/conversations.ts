@@ -1,6 +1,6 @@
 import { ConversationItem } from '@/types/app'
 import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit'
-import { fetchConversationsApi } from '@/service'
+import { getConversations, removeConversation } from '@/service'
 import Toast from '@/app/components/base/toast'
 
 export interface ConversationsState {
@@ -58,7 +58,7 @@ export const fetchConversations = createAsyncThunk(
   'conversations/fetchConversations',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await fetchConversationsApi()
+      const response = await getConversations()
       const { data, error } = response as { data: ConversationItem[]; error?: string }
 
       if (error) {
@@ -69,6 +69,18 @@ export const fetchConversations = createAsyncThunk(
       return data
     } catch (error: any) {
       return rejectWithValue(error.message || 'Failed to fetch conversations')
+    }
+  }
+)
+
+export const deleteConversation = createAsyncThunk(
+  'conversations/deleteConversation',
+  async (conversationId: string, { rejectWithValue }) => {
+    try {
+      const response = await removeConversation(conversationId)
+      return response
+    } catch (error: any) {
+      return rejectWithValue(error.message || 'Failed to delete conversation')
     }
   }
 )

@@ -1,5 +1,5 @@
 import type { IOnCompleted, IOnData, IOnError, IOnFile, IOnMessageEnd, IOnMessageReplace, IOnNodeFinished, IOnNodeStarted, IOnThought, IOnWorkflowFinished, IOnWorkflowStarted } from './base'
-import { get, post, ssePost } from './base'
+import { get, post, ssePost, remove } from './base'
 import type { Feedbacktype } from '@/types/app'
 
 export const sendChatMessage = async (
@@ -40,12 +40,20 @@ export const sendChatMessage = async (
   }, { onData, onCompleted, onThought, onFile, onError, getAbortController, onMessageEnd, onMessageReplace, onNodeStarted, onWorkflowStarted, onWorkflowFinished, onNodeFinished })
 }
 
-export const fetchConversationsApi = async () => {
+export const getConversations = async () => {
   return get('conversations', { params: { limit: 100, first_id: '' } })
 }
 
-export const fetchChatList = async (conversationId: string) => {
+export const removeConversation = async (conversationId: string) => {
+  return remove(`conversations/${conversationId}`)
+}
+
+export const getMessages = async (conversationId: string) => {
   return get('messages', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+
+export const deleteMessage = async (messageId: string) => {
+  return remove(`messages/${messageId}`)
 }
 
 // init value. wait for server update
