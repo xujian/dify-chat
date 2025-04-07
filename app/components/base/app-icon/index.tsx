@@ -28,7 +28,7 @@ const AppIcon: FC<AppIconProps> = ({
         background,
       }}
     >
-      🤖
+      <img src="https://simple.shensi.tech/icons/support.png" alt="logo" />
     </span>
   )
 }

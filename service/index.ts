@@ -40,7 +40,7 @@ export const sendChatMessage = async (
   }, { onData, onCompleted, onThought, onFile, onError, getAbortController, onMessageEnd, onMessageReplace, onNodeStarted, onWorkflowStarted, onWorkflowFinished, onNodeFinished })
 }
 
-export const fetchConversations = async () => {
+export const fetchConversationsApi = async () => {
   return get('conversations', { params: { limit: 100, first_id: '' } })
 }
 
@@ -50,7 +50,13 @@ export const fetchChatList = async (conversationId: string) => {
 
 // init value. wait for server update
 export const fetchAppParams = async () => {
-  return get('parameters')
+  const result: any = await get('parameters')
+  return {
+    systemParameters: result.system_parameters,
+    fileUpload: result.file_upload,
+    inputs: result.user_input_form,
+    openingStatement: result.opening_statement,
+  }
 }
 
 export const updateFeedback = async ({ url, body }: { url: string; body: Feedbacktype }) => {
