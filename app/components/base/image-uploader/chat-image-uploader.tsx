@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import Uploader from './uploader'
 import ImageLinkInput from './image-link-input'
 import ImagePlus from '@/app/components/base/icons/line/image-plus'
-import { TransferMethod } from '@/types/app'
+import { Resolution, TransferMethod } from '@/types/app'
 import {
   PortalToFollowElem,
   PortalToFollowElemContent,
@@ -116,16 +116,26 @@ const UploaderButton: FC<UploaderButtonProps> = ({
 }
 
 type ChatImageUploaderProps = {
-  settings: VisionSettings
+  settings?: VisionSettings
   onUpload: (imageFile: ImageFile) => void
   disabled?: boolean
 }
+
+const defaultSettings: VisionSettings = {
+  enabled: true,
+  number_limits: 10,
+  detail: Resolution.high,
+  transfer_methods: [TransferMethod.all],
+  image_file_size_limit: 10
+}
+
 const ChatImageUploader: FC<ChatImageUploaderProps> = ({
-  settings,
+  settings = defaultSettings,
   onUpload,
   disabled,
 }) => {
-  const onlyUploadLocal = settings.transfer_methods.length === 1 && settings.transfer_methods[0] === TransferMethod.local_file
+  const onlyUploadLocal = settings.transfer_methods.length === 1
+    && settings.transfer_methods[0] === TransferMethod.local_file
 
   if (onlyUploadLocal) {
     return (
