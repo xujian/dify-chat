@@ -12,7 +12,7 @@ type IQuestionProps = Pick<IChatItem, 'id' | 'content' | 'useCurrentUserAvatar'>
 }
 
 const Question: FC<IQuestionProps> = ({ id, content, useCurrentUserAvatar, imgSrcs }) => {
-  const userName = ''
+  const userName = ['']
   return (
     <div className='flex items-start justify-end' key={id}>
       <div>
