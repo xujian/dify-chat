@@ -12,10 +12,10 @@ import { AppDispatch, RootState } from '@/app/store'
 import { fetchMessages } from '@/app/store/messages'
 import InputBox from './input-box'
 
-export type ChatProps = {
+export type MessagesProps = {
 }
 
-const Chat: FC<ChatProps> = () => {
+const Messages: FC<MessagesProps> = () => {
 
   const dispatch = useDispatch<AppDispatch>()
   const session = useSelector((state: RootState) => state.session)
@@ -123,4 +123,4 @@ const Chat: FC<ChatProps> = () => {
   )
 }
 
-export default React.memo(Chat)
+export default React.memo(Messages)

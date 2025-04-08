@@ -1,7 +1,7 @@
 'use client'
 import type { FC } from 'react'
 import React from 'react'
-import s from './style.module.css'
+import s from './loading.module.css'
 
 export type ILoaidingAnimProps = {
   type: 'text' | 'avatar'

@@ -8,7 +8,7 @@ import { useBoolean } from 'ahooks'
 import Header from '@/app/components/header'
 import type { PromptConfig, VisionSettings } from '@/types/app'
 import { Resolution, TransferMethod } from '@/types/app'
-import Chat from '@/app/components/chat'
+import { Messages } from '@/app/components/chat'
 import { setLocaleOnClient } from '@/i18n/client'
 import useBreakpoints, { MediaType } from '@/hooks/use-breakpoints'
 import Loading from '@/app/components/base/loading'
@@ -21,6 +21,7 @@ import type { RootState, AppDispatch } from './store/index'
 import { fetchServerConfig } from './store/server'
 import Welcome from './components/welcome'
 import { fetchConversations } from './store/conversations'
+
 export type AppProps = {
   params: any
 }
@@ -109,8 +110,8 @@ const App: FC<AppProps> = () => {
             <div className='flex-grow flex flex-col h-[calc(100vh_-_3rem)] overflow-y-auto'>
               {
                 session.chatStarted
-                  ? (<Chat />)
-                  : (<Welcome></Welcome>)
+                  ? (<Messages />)
+                  : (<Welcome />)
               }
             </div>
           </div>
