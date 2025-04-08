@@ -1,11 +1,11 @@
-import { MessageItem } from '@/types/app'
+import { Message } from '@/models'
 import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit'
 import { deleteMessage, getMessages } from '@/service'
 import Toast from '@/app/components/base/toast'
 import { toJson } from '@/lib/utils'
 
 export interface MessagesState {
-  value: MessageItem[]
+  value: Message[]
   loading: boolean
   error: string | null
 }
@@ -20,13 +20,10 @@ export const messagesSlice = createSlice({
   name: 'messages',
   initialState,
   reducers: {
-    add: (state, action: PayloadAction<MessageItem>) => {
+    addMessage: (state, action: PayloadAction<Message>) => {
       state.value.push(action.payload)
     },
-    remove: (state, action: PayloadAction<string>) => {
-      state.value = state.value.filter(item => item.id !== action.payload)
-    },
-    clear: (state) => {
+    clearMessages: (state) => {
       state.value = []
     },
     clearError: (state) => {
@@ -54,7 +51,7 @@ export const messagesSlice = createSlice({
   },
 })
 
-export const { add, remove, clear, clearError } = messagesSlice.actions
+export const { addMessage, clearMessages, clearError } = messagesSlice.actions
 
 export const fetchMessages = createAsyncThunk(
   'messages/fetchMessages',
@@ -62,14 +59,14 @@ export const fetchMessages = createAsyncThunk(
     try {
       const response = await getMessages(conversationId)
       const { data } = response as { data: any[] }
-      const result: MessageItem[] = []
+      const result: Message[] = []
 
       data.forEach((item: any) => {
         const customContent = toJson(item.answer)
         result.push({
           id: `question-${item.id}`,
           content: item.query,
-          isAnswer: false,
+          type: 'question',
           message_files: item.message_files
             ?.filter((file: any) =>
               file.belongs_to === 'assistant')
@@ -80,7 +77,7 @@ export const fetchMessages = createAsyncThunk(
           content: item.answer,
           format: customContent ? 'json' : 'text',
           customContent,
-          isAnswer: true,
+          type: 'answer',
           feedback: item.feedback,
           message_files: item.message_files?.filter((file: any) => file.belongs_to === 'assistant') || [],
         })

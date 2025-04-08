@@ -1,17 +1,17 @@
 'use client'
 import type { FC } from 'react'
 import React from 'react'
-import type { IChatItem } from './type'
+import type { Message } from '@/models'
 import s from './style.module.css'
 
 import { Markdown } from '@/app/components/base/markdown'
 import ImageGallery from '@/app/components/base/image-gallery'
 
-type IQuestionProps = Pick<IChatItem, 'id' | 'content' | 'useCurrentUserAvatar'> & {
+type QuestionProps = Pick<react, 'id' | 'content' | 'useCurrentUserAvatar'> & {
   imgSrcs?: string[]
 }
 
-const Question: FC<IQuestionProps> = ({ id, content, useCurrentUserAvatar, imgSrcs }) => {
+const Question: FC<QuestionProps> = ({ id, content, useCurrentUserAvatar, imgSrcs }) => {
   const userName = ['']
   return (
     <div className='flex items-start justify-end' key={id}>

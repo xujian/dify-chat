@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '@/app/store'
 import { fetchMessages } from '@/app/store/messages'
 import InputBox from './input-box'
-
+import type { Message } from '@/models'
 export type MessagesProps = {
 }
 
@@ -95,14 +95,14 @@ const Messages: FC<MessagesProps> = () => {
     <div className='chat h-full'>
       <div className="h-full py-2">
         {messages.map((item) => {
-          if (item.isAnswer) {
+          if (item.type === 'answer') {
             const isLast = item.id === messages[messages.length - 1].id
             return <Answer
               key={item.id}
               item={item}
               feedbackDisabled={false} //{feedbackDisabled}
               onFeedback={() => Promise.resolve()} //{onFeedback}
-              isResponding={false} //{isResponding && isLast}
+              isResponding={session.responding} //{isResponding && isLast}
             />
           }
           return (
