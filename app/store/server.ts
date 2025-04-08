@@ -15,6 +15,16 @@ export interface ServerState extends AppParams {
   error: string | null
 }
 
+const loadStateFromLocalStorage = (): Partial<ServerState> => {
+  try {
+    const serializedState = localStorage.getItem('server-state')
+    if (serializedState === null) return {}
+    return JSON.parse(serializedState)
+  } catch (err) {
+    return {}
+  }
+}
+
 const initialState: ServerState = {
   isConfigured: false,
   inputs: [],
@@ -24,6 +34,7 @@ const initialState: ServerState = {
   promptVariables: {},
   loading: false,
   error: null,
+  ...loadStateFromLocalStorage()
 }
 
 export const fetchServerConfig = createAsyncThunk(
@@ -38,15 +49,33 @@ export const fetchServerConfig = createAsyncThunk(
   }
 )
 
+const saveStateToLocalStorage = (state: ServerState) => {
+  try {
+    const serializedState = JSON.stringify({
+      isConfigured: state.isConfigured,
+      inputs: state.inputs,
+      openingStatement: state.openingStatement,
+      fileUpload: state.fileUpload,
+      systemParameters: state.systemParameters,
+      promptVariables: state.promptVariables
+    })
+    localStorage.setItem('server-state', serializedState)
+  } catch (err) {
+    // Ignore write errors
+  }
+}
+
 export const serverSlice = createSlice({
   name: 'server',
   initialState,
   reducers: {
     setServerConfig: (state, action) => {
       state.isConfigured = true
+      saveStateToLocalStorage(state)
     },
     clearServerConfig: (state) => {
       state.isConfigured = false
+      localStorage.removeItem('server-state')
     },
   },
   extraReducers: (builder) => {
@@ -61,6 +90,7 @@ export const serverSlice = createSlice({
         state.fileUpload = action.payload.fileUpload
         state.inputs = action.payload.inputs
         state.openingStatement = action.payload.openingStatement
+        saveStateToLocalStorage(state)
       })
       .addCase(fetchServerConfig.rejected, (state, action) => {
         state.loading = false
