@@ -6,12 +6,14 @@ import Toast from '@/app/components/base/toast'
 export interface ConversationsState {
   value: ConversationItem[]
   loading: boolean
+  fufilled: boolean
   error: string | null
 }
 
 const initialState: ConversationsState = {
   value: [],
   loading: false,
+  fufilled: false,
   error: null,
 }
 
@@ -38,6 +40,7 @@ export const conversationsSlice = createSlice({
       })
       .addCase(fetchConversations.fulfilled, (state, action) => {
         state.loading = false
+        state.fufilled = true
         state.value = action.payload
       })
       .addCase(fetchConversations.rejected, (state, action) => {

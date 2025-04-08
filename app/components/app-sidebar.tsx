@@ -29,7 +29,7 @@ import { setCurrentConversation } from '@/app/store/session'
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const dispatch = useDispatch<AppDispatch>()
-  const { value: conversations, loading, error } = useSelector((state: RootState) => state.conversations)
+  const { value: conversations, loading, error, fufilled } = useSelector((state: RootState) => state.conversations)
   const session = useSelector((state: RootState) => state.session)
   const { t } = useTranslation()
 
@@ -43,7 +43,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   // init
   useEffect(() => {
-    dispatch(fetchConversations())
+    if (!fufilled) {
+      dispatch(fetchConversations())
+    }
   }, [])
 
   const versions = ['1.0.1', '1.1.0-alpha', '2.0.0-beta1']
