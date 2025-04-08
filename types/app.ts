@@ -55,38 +55,6 @@ export type MessageMore = {
   latency: number | string
 }
 
-export type IChatItem = {
-  id: string
-  content: string
-  /**
-   * Specific message type
-   */
-  isAnswer: boolean
-  /**
-   * The user feedback result of this message
-   */
-  feedback?: Feedbacktype
-  /**
-   * The admin feedback result of this message
-   */
-  adminFeedback?: Feedbacktype
-  /**
-   * Whether to hide the feedback area
-   */
-  feedbackDisabled?: boolean
-  /**
-   * More information about this message
-   */
-  more?: MessageMore
-  annotation?: Annotation
-  useCurrentUserAvatar?: boolean
-  isOpeningStatement?: boolean
-  suggestedQuestions?: string[]
-  log?: { role: string; text: string }[]
-  agent_thoughts?: ThoughtItem[]
-  message_files?: VisionFile[]
-}
-
 export type ChatItemFormat = 'text' | 'json'
 
 export type ChatItem = IChatItem & {
@@ -226,15 +194,4 @@ export enum CodeLanguage {
   python3 = 'python3',
   javascript = 'javascript',
   json = 'json',
-}
-
-export type MessageItem = {
-  id: string
-  content: string
-  isAnswer: boolean
-  message_files?: any[]
-  agent_thoughts?: any[]
-  feedback?: any
-  format?: 'text' | 'json'
-  customContent?: any
 }
