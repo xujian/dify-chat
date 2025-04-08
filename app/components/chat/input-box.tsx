@@ -1,21 +1,23 @@
 'use client'
 import { cn } from '@/lib/utils'
-import { FC, useContext, useEffect, useRef, useState } from 'react'
+import { FC, useRef, useState } from 'react'
 import { useTranslation } from "react-i18next"
 import { Input } from "../ui/input"
 import { TextareaAutosize } from "../ui/textarea-autosize"
-import { CirclePlus, CircleStop, SendHorizonal, SendIcon, StopCircle } from 'lucide-react'
-import { ChatItem, VisionFile, VisionSettings, WorkflowRunningStatus } from '@/types/app'
+import { CirclePlus, CircleStop, SendHorizonal } from 'lucide-react'
+import { ChatItem, VisionFile, WorkflowRunningStatus } from '@/types/app'
 import ChatImageUploader from '@/app/components/base/image-uploader/chat-image-uploader'
 import ImageList from '@/app/components/base/image-uploader/image-list'
 import { useImageFiles } from '../base/image-uploader/hooks'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '@/app/store'
 import { sendChatMessage } from '@/service'
-import produce from 'immer'
 import { setResponding } from '@/app/store/session'
-const InputBox: FC<ChatInputProps> = () => {
+import { addMessage } from '@/app/store/messages'
 
+interface InputBoxProps { }
+
+const InputBox: FC<InputBoxProps> = () => {
   const { t } = useTranslation()
   const chatInputRef = useRef<HTMLTextAreaElement>(null)
   const session = useSelector((state: RootState) => state.session)
@@ -23,6 +25,7 @@ const InputBox: FC<ChatInputProps> = () => {
   const [isTyping, setIsTyping] = useState<boolean>(false)
   const [isGenerating, setIsGenerating] = useState<boolean>(false)
   const [userInput, setUserInput] = useState<string>('')
+  const [abortController, setAbortController] = useState<AbortController | null>(null)
 
   const {
     files,
@@ -36,8 +39,8 @@ const InputBox: FC<ChatInputProps> = () => {
 
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const handleInputChange = (e: any) => {
-    setUserInput(e.target.value)
+  const handleInputChange = (value: string) => {
+    setUserInput(value)
   }
 
   const handleStopMessage = () => {
@@ -45,10 +48,9 @@ const InputBox: FC<ChatInputProps> = () => {
   }
 
   const send = async (message: string, files?: VisionFile[]) => {
-    // if (isResponding) {
-    //   notify({ type: 'info', message: t('app.errorMessage.waitForResponse') })
-    //   return
-    // }
+    if (session.responding) {
+      return
+    }
     const data: Record<string, any> = {
       inputs: {}, //currInputs,
       query: message,
@@ -59,16 +61,19 @@ const InputBox: FC<ChatInputProps> = () => {
     const questionItem = {
       id: questionId,
       content: message,
-      isAnswer: false,
+      type: 'question',
       message_files: files,
     }
+    dispatch(addMessage(questionItem))
 
     const placeholderAnswerId = `answer-placeholder-${Date.now()}`
     const placeholderAnswerItem = {
       id: placeholderAnswerId,
       content: '',
-      isAnswer: true,
+      type: 'answer',
     }
+
+    dispatch(addMessage(placeholderAnswerItem))
 
     let isAgentMode = false
 
@@ -78,21 +83,23 @@ const InputBox: FC<ChatInputProps> = () => {
       content: '',
       agent_thoughts: [],
       message_files: [],
-      isAnswer: true,
+      type: 'answer',
     }
-    let hasSetResponseId = false
+    let hasSetResponseId = FileSystemWritableFileStream
 
-    const prevTempNewConversationId = session.currentConversation.id || '-1'
-    let tempNewConversationId = ''
-
-    const [abortController, setAbortController] = useState<AbortController | null>(null)
-
-    // dispatch(setResponding(true))
+    dispatch(setResponding(true))
     sendChatMessage(data, {
       getAbortController: (abortController) => {
         setAbortController(abortController)
       },
-      onData: (message: string, isFirstMessage: boolean, { conversationId: newConversationId, messageId, taskId }: any) => {
+      onData: (
+        message: string,
+        isFirstMessage: boolean, {
+          conversationId: newConversationId,
+          messageId,
+          taskId
+        }: any) => {
+        console.log('onData', message, isFirstMessage, newConversationId, messageId, taskId)
         if (!isAgentMode) {
           responseItem.content = responseItem.content + message
         }
@@ -103,11 +110,7 @@ const InputBox: FC<ChatInputProps> = () => {
         }
         if (messageId && !hasSetResponseId) {
           responseItem.id = messageId
-          hasSetResponseId = true
         }
-
-        if (isFirstMessage && newConversationId)
-          tempNewConversationId = newConversationId
       },
       async onCompleted(hasError?: boolean) {
         if (hasError)
@@ -123,7 +126,6 @@ const InputBox: FC<ChatInputProps> = () => {
         const response = responseItem as any
         if (thought.message_id && !hasSetResponseId) {
           response.id = thought.message_id
-          hasSetResponseId = true
         }
         // responseItem.id = thought.message_id;
         if (response.agent_thoughts.length === 0) {
@@ -143,6 +145,7 @@ const InputBox: FC<ChatInputProps> = () => {
         }
       },
       onMessageEnd: (messageEnd) => {
+        console.log('onMessageEnd', messageEnd)
         if (messageEnd.metadata?.annotation_reply) {
           responseItem.id = messageEnd.id
           responseItem.annotation = ({
@@ -153,6 +156,7 @@ const InputBox: FC<ChatInputProps> = () => {
         }
       },
       onMessageReplace: (messageReplace) => {
+        console.log('onMessageReplace', messageReplace)
         console.log('onMessageReplace', messageReplace)
       },
       onError() {
@@ -188,7 +192,7 @@ const InputBox: FC<ChatInputProps> = () => {
 
   return (
     <>
-      <div className="border-input relative my-3 flex min-h-[60px] w-full items-center justify-center rounded-xl border-2">
+      <div className="border-input relative my-3 flex min-h-[60px] w-full items-center justify-center rounded-xl border">
         <>
           <CirclePlus
             className="absolute bottom-[12px] left-3 cursor-pointer p-1 hover:opacity-50"
