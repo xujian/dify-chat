@@ -3,7 +3,7 @@ import { get, post, ssePost, remove } from './base'
 import type { Feedbacktype } from '@/types/app'
 
 export const sendChatMessage = async (
-  body: Record<string, any>,
+  data: Record<string, any>,
   {
     onData,
     onCompleted,
@@ -32,10 +32,16 @@ export const sendChatMessage = async (
     onWorkflowFinished: IOnWorkflowFinished
   },
 ) => {
+  const body = {
+    ...data,
+    conversation_id: data.conversation_id === '-1'
+      ? null
+      : data.conversation_id,
+    response_mode: 'streaming',
+  }
   return ssePost('chat-messages', {
     body: {
       ...body,
-      response_mode: 'streaming',
     },
   }, { onData, onCompleted, onThought, onFile, onError, getAbortController, onMessageEnd, onMessageReplace, onNodeStarted, onWorkflowStarted, onWorkflowFinished, onNodeFinished })
 }
