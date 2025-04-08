@@ -3,7 +3,7 @@ import type { FC } from 'react'
 import React from 'react'
 import { HandThumbDownIcon, HandThumbUpIcon } from '@heroicons/react/24/outline'
 import { useTranslation } from 'react-i18next'
-import LoadingAnim from './loading'
+import Loading from './loading'
 import type { FeedbackFunc } from './type'
 import s from './style.module.css'
 import ImageGallery from '../base/image-gallery'
@@ -172,7 +172,7 @@ const Answer: FC<IAnswerProps> = ({
         <div className={`${s.answerIcon} ml-2 w-10 h-10 shrink-0`}>
           {isResponding
             && <div className={s.typeingIcon}>
-              <LoadingAnim type='avatar' />
+              <Loading type='avatar' />
             </div>
           }
         </div>
@@ -185,7 +185,7 @@ const Answer: FC<IAnswerProps> = ({
               {(isResponding && (isAgentMode ? (!content && (agent_thoughts || []).filter(item => !!item.thought || !!item.tool).length === 0) : !content))
                 ? (
                   <div className='flex items-center justify-center w-6 h-5'>
-                    <LoadingAnim type='text' />
+                    <Loading type='text' />
                   </div>
                 )
                 : (isAgentMode
