@@ -20,7 +20,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import type { RootState, AppDispatch } from './store/index'
 import { fetchServerConfig } from './store/server'
 import Welcome from './components/welcome'
-import { fetchConversations } from './store/conversations'
 
 export type AppProps = {
   params: any
@@ -72,7 +71,6 @@ const App: FC<AppProps> = () => {
     try {
       if (!inited) {
         dispatch(fetchServerConfig())
-        dispatch(fetchConversations())
       }
       setLocaleOnClient(APP_INFO.default_language, true)
       setInited(true)
