@@ -93,7 +93,7 @@ const Messages: FC<MessagesProps> = () => {
 
   return (
     <div className='chat h-full'>
-      <div className="h-full space-y-[30px]">
+      <div className="h-full py-2">
         {messages.map((item) => {
           if (item.isAnswer) {
             const isLast = item.id === messages[messages.length - 1].id
