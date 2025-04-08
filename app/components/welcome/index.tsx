@@ -9,6 +9,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import type { RootState } from '@/app/store'
 import { Button } from '../ui'
 import { startChat } from '@/app/store/session'
+import { addConversation } from '@/app/store/conversations'
 
 // regex to match the {{}} and replace it with a span
 const regex = /\{\{([^}]+)\}\}/g
@@ -136,6 +137,12 @@ const Welcome: FC = () => {
   const handleChat = () => {
     if (!canChat())
       return
+    dispatch(addConversation({
+      id: 'new',
+      name: '新对话',
+      introduction: '',
+      inputs: {},
+    }))
     dispatch(startChat())
   }
 
@@ -306,7 +313,7 @@ const Welcome: FC = () => {
         }
         {session.inputs && renderHasSetInputs()}
         <Button className='mt-3 mobile:ml-0 tablet:ml-[128px]'
-          onClick={() => dispatch(startChat())}>开始对话</Button>
+          onClick={handleChat}>开始对话</Button>
       </div>
     </div >
   )

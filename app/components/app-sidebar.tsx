@@ -26,9 +26,11 @@ import { ConversationItem } from '@/types/app'
 import { MessageSquare, PlusIcon, MoreHorizontalIcon } from 'lucide-react'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui'
 import { setCurrentConversation } from '@/app/store/session'
+
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const dispatch = useDispatch<AppDispatch>()
   const { value: conversations, loading, error } = useSelector((state: RootState) => state.conversations)
+  const session = useSelector((state: RootState) => state.session)
   const { t } = useTranslation()
 
   const handleConversationIdChange = (conversation: ConversationItem) => {
@@ -66,9 +68,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               {conversations.map((c: ConversationItem) => (
                 <SidebarMenuItem key={c.id} onClick={() => handleConversationIdChange(c)}>
                   <SidebarMenuButton asChild
-                    isActive={c.id === ''}>
+                    isActive={c.id === session.currentConversation?.id}>
                     <a href={`#${c.id}`}>
-                      <MessageSquare /> {c.name}</a>
+                      <MessageSquare /> {c.name}
+                    </a>
                   </SidebarMenuButton>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -90,6 +93,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
       </SidebarContent>
       <SidebarRail />
     </Sidebar>
