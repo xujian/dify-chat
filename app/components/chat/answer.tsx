@@ -15,6 +15,7 @@ import WorkflowProcess from '@/app/components/workflow/workflow-process'
 import { Markdown } from '@/app/components/base/markdown'
 import type { Emoji } from '@/types/tools'
 import CustomBlock from '../workflow/custom-block'
+import { Message } from '@/models'
 
 const OperationBtn = ({ innerContent, onClick, className }: { innerContent: React.ReactNode; onClick?: () => void; className?: string }) => (
   <div
@@ -55,8 +56,8 @@ const IconWrapper: FC<{ children: React.ReactNode | string }> = ({ children }) =
   </div>
 }
 
-type IAnswerProps = {
-  item: ChatItem
+type AnswerProps = {
+  item: Message
   feedbackDisabled: boolean
   onFeedback?: FeedbackFunc
   isResponding?: boolean
@@ -64,14 +65,14 @@ type IAnswerProps = {
 }
 
 // The component needs to maintain its own state to control whether to display input component
-const Answer: FC<IAnswerProps> = ({
+const Answer: FC<AnswerProps> = ({
   item,
   feedbackDisabled = false,
   onFeedback,
   isResponding,
   allToolIcons,
 }) => {
-  const { id, content, feedback, agent_thoughts, workflowProcess } = item
+  const { id, content, feedback, thoughts, workflowProcess } = item
   const isAgentMode = !!agent_thoughts && agent_thoughts.length > 0
 
   const { t } = useTranslation()

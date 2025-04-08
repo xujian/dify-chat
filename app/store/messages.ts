@@ -23,6 +23,14 @@ export const messagesSlice = createSlice({
     addMessage: (state, action: PayloadAction<Message>) => {
       state.value.push(action.payload)
     },
+    updateMessage: (state, action: PayloadAction<Message>) => {
+      const index = state.value.findIndex(
+        item => item.id === action.payload.id
+      )
+      if (index !== -1) {
+        state.value[index] = action.payload
+      }
+    },
     clearMessages: (state) => {
       state.value = []
     },
@@ -67,7 +75,7 @@ export const fetchMessages = createAsyncThunk(
           id: `question-${item.id}`,
           content: item.query,
           type: 'question',
-          message_files: item.message_files
+          files: item.message_files
             ?.filter((file: any) =>
               file.belongs_to === 'assistant')
             || [],
@@ -79,7 +87,8 @@ export const fetchMessages = createAsyncThunk(
           customContent,
           type: 'answer',
           feedback: item.feedback,
-          message_files: item.message_files?.filter((file: any) => file.belongs_to === 'assistant') || [],
+          files: item.message_files?.filter(
+            (file: any) => file.belongs_to === 'assistant') || [],
         })
       })
       return result

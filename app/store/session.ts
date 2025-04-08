@@ -6,8 +6,8 @@ const localStorageKey = 'conversation'
 const hasLocalStorage = () => !!globalThis.localStorage.getItem(localStorageKey)
 
 const getCurrentConversationFromLocalStorage = () => {
-  const c = globalThis.localStorage.getItem(localStorageKey) || ''
   try {
+    const c = globalThis.localStorage.getItem(localStorageKey) || ''
     return JSON.parse(c)
   } catch (error) {
     return {
@@ -26,16 +26,16 @@ export interface SessionState {
   inputs: Record<string, string>, // 输入变量
 }
 
-const initialState: SessionState = {
+const getInitialState: () => SessionState = () => ({
   currentConversation: getCurrentConversationFromLocalStorage(),
   chatStarted: hasLocalStorage(),
   responding: false,
   inputs: {},
-}
+})
 
 export const sessionSlice = createSlice({
   name: 'session',
-  initialState,
+  initialState: getInitialState(),
   reducers: {
     setCurrentConversation: (state, action) => {
       state.currentConversation = action.payload

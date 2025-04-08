@@ -1,8 +1,22 @@
+import { WorkflowRunningStatus } from '@/types/app'
+import { WorkflowProcess } from './workflow'
 
 export type Citation = {
   id: string
   title: string
   url: string
+}
+
+export type MessageFormat = 'text' | 'json'
+
+export type LogAnnotation = {
+  content: string
+  account: {
+    id: string
+    name: string
+    email: string
+  }
+  created_at: number
 }
 
 export type Annotation = {
@@ -29,9 +43,16 @@ export type MessageRating = typeof MessageRatings[number]
 export const MessageTypes = ['question', 'answer'] as const
 export type MessageType = typeof MessageTypes[number]
 
-export type ThoughtItem = {
+export type Thought = {
   id: string
-  text: string
+  text: string,
+  tool: string // plugin or dataset. May has multi.
+  content: string
+  input: string
+  messageId: string
+  observation: string
+  position: number
+  files?: File[]
 }
 
 export type TransferMethod = 'all' | 'local_file' | 'remote_url'
@@ -39,10 +60,10 @@ export type TransferMethod = 'all' | 'local_file' | 'remote_url'
 export type File = {
   id?: string
   type: string
-  transfer_method: TransferMethod
+  transferMethod: TransferMethod
   url: string
-  upload_file_id: string
-  belongs_to?: string
+  uploadId: string
+  belongsTo?: string
 }
 
 export type Message = {
@@ -53,6 +74,8 @@ export type Message = {
    * Specific message type
    */
   type: MessageType
+  format?: MessageFormat
+  customContent?: Record<string, any>
   /**
    * The user feedback result of this message
    */
@@ -74,6 +97,8 @@ export type Message = {
   isOpeningStatement?: boolean
   suggestedQuestions?: string[]
   log?: { role: string; text: string }[]
-  agent_thoughts?: ThoughtItem[]
-  message_files?: File[]
+  thoughts?: Thought[]
+  files?: File[]
+  workflowProcess?: WorkflowProcess
+  workflowRunId?: string
 }
