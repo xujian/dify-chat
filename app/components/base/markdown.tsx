@@ -36,7 +36,6 @@ export function Markdown(props: { content: string }) {
               )
           },
         }}
-        linkTarget={'_blank'}
       >
         {props.content}
       </ReactMarkdown>
