@@ -73,7 +73,7 @@ const Answer: FC<AnswerProps> = ({
   allToolIcons,
 }) => {
   const { id, content, feedback, thoughts, workflowProcess } = item
-  const isAgentMode = !!agent_thoughts && agent_thoughts.length > 0
+  const isAgentMode = !!thoughts && thoughts.length > 0
 
   const { t } = useTranslation()
 
@@ -144,7 +144,7 @@ const Answer: FC<AnswerProps> = ({
 
   const agentModeAnswer = (
     <div>
-      {agent_thoughts?.map((item, index) => (
+      {thoughts?.map((item, index) => (
         <div key={index}>
           {item.thought && (
             <Markdown content={item.thought} />
@@ -159,8 +159,8 @@ const Answer: FC<AnswerProps> = ({
             />
           )}
 
-          {getImgs(item.message_files).length > 0 && (
-            <ImageGallery srcs={getImgs(item.message_files).map(item => item.url)} />
+          {getImgs(item.files).length > 0 && (
+            <ImageGallery srcs={getImgs(item.files).map(item => item.url)} />
           )}
         </div>
       ))}
@@ -183,7 +183,7 @@ const Answer: FC<AnswerProps> = ({
               {workflowProcess && (
                 <WorkflowProcess data={workflowProcess} hideInfo />
               )}
-              {(isResponding && (isAgentMode ? (!content && (agent_thoughts || []).filter(item => !!item.thought || !!item.tool).length === 0) : !content))
+              {(isResponding && (isAgentMode ? (!content && thoughts?.filter(item => !!item.thought || !!item.tool).length === 0) : !content))
                 ? (
                   <div className='flex items-center justify-center w-6 h-5'>
                     <Loading type='text' />

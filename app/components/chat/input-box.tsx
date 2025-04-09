@@ -10,9 +10,9 @@ import ImageList from '@/app/components/base/image-uploader/image-list'
 import { useImageFiles } from '../base/image-uploader/hooks'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '@/app/store'
-import { sendChatMessage } from '@/service'
-import { setResponding } from '@/app/store/session'
-import { addMessage } from '@/app/store/messages'
+import { generationConversationName, sendChatMessage, SendChatMessageData } from '@/service'
+import { setCurrentConversation, setResponding } from '@/app/store/session'
+import { addMessage, updateMessage } from '@/app/store/messages'
 import { Annotation, Message } from '@/models'
 import { WorkflowRunningStatus } from '@/models/workflow'
 import { File } from '@/models/chat'
@@ -50,50 +50,44 @@ const InputBox: FC<InputBoxProps> = () => {
   }
 
   const send = async (message: string, files?: File[]) => {
+    console.log('send', message, files)
     if (session.responding) {
       return
     }
-    const data: Record<string, any> = {
-      inputs: {}, //currInputs,
+    const data: SendChatMessageData = {
       query: message,
-      conversation_id: session.currentConversation.id,
+      conversationId: session.currentConversation.id,
     }
 
-    const questionId = `question-${Date.now()}`
-    const questionItem: Message = {
+    const t = Date.now()
+    const questionId = `question-${t}`
+    const question: Message = {
       id: questionId,
       content: message,
+      conversationId: session.currentConversation.id,
+      createdAt: t,
       type: 'question',
       files: files,
     }
-    dispatch(addMessage(questionItem))
+    dispatch(addMessage(question))
 
-    const placeholderAnswerId = `answer-placeholder-${Date.now()}`
-    const placeholderAnswerItem: Message = {
-      id: placeholderAnswerId,
+    const answerId = `answer-${t}`
+    const answer: Message = {
+      id: answerId,
       content: '',
       type: 'answer',
+      conversationId: session.currentConversation.id,
+      createdAt: t,
       files: files,
     }
 
-    dispatch(addMessage(placeholderAnswerItem))
+    dispatch(addMessage(answer))
 
     let isAgentMode = false
 
-    // answer
-    const returnedMessage: Message = {
-      id: `${Date.now()}`,
-      content: '',
-      thoughts: [],
-      files: [],
-      type: 'answer',
+    const commit = (message: Message) => {
+      dispatch(updateMessage(message))
     }
-
-    const commit = () => {
-      dispatch(addMessage(returnedMessage))
-    }
-
-    let hasSetResponseId = false
 
     // loading animation
     dispatch(setResponding(true))
@@ -110,31 +104,41 @@ const InputBox: FC<InputBoxProps> = () => {
         }: any) => {
         console.log('onData', message, isFirstMessage, newConversationId, messageId, taskId)
         if (!isAgentMode) {
-          returnedMessage.content = returnedMessage.content + message
+          answer.content += message
         }
         else {
-          const lastThought = returnedMessage.thoughts?.[returnedMessage.thoughts?.length - 1]
+          const lastThought = answer.thoughts?.[answer.thoughts?.length - 1]
           if (lastThought)
             lastThought.content = lastThought.content + message // need immer setAutoFreeze
         }
-        if (messageId && !hasSetResponseId) {
-          returnedMessage.id = messageId
+        if (messageId && answer.id === `answer-${t}`) {
+          answer.id = `answer-${messageId}`
+          question.id = `question-${messageId}`
+          commit(question)
         }
-        commit()
+        commit(answer)
       },
       async onCompleted(hasError?: boolean) {
+        console.log('onCompleted', hasError)
         if (hasError)
           return
+        dispatch(setResponding(false))
+        // refresh conversation name
+        const conversation = await generationConversationName(session.currentConversation.id)
+        dispatch(setCurrentConversation({
+          ...session.currentConversation,
+          name: conversation.name
+        }))
       },
       onFile(file) {
-        const lastThought = returnedMessage.thoughts?.[returnedMessage.thoughts?.length - 1]
+        const lastThought = answer.thoughts?.[answer.thoughts?.length - 1]
         if (lastThought)
           lastThought.files = [...(lastThought as any).message_files, { ...file }]
       },
       onThought(thought) {
         isAgentMode = true
-        const response = returnedMessage as any
-        if (thought.message_id && !hasSetResponseId) {
+        const response = answer as any
+        if (thought.message_id && answer.id === `answer-${t}`) {
           response.id = thought.message_id
         }
         // returnedMessage.id = thought.message_id;
@@ -147,18 +151,18 @@ const InputBox: FC<InputBoxProps> = () => {
           if (lastThought.id === thought.id) {
             thought.thought = lastThought.thought
             thought.message_files = lastThought.message_files
-            returnedMessage.thoughts![response.agent_thoughts.length - 1] = thought
+            answer.thoughts![response.agent_thoughts.length - 1] = thought
           }
           else {
-            returnedMessage.thoughts!.push(thought)
+            answer.thoughts!.push(thought)
           }
         }
       },
       onMessageEnd: (messageEnd) => {
         console.log('onMessageEnd', messageEnd)
         if (messageEnd.metadata?.annotation_reply) {
-          returnedMessage.id = messageEnd.id
-          returnedMessage.annotation = ({
+          answer.id = messageEnd.id
+          answer.annotation = ({
             id: messageEnd.metadata.annotation_reply.id,
             authorName: messageEnd.metadata.annotation_reply.account.name,
           } as Annotation)
@@ -173,28 +177,28 @@ const InputBox: FC<InputBoxProps> = () => {
       },
       onWorkflowStarted: ({ workflow_run_id, task_id }) => {
         // taskIdRef.current = task_id
-        returnedMessage.workflowRunId = workflow_run_id
-        returnedMessage.workflowProcess = {
+        answer.workflowRunId = workflow_run_id
+        answer.workflowProcess = {
           status: WorkflowRunningStatus.Running,
           tracing: [],
         }
       },
       onWorkflowFinished: ({ data }) => {
         console.log('onWorkflowFinished', data)
-        returnedMessage.workflowProcess!.status = data.status as WorkflowRunningStatus
+        answer.workflowProcess!.status = data.status as WorkflowRunningStatus
       },
       onNodeStarted: ({ data }) => {
-        returnedMessage.workflowProcess!.tracing!.push(data as any)
+        answer.workflowProcess!.tracing!.push(data as any)
       },
       onNodeFinished: ({ data }) => {
-        console.log('onNodeFinished', data, returnedMessage)
-        const currentIndex = returnedMessage.workflowProcess!.tracing!.findIndex(item => item.node_id === data.node_id)
-        returnedMessage.workflowProcess!.tracing[currentIndex] = data as any
+        console.log('onNodeFinished', data, answer)
+        const currentIndex = answer.workflowProcess!.tracing!.findIndex(item => item.node_id === data.node_id)
+        answer.workflowProcess!.tracing![currentIndex] = data as any
         if (data.node_type === 'code' && data.outputs.format === 'json') {
-          returnedMessage.format = 'json'
-          returnedMessage.customContent = data.outputs.result
+          answer.format = 'json'
+          answer.customContent = data.outputs.result
         }
-        console.log('onNodeFinished------', data, returnedMessage)
+        console.log('onNodeFinished------', data, answer)
       },
     })
   }

@@ -24,11 +24,14 @@ export const messagesSlice = createSlice({
       state.value.push(action.payload)
     },
     updateMessage: (state, action: PayloadAction<Message>) => {
+      const message = action.payload
       const index = state.value.findIndex(
-        item => item.id === action.payload.id
+        item => item.id === message.id ||
+          item.id === `answer-${message.createdAt}` ||
+          item.id === `question-${message.createdAt}`
       )
       if (index !== -1) {
-        state.value[index] = action.payload
+        state.value[index] = message
       }
     },
     clearMessages: (state) => {
@@ -59,7 +62,7 @@ export const messagesSlice = createSlice({
   },
 })
 
-export const { addMessage, clearMessages, clearError } = messagesSlice.actions
+export const { addMessage, updateMessage, clearMessages, clearError } = messagesSlice.actions
 
 export const fetchMessages = createAsyncThunk(
   'messages/fetchMessages',
@@ -73,6 +76,7 @@ export const fetchMessages = createAsyncThunk(
         const customContent = toJson(item.answer)
         result.push({
           id: `question-${item.id}`,
+          conversationId: conversationId,
           content: item.query,
           type: 'question',
           files: item.message_files
@@ -83,6 +87,7 @@ export const fetchMessages = createAsyncThunk(
         result.push({
           id: item.id,
           content: item.answer,
+          conversationId: conversationId,
           format: customContent ? 'json' : 'text',
           customContent,
           type: 'answer',
