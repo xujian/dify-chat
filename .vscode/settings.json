@@ -29,5 +29,8 @@
     "app/api/messages"
   ],
   "javascript.preferences.quoteStyle": "single",
-  "typescript.preferences.quoteStyle": "single"
+  "typescript.preferences.quoteStyle": "single",
+  "css.customData": [
+    "../tailwind.config.js"
+  ]
 }
