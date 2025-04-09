@@ -22,8 +22,6 @@ interface FormProps {
 }
 
 const CustomBlock: React.FC<FormProps> = ({ data }) => {
-  console.log('f------------form:data', data)
-
   const formSchema = z.object({
     username: z.string().min(2, {
       message: "Username must be at least 2 characters.",
