@@ -21,8 +21,8 @@ import {
   SidebarRail,
 } from '@/app/components/ui/sidebar'
 import { useEffect } from 'react'
-import { deleteConversation, fetchConversations } from '@/app/store/conversations'
-import { ConversationItem } from '@/types/app'
+import { deleteConversation, fetchConversations, newConversation } from '@/app/store/conversations'
+import { Conversation } from '@/models'
 import { MessageSquare, PlusIcon, MoreHorizontalIcon } from 'lucide-react'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui'
 import { setCurrentConversation } from '@/app/store/session'
@@ -33,12 +33,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const session = useSelector((state: RootState) => state.session)
   const { t } = useTranslation()
 
-  const handleConversationIdChange = (conversation: ConversationItem) => {
+  const handleConversationIdChange = (conversation: Conversation) => {
     dispatch(setCurrentConversation(conversation))
   }
 
-  const handleDeleteConversation = (conversationId: string) => {
-    dispatch(deleteConversation(conversationId))
+  const handleDeleteConversation = async (conversationId: string) => {
+    await dispatch(deleteConversation(conversationId))
+    dispatch(setCurrentConversation(conversations[0]))
+  }
+
+  const createConversation = () => {
+    dispatch(newConversation())
   }
 
   // init
@@ -62,12 +67,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         {/* We create a SidebarGroup for each parent. */}
         <SidebarGroup>
           <SidebarGroupLabel>Conversations</SidebarGroupLabel>
-          <SidebarGroupAction title="Add Project">
+          <SidebarGroupAction title="Add Project" onClick={createConversation}>
             <PlusIcon />
           </SidebarGroupAction>
           <SidebarGroupContent>
             <SidebarMenu>
-              {conversations.map((c: ConversationItem) => (
+              {conversations.map((c: Conversation) => (
                 <SidebarMenuItem key={c.id} onClick={() => handleConversationIdChange(c)}>
                   <SidebarMenuButton asChild
                     isActive={c.id === session.currentConversation?.id}>

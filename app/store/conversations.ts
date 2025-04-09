@@ -1,10 +1,10 @@
-import { ConversationItem } from '@/types/app'
+import { Conversation } from '@/models'
 import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit'
 import { getConversations, removeConversation } from '@/service'
 import Toast from '@/app/components/base/toast'
 
 export interface ConversationsState {
-  value: ConversationItem[]
+  value: Conversation[]
   loading: boolean
   fufilled: boolean
   error: string | null
@@ -21,7 +21,15 @@ export const conversationsSlice = createSlice({
   name: 'conversations',
   initialState,
   reducers: {
-    addConversation: (state, action: PayloadAction<ConversationItem>) => {
+    newConversation: (state) => {
+      state.value.unshift({
+        id: '-1',
+        name: 'New Conversation',
+        introduction: '',
+        inputs: {},
+      })
+    },
+    addConversation: (state, action: PayloadAction<Conversation>) => {
       // Redux Toolkit allows us to write "mutating" logic in reducers. It
       // doesn't actually mutate the state because it uses the Immer library,
       // which detects changes to a "draft state" and produces a brand new
@@ -55,14 +63,14 @@ export const conversationsSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { addConversation, clearError } = conversationsSlice.actions
+export const { addConversation, clearError, newConversation } = conversationsSlice.actions
 
 export const fetchConversations = createAsyncThunk(
   'conversations/fetchConversations',
   async (_, { rejectWithValue }) => {
     try {
       const response = await getConversations()
-      const { data, error } = response as { data: ConversationItem[]; error?: string }
+      const { data, error } = response as { data: Conversation[]; error?: string }
 
       if (error) {
         Toast.notify({ type: 'error', message: error })
