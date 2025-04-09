@@ -55,7 +55,7 @@ const Tool: FC<Props> = ({
   const icon = getIcon(toolName, allToolIcons) as any
   return (
     <div>
-      <div className={cn(!isShowDetail && 'shadow-sm', !isShowDetail && 'inline-block', 'max-w-full overflow-x-auto bg-white rounded-md')}>
+      <div className={cn(!isShowDetail && 'shadow-xs', !isShowDetail && 'inline-block', 'max-w-full overflow-x-auto bg-white rounded-md')}>
         <div
           className={cn('flex items-center h-7 px-2 cursor-pointer')}
           onClick={() => setIsShowDetail(!isShowDetail)}

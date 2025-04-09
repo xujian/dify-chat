@@ -79,7 +79,7 @@ const Welcome: FC = () => {
       // <div className='welcome-inputs space-y-3'>
       //   {serverConfig.promptConfig.prompt_variables.map(item => (
       //     <div className='tablet:flex items-start mobile:space-y-2 tablet:space-y-0 mobile:text-xs tablet:text-sm' key={item.key}>
-      //       <label className={`flex-shrink-0 flex items-center tablet:leading-9 mobile:text-gray-700 tablet:text-gray-900 mobile:font-medium pc:font-normal ${s.formLabel}`}>{item.name}</label>
+      //       <label className={`shrink-0 flex items-center tablet:leading-9 mobile:text-gray-700 tablet:text-gray-900 mobile:font-medium pc:font-normal ${s.formLabel}`}>{item.name}</label>
       //       {item.type === 'select'
       //         && (
       //           <Select
@@ -96,13 +96,13 @@ const Welcome: FC = () => {
       //           placeholder={`${item.name}${!item.required ? `(${t('app.variableTable.optional')})` : ''}`}
       //           value={inputs?.[item.key] || ''}
       //           onChange={(e) => { setInputs({ ...inputs, [item.key]: e.target.value }) }}
-      //           className={'w-full flex-grow py-2 pl-3 pr-3 box-border rounded-lg bg-gray-50'}
+      //           className={'w-full grow py-2 pl-3 pr-3 box-border rounded-lg bg-gray-50'}
       //           maxLength={item.max_length || DEFAULT_VALUE_MAX_LEN}
       //         />
       //       )}
       //       {item.type === 'paragraph' && (
       //         <textarea
-      //           className="w-full h-[104px] flex-grow py-2 pl-3 pr-3 box-border rounded-lg bg-gray-50"
+      //           className="w-full h-[104px] grow py-2 pl-3 pr-3 box-border rounded-lg bg-gray-50"
       //           placeholder={`${item.name}${!item.required ? `(${t('app.variableTable.optional')})` : ''}`}
       //           value={inputs?.[item.key] || ''}
       //           onChange={(e) => { setInputs({ ...inputs, [item.key]: e.target.value }) }}

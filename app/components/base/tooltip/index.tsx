@@ -9,7 +9,7 @@ type TooltipProps = {
   selector: string
   content?: string
   htmlContent?: React.ReactNode
-  className?: string // This should use !impornant to override the default styles eg: '!bg-white'
+  className?: string // This should use !impornant to override the default styles eg: 'bg-white!'
   position?: 'top' | 'right' | 'bottom' | 'left'
   clickable?: boolean
   children: React.ReactNode
@@ -33,7 +33,7 @@ const Tooltip: FC<TooltipProps> = ({
       <ReactTooltip
         id={selector}
         content={content}
-        className={classNames('!bg-white !text-xs !font-normal !text-gray-700 !shadow-lg !opacity-100', className)}
+        className={classNames('bg-white! text-xs! font-normal! text-gray-700! shadow-lg! opacity-100!', className)}
         place={position}
         clickable={clickable}
       >

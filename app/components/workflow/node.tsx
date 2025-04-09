@@ -39,20 +39,20 @@ const NodePanel: FC<Props> = ({ nodeInfo, hideInfo = false }) => {
   }, [nodeInfo.expand])
 
   return (
-    <div className={cn('px-4 py-1', hideInfo && '!p-0')}>
-      <div className={cn('group transition-all bg-white border border-gray-100 rounded-2xl shadow-xs hover:shadow-md', hideInfo && '!rounded-lg')}>
+    <div className={cn('px-4 py-1', hideInfo && 'p-0!')}>
+      <div className={cn('group transition-all bg-white border border-gray-100 rounded-2xl shadow-2xs hover:shadow-md', hideInfo && 'rounded-lg!')}>
         <div
           className={cn(
             'flex items-center pl-[6px] pr-3 cursor-pointer',
             hideInfo ? 'py-2' : 'py-3',
-            !collapseState && (hideInfo ? '!pb-1' : '!pb-2'),
+            !collapseState && (hideInfo ? 'pb-1!' : 'pb-2!'),
           )}
           onClick={() => setCollapseState(!collapseState)}
         >
-          <BlockIcon size={hideInfo ? 'xs' : 'sm'} className={cn('shrink-0 mr-2', hideInfo && '!mr-1')} type={nodeInfo.node_type} toolIcon={nodeInfo.extras?.icon || nodeInfo.extras} />
+          <BlockIcon size={hideInfo ? 'xs' : 'sm'} className={cn('shrink-0 mr-2', hideInfo && 'mr-1!')} type={nodeInfo.node_type} toolIcon={nodeInfo.extras?.icon || nodeInfo.extras} />
           <div className={cn(
             'grow text-gray-700 text-[13px] leading-[16px] font-semibold truncate',
-            hideInfo && '!text-xs',
+            hideInfo && 'text-xs!',
           )} title={nodeInfo.title}>{nodeInfo.title}</div>
           {nodeInfo.status !== 'running' && !hideInfo && (
             <div className='shrink-0 text-gray-500 text-xs leading-[18px]'>{`${getTime(nodeInfo.elapsed_time || 0)} · ${getTokenCount(nodeInfo.execution_metadata?.total_tokens || 0)} tokens`}</div>

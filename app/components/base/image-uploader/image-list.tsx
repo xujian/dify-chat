@@ -51,7 +51,7 @@ const ImageList: FC<ImageListProps> = ({
               item.type === TransferMethod.local_file && item.progress !== 100 && (
                 <>
                   <div
-                    className='absolute inset-0 flex items-center justify-center z-[1] bg-black/30'
+                    className='absolute inset-0 flex items-center justify-center z-1 bg-black/30'
                     style={{ left: item.progress > -1 ? `${item.progress}%` : 0 }}
                   >
                     {
@@ -62,7 +62,7 @@ const ImageList: FC<ImageListProps> = ({
                   </div>
                   {
                     item.progress > -1 && (
-                      <span className='absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] text-sm text-white mix-blend-lighten z-[1]'>{item.progress}%</span>
+                      <span className='absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] text-sm text-white mix-blend-lighten z-1'>{item.progress}%</span>
                     )
                   }
                 </>
@@ -71,7 +71,7 @@ const ImageList: FC<ImageListProps> = ({
             {
               item.type === TransferMethod.remote_url && item.progress !== 100 && (
                 <div className={`
-                  absolute inset-0 flex items-center justify-center rounded-lg z-[1] border
+                  absolute inset-0 flex items-center justify-center rounded-lg z-1 border
                   ${item.progress === -1 ? 'bg-[#FEF0C7] border-[#DC6803]' : 'bg-black/[0.16] border-transparent'}
                 `}>
                   {

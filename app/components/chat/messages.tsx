@@ -90,7 +90,7 @@ const Messages: FC<MessagesProps> = () => {
           )
         })}
       </div>
-      <div className={cn(!feedbackDisabled && '!left-3.5 !right-3.5', 'absolute z-10 bottom-0 left-0 right-0')}>
+      <div className={cn(!feedbackDisabled && 'left-3.5! right-3.5!', 'absolute z-10 bottom-0 left-0 right-0')}>
         <InputBox />
       </div>
     </div>

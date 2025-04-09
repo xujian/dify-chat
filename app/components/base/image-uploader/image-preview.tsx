@@ -11,7 +11,7 @@ const ImagePreview: FC<ImagePreviewProps> = ({
   onCancel,
 }) => {
   return createPortal(
-    <div className='fixed inset-0 p-8 flex items-center justify-center bg-black/80 z-[1000]' onClick={e => e.stopPropagation()}>
+    <div className='fixed inset-0 p-8 flex items-center justify-center bg-black/80 z-1000' onClick={e => e.stopPropagation()}>
       <img
         alt='preview image'
         src={url}

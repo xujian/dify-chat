@@ -46,7 +46,7 @@ const Toast = ({
     type === 'info' ? 'bg-blue-50' : '',
   )}>
     <div className="flex">
-      <div className="flex-shrink-0">
+      <div className="shrink-0">
         {type === 'success' && <CheckCircleIcon className="w-5 h-5 text-green-400" aria-hidden="true" />}
         {type === 'error' && <XCircleIcon className="w-5 h-5 text-red-400" aria-hidden="true" />}
         {type === 'warning' && <ExclamationTriangleIcon className="w-5 h-5 text-yellow-400" aria-hidden="true" />}

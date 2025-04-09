@@ -104,7 +104,7 @@ const App: FC<AppProps> = () => {
             isMobile={isMobile}
             onShowSideBar={showSidebar}
           />
-          <div className='flex-grow flex flex-col overflow-hidden'>
+          <div className='grow flex flex-col overflow-hidden'>
             {
               session.chatStarted
                 ? (<Messages />)

@@ -23,8 +23,8 @@ type BlockIconProps = {
   toolIcon?: string | { content: string; background: string }
 }
 const ICON_CONTAINER_CLASSNAME_SIZE_MAP: Record<string, string> = {
-  xs: 'w-4 h-4 rounded-[5px] shadow-xs',
-  sm: 'w-5 h-5 rounded-md shadow-xs',
+  xs: 'w-4 h-4 rounded-[5px] shadow-2xs',
+  sm: 'w-5 h-5 rounded-md shadow-2xs',
   md: 'w-6 h-6 rounded-lg shadow-md',
 }
 const getIcon = (type: BlockEnum, className: string) => {
@@ -67,7 +67,7 @@ const BlockIcon: FC<BlockIconProps> = ({
       flex items-center justify-center border-[0.5px] border-white/[0.02] text-white
       ${ICON_CONTAINER_CLASSNAME_SIZE_MAP[size]} 
       ${ICON_CONTAINER_BG_COLOR_MAP[type]}
-      ${toolIcon && '!shadow-none'}
+      ${toolIcon && 'shadow-none!'}
       ${className}
     `}
     >
@@ -91,7 +91,7 @@ const BlockIcon: FC<BlockIconProps> = ({
                 )
                 : (
                   <AppIcon
-                    className='shrink-0 !w-full !h-full'
+                    className='shrink-0 w-full! h-full!'
                     size='tiny'
                     icon={toolIcon?.content}
                     background={toolIcon?.background}
