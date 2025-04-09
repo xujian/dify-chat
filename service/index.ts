@@ -2,8 +2,15 @@ import type { IOnCompleted, IOnData, IOnError, IOnFile, IOnMessageEnd, IOnMessag
 import { get, post, ssePost, remove } from './base'
 import type { Feedbacktype } from '@/types/app'
 
+export type SendChatMessageData = {
+  conversationId: string
+  query: string
+  files?: File[]
+  inputs?: Record<string, any>
+}
+
 export const sendChatMessage = async (
-  data: Record<string, any>,
+  data: SendChatMessageData,
   {
     onData,
     onCompleted,
@@ -33,17 +40,29 @@ export const sendChatMessage = async (
   },
 ) => {
   const body = {
-    ...data,
-    conversation_id: data.conversation_id === '-1'
+    query: data.query,
+    inputs: data.inputs || {},
+    conversation_id: data.conversationId === '-1'
       ? null
-      : data.conversation_id,
+      : data.conversationId,
     response_mode: 'streaming',
   }
   return ssePost('chat-messages', {
-    body: {
-      ...body,
-    },
-  }, { onData, onCompleted, onThought, onFile, onError, getAbortController, onMessageEnd, onMessageReplace, onNodeStarted, onWorkflowStarted, onWorkflowFinished, onNodeFinished })
+    body,
+  }, {
+    onData,
+    onCompleted,
+    onThought,
+    onFile,
+    onError,
+    getAbortController,
+    onMessageEnd,
+    onMessageReplace,
+    onNodeStarted,
+    onWorkflowStarted,
+    onWorkflowFinished,
+    onNodeFinished
+  })
 }
 
 export const getConversations = async () => {
@@ -77,6 +96,8 @@ export const updateFeedback = async ({ url, body }: { url: string; body: Feedbac
   return post(url, { body })
 }
 
-export const generationConversationName = async (id: string) => {
-  return post(`conversations/${id}/name`, { body: { auto_generate: true } })
-}
+export const generationConversationName: (id: string) => Promise<{ name: string }>
+  = async (id: string) => {
+    const result = await post(`conversations/${id}/name`, { body: { auto_generate: true } })
+    return result as { name: string }
+  }

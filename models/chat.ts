@@ -66,9 +66,14 @@ export type File = {
   belongsTo?: string
 }
 
+/**
+ * A Chat Message
+ */
 export type Message = {
   id: string
   content: string
+  conversationId: string
+  createdAt?: number
   citations?: Citation[]
   /**
    * Specific message type
