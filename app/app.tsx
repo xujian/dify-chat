@@ -98,20 +98,18 @@ const App: FC<AppProps> = () => {
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <div className='home flex flex-col min-h-screen'>
+        <div className='home flex flex-col h-screen'>
           <Header
             title={APP_INFO.title}
             isMobile={isMobile}
             onShowSideBar={showSidebar}
           />
-          <div className="flex rounded-t-2xl bg-white overflow-hidden">
-            <div className='flex-grow flex flex-col h-[calc(100vh_-_3rem)] overflow-y-auto'>
-              {
-                session.chatStarted
-                  ? (<Messages />)
-                  : (<Welcome />)
-              }
-            </div>
+          <div className='flex-grow flex flex-col overflow-hidden'>
+            {
+              session.chatStarted
+                ? (<Messages />)
+                : (<Welcome />)
+            }
           </div>
         </div>
       </SidebarInset>
