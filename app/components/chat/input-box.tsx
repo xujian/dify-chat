@@ -79,6 +79,11 @@ const InputBox: FC<InputBoxProps> = () => {
       conversationId: session.currentConversation.id,
       createdAt: t,
       files: files,
+      workflowRunId: '',
+      workflowProcess: {
+        status: WorkflowRunningStatus.Running,
+        tracing: [],
+      }
     }
 
     dispatch(addMessage(answer))
@@ -176,6 +181,7 @@ const InputBox: FC<InputBoxProps> = () => {
         dispatch(setResponding(false))
       },
       onWorkflowStarted: ({ workflow_run_id, task_id }) => {
+        console.log('onWorkflowStarted', workflow_run_id, task_id)
         // taskIdRef.current = task_id
         answer.workflowRunId = workflow_run_id
         answer.workflowProcess = {
@@ -205,7 +211,7 @@ const InputBox: FC<InputBoxProps> = () => {
 
   return (
     <>
-      <div className="border-input relative my-3 flex min-h-[60px] w-full items-center justify-center rounded-xl border">
+      <div className="border-input relative my-3 bg-white flex min-h-[60px] w-full items-center justify-center rounded-xl border">
         <>
           <CirclePlus
             className="absolute bottom-[12px] left-3 cursor-pointer p-1 hover:opacity-50"

@@ -21,7 +21,10 @@ export const messagesSlice = createSlice({
   initialState,
   reducers: {
     addMessage: (state, action: PayloadAction<Message>) => {
-      state.value.push(action.payload)
+      const message = action.payload
+      state.value.push({
+        ...message,
+      })
     },
     updateMessage: (state, action: PayloadAction<Message>) => {
       const message = action.payload
@@ -31,7 +34,9 @@ export const messagesSlice = createSlice({
           item.id === `question-${message.createdAt}`
       )
       if (index !== -1) {
-        state.value[index] = message
+        state.value[index] = {
+          ...message,
+        }
       }
     },
     clearMessages: (state) => {
