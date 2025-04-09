@@ -210,21 +210,21 @@ const InputBox: FC<InputBoxProps> = () => {
   }
 
   return (
-    <>
-      <div className="border-input relative my-3 bg-white flex min-h-[60px] w-full items-center justify-center rounded-xl border">
-        <>
-          <CirclePlus
-            className="absolute bottom-[12px] left-3 cursor-pointer p-1 hover:opacity-50"
-            size={32}
-            onClick={() => fileInputRef.current?.click()}
+    <div className="border-input relative my-3 bg-white flex min-h-[60px] w-full items-center justify-center rounded-xl border">
+      <>
+        <CirclePlus
+          className="absolute bottom-[12px] left-3 cursor-pointer p-1 hover:opacity-50"
+          size={32}
+          onClick={() => fileInputRef.current?.click()}
+        />
+        <div className='bottom-2 left-2 flex items-center'>
+          <ChatImageUploader
+            onUpload={onUpload}
+            disabled={files.length >= 2}
           />
-          <div className='bottom-2 left-2 flex items-center'>
-            <ChatImageUploader
-              onUpload={onUpload}
-              disabled={files.length >= 2}
-            />
-            <div className='mx-1 w-[1px] h-4 bg-black/5' />
-          </div>
+          <div className='mx-1 w-[1px] h-4 bg-black/5' />
+        </div>
+        {files.length > 0 && (
           <div className='pl-[52px]'>
             <ImageList
               list={files}
@@ -234,51 +234,51 @@ const InputBox: FC<InputBoxProps> = () => {
               onImageLinkLoadError={onImageLinkLoadError}
             />
           </div>
-          <Input
-            ref={fileInputRef}
-            className="hidden"
-            type="file"
-            onChange={e => {
-              if (!e.target.files) return
-            }}
-            accept={'*'}
-          />
-        </>
-        <TextareaAutosize
-          textareaRef={chatInputRef}
-          className="ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring text-md flex w-full resize-none rounded-md border-none bg-transparent px-14 py-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-          onValueChange={handleInputChange}
-          value={userInput}
-          minRows={1}
-          maxRows={18}
-          onCompositionStart={() => setIsTyping(true)}
-          onCompositionEnd={() => setIsTyping(false)}
+        )}
+        <Input
+          ref={fileInputRef}
+          className="hidden"
+          type="file"
+          onChange={e => {
+            if (!e.target.files) return
+          }}
+          accept={'*'}
         />
-        <div className="absolute bottom-[14px] right-3 cursor-pointer hover:opacity-50">
-          {isGenerating
-            ? (
-              <CircleStop
-                className="hover:bg-background animate-pulse rounded bg-transparent p-1"
-                onClick={handleStopMessage}
-                size={30}
-              />
-            )
-            : (
-              <SendHorizonal
-                className={cn(
-                  "bg-primary text-secondary rounded p-1",
-                  !userInput && "cursor-not-allowed opacity-50"
-                )}
-                onClick={() => {
-                  if (!userInput) return
-                  send(userInput)
-                }}
-                size={30}
-              />
-            )}
-        </div>
+      </>
+      <TextareaAutosize
+        textareaRef={chatInputRef}
+        className="ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring text-md flex w-full resize-none rounded-md border-none bg-transparent px-1 py-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+        onValueChange={handleInputChange}
+        value={userInput}
+        minRows={1}
+        maxRows={18}
+        onCompositionStart={() => setIsTyping(true)}
+        onCompositionEnd={() => setIsTyping(false)}
+      />
+      <div className="absolute bottom-[14px] right-3 cursor-pointer hover:opacity-50">
+        {isGenerating
+          ? (
+            <CircleStop
+              className="hover:bg-background animate-pulse rounded bg-transparent p-1"
+              onClick={handleStopMessage}
+              size={30}
+            />
+          )
+          : (
+            <SendHorizonal
+              className={cn(
+                "bg-primary text-secondary rounded p-1",
+                !userInput && "cursor-not-allowed opacity-50"
+              )}
+              onClick={() => {
+                if (!userInput) return
+                send(userInput)
+              }}
+              size={30}
+            />
+          )}
       </div>
-    </>
+    </div>
   )
 }
 

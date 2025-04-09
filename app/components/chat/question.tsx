@@ -14,7 +14,7 @@ type QuestionProps = Pick<react, 'id' | 'content' | 'useCurrentUserAvatar'> & {
 const Question: FC<QuestionProps> = ({ id, content, useCurrentUserAvatar, imgSrcs }) => {
   const userName = ['']
   return (
-    <div className='flex items-start justify-end' key={id}>
+    <div className='flex items-start justify-end py-1' key={id}>
       <div>
         <div className={`${s.question} relative text-sm text-gray-900`}>
           <div

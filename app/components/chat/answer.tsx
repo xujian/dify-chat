@@ -168,41 +168,39 @@ const Answer: FC<AnswerProps> = ({
   )
 
   return (
-    <div key={id} className='answer'>
-      <div className='flex items-start'>
-        <div className={`${s.answerIcon} ml-2 w-10 h-10 shrink-0`}>
-          {isResponding
-            && <div className={s.typeingIcon}>
-              <Loading type='avatar' />
-            </div>
-          }
-        </div>
-        <div className={`${s.answerWrap}`}>
-          <div className={`${s.answer} relative text-sm text-gray-900`}>
-            <div className={`ml-2 py-3 px-4 bg-gray-100 rounded-tr-2xl rounded-b-2xl ${workflowProcess && 'min-w-[480px]'}`}>
-              {workflowProcess && (
-                <WorkflowProcess data={workflowProcess} hideInfo />
-              )}
-              {(isResponding && (isAgentMode ? (!content && thoughts?.filter(item => !!item.thought || !!item.tool).length === 0) : !content))
-                ? (
-                  <div className='flex items-center justify-center w-6 h-5'>
-                    <Loading type='text' />
-                  </div>
+    <div key={id} className='answer flex items-start py-1'>
+      <div className={`${s.answerIcon} ml-2 w-10 h-10 shrink-0`}>
+        {isResponding
+          && <div className={s.typeingIcon}>
+            <Loading type='avatar' />
+          </div>
+        }
+      </div>
+      <div className={`${s.answerWrap}`}>
+        <div className={`${s.answer} relative text-sm text-gray-900`}>
+          <div className={`ml-2 py-3 px-4 bg-gray-100 rounded-tr-2xl rounded-b-2xl ${workflowProcess && 'min-w-[480px]'}`}>
+            {workflowProcess && (
+              <WorkflowProcess data={workflowProcess} hideInfo />
+            )}
+            {(isResponding && (isAgentMode ? (!content && thoughts?.filter(item => !!item.thought || !!item.tool).length === 0) : !content))
+              ? (
+                <div className='flex items-center justify-center w-6 h-5'>
+                  <Loading type='text' />
+                </div>
+              )
+              : (isAgentMode
+                ? agentModeAnswer
+                : (
+                  item.format === 'json'
+                    ? <CustomBlock type='form' data={item.customContent} />
+                    : <Markdown content={content} />
                 )
-                : (isAgentMode
-                  ? agentModeAnswer
-                  : (
-                    item.format === 'json'
-                      ? <CustomBlock type='form' data={item.customContent} />
-                      : <Markdown content={content} />
-                  )
-                )}
-            </div>
-            <div className='absolute top-[-14px] right-[-14px] flex flex-row justify-end gap-1'>
-              {!feedbackDisabled && !item.feedbackDisabled && renderItemOperation()}
-              {/* User feedback must be displayed */}
-              {!feedbackDisabled && renderFeedbackRating(feedback?.rating)}
-            </div>
+              )}
+          </div>
+          <div className='absolute top-[-14px] right-[-14px] flex flex-row justify-end gap-1'>
+            {!feedbackDisabled && !item.feedbackDisabled && renderItemOperation()}
+            {/* User feedback must be displayed */}
+            {!feedbackDisabled && renderFeedbackRating(feedback?.rating)}
           </div>
         </div>
       </div>
