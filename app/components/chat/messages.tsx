@@ -32,6 +32,8 @@ const Messages: FC<MessagesProps> = () => {
   const { notify } = Toast
   const isUseInputMethod = useRef(false)
 
+  const container = useRef<HTMLDivElement>(null)
+
   const [query, setQuery] = React.useState('')
   const handleContentChange = (e: any) => {
     const value = e.target.value
@@ -50,50 +52,22 @@ const Messages: FC<MessagesProps> = () => {
     return true
   }
 
-  const handleSend = () => {
-    // if (!valid() || (checkCanSend && !checkCanSend()))
-    //   return
-    // onSend(query, files.filter(file => file.progress !== -1).map(fileItem => ({
-    //   type: 'image',
-    //   transfer_method: fileItem.type,
-    //   url: fileItem.url,
-    //   upload_file_id: fileItem.fileId,
-    // })))
-    // if (!files.find(item => item.type === TransferMethod.local_file && !item.fileId)) {
-    //   if (files.length)
-    //     onClear()
-    //   if (!isResponding)
-    //     setQuery('')
-    // }
-  }
-
-  const handleKeyUp = (e: any) => {
-    if (e.code === 'Enter') {
-      e.preventDefault()
-      // prevent send message when using input method enter
-      if (!e.shiftKey && !isUseInputMethod.current)
-        handleSend()
-    }
-  }
-
-  const handleKeyDown = (e: any) => {
-    isUseInputMethod.current = e.nativeEvent.isComposing
-    if (e.code === 'Enter' && !e.shiftKey) {
-      setQuery(query.replace(/\n$/, ''))
-      e.preventDefault()
-    }
-  }
-
   useEffect(() => {
     if (session.currentConversation?.id !== '-1') {
       dispatch(fetchMessages(session.currentConversation.id))
     }
   }, [session.currentConversation])
 
+  useEffect(() => {
+    if (container.current) {
+      container.current.scrollTop = container.current.scrollHeight
+    }
+  }, [messages])
+
 
   return (
-    <div className='chat h-full'>
-      <div className="h-full py-2">
+    <div className='chat h-full relative inset-0'>
+      <div className="h-full pt-2 pb-24 overflow-y-auto" ref={container}>
         {messages.map((item) => {
           if (item.type === 'answer') {
             const isLast = item.id === messages[messages.length - 1].id
@@ -111,7 +85,7 @@ const Messages: FC<MessagesProps> = () => {
               id={item.id}
               content={item.content}
               useCurrentUserAvatar={true} //{useCurrentUserAvatar}
-              imgSrcs={(item.message_files && item.message_files?.length > 0) ? item.message_files.map(item => item.url) : []}
+              imgSrcs={(item.files && item.files?.length > 0) ? item.files.map(item => item.url) : []}
             />
           )
         })}
