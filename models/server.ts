@@ -1,4 +1,4 @@
-import { PromptVariable } from './app'
+import { Variable } from './app'
 
 export type FileUpload = {
   enabled: boolean
@@ -20,7 +20,7 @@ export interface ServerConfig {
   openingStatement: string
   upload: FileUpload
   systemParameters: SystemParameters
-  variables: PromptVariable[]
+  variables: Variable[]
   annotationReply?: AnnotationReply
   suggests?: Suggest[]
 }

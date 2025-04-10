@@ -26,7 +26,6 @@ export interface SessionState {
   currentConversation: string,
   chatStarted: boolean,
   responding: boolean,
-  inputs: Record<string, string>, // 输入变量
 }
 
 const getInitialState: () => SessionState = () => ({
