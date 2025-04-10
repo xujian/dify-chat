@@ -1,3 +1,4 @@
+'use client'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 /**
@@ -6,7 +7,12 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
  */
 const localStorageKey = 'conversation'
 
-const hasLocalStorage = () => !!globalThis.localStorage.getItem(localStorageKey)
+const hasLocalStorage = () => {
+  if (typeof window === 'undefined') {
+    return false
+  }
+  return !!localStorage.getItem(localStorageKey)
+}
 
 const getCurrentConversationFromLocalStorage = () => {
   try {
