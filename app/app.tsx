@@ -26,11 +26,8 @@ export type AppProps = {
 
 const App: FC<AppProps> = () => {
   const dispatch = useDispatch<AppDispatch>()
-  const { value: conversations, loading: conversationsLoading, error: conversationsError } =
-    useSelector((state: RootState) => state.conversations),
-    session = useSelector((state: RootState) => state.session)
+  const session = useSelector((state: RootState) => state.session)
   const serverConfig = useSelector((state: RootState) => state.server)
-  const { t } = useTranslation()
   const media = useBreakpoints()
   const isMobile = media === MediaType.mobile
   const hasSetAppConfig = APP_ID && API_KEY
@@ -39,27 +36,12 @@ const App: FC<AppProps> = () => {
   const [isUnknownReason, setIsUnknownReason] = useState<boolean>(false)
   const [promptConfig, setPromptConfig] = useState<PromptConfig | null>(null)
   const [inited, setInited] = useState<boolean>(false)
-  // in mobile, show sidebar by click button
   const [isShowSidebar, { setTrue: showSidebar, setFalse: hideSidebar }] = useBoolean(false)
-  const [mediaConfig, setMediaConfig] = useState<MediaSettings | undefined>({
-    enabled: false,
-    number_limits: 2,
-    detail: Resolution.low,
-    transfer_methods: ['local'],
-  })
 
   useEffect(() => {
     if (APP_INFO?.title)
-      document.title = `${APP_INFO.title} - Powered by Dify`
+      document.title = `${APP_INFO.title}`
   }, [APP_INFO?.title])
-
-  // onData change thought (the produce obj). https://github.com/immerjs/immer/issues/576
-  useEffect(() => {
-    setAutoFreeze(false)
-    return () => {
-      setAutoFreeze(true)
-    }
-  }, [])
 
   useEffect(() => {
     console.log('init===serverConfig 1', serverConfig)
@@ -71,7 +53,7 @@ const App: FC<AppProps> = () => {
       if (!inited) {
         dispatch(fetchServerConfig())
       }
-      setLocaleOnClient(APP_INFO.default_language, true)
+      setLocaleOnClient(APP_INFO.defaultLanguage, true)
       setInited(true)
     }
     catch (e: any) {

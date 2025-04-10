@@ -1,6 +1,6 @@
 import type { IOnCompleted, IOnData, IOnError, IOnFile, IOnMessageEnd, IOnMessageReplace, IOnNodeFinished, IOnNodeStarted, IOnThought, IOnWorkflowFinished, IOnWorkflowStarted } from './base'
 import { get, post, ssePost, remove } from './base'
-import type { Media, Feedback } from '@/models'
+import type { Media, Feedback, ServerConfig } from '@/models'
 
 export type SendChatMessageData = {
   conversationId: string
@@ -82,13 +82,33 @@ export const deleteMessage = async (messageId: string) => {
 }
 
 // init value. wait for server update
-export const fetchAppParams = async () => {
+export const fetchAppParams: () => Promise<ServerConfig> = async () => {
   const result: any = await get('parameters')
+  const typeMapping: Record<string, string> = {
+    'text-input': 'text',
+    'select': 'select',
+    'number': 'number'
+  }
   return {
     systemParameters: result.system_parameters,
-    fileUpload: result.file_upload,
-    inputs: result.user_input_form,
+    upload: {
+      enabled: result.file_upload.enable
+    },
     openingStatement: result.opening_statement,
+    suggests: result.suggested_questions,
+    variables: result.user_input_form.map((i: any) => {
+      const t = Object.keys(i)[0],
+        type = typeMapping[t] || 'text'
+      return {
+        label: i[t].label,
+        name: i[t].variable,
+        maxLength: i[t].max_length,
+        options: i[t].options,
+        required: i[t].required,
+        type,
+        default: i[t].default,
+      }
+    })
   }
 }
 

@@ -6,8 +6,8 @@ export const APP_INFO: AppInfo = {
   title: '智慧客户专员',
   description: '',
   copyright: '',
-  privacy_policy: '',
-  default_language: 'zh-Hans',
+  privacyPolicy: '',
+  defaultLanguage: 'zh-Hans',
 }
 
 export const isShowPrompt = false

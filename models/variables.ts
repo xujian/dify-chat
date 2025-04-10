@@ -1,18 +1,3 @@
-export type PromptVariable = {
-  key: string
-  name: string
-  type: string
-  default?: string | number
-  options?: string[]
-  max_length?: number
-  required: boolean
-}
-
-export type PromptConfig = {
-  prompt_template: string
-  prompt_variables: PromptVariable[]
-}
-
 export type TextTypeFormItem = {
   label: string
   variable: string

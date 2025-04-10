@@ -20,7 +20,7 @@ const Welcome: FC = () => {
     session = useSelector((state: RootState) => state.session)
   const dispatch = useDispatch()
   const { t } = useTranslation()
-  const hasVar = Object.keys(serverConfig.promptVariables).length > 0
+  const hasVar = serverConfig.variables.length > 0
   const [isFold, setIsFold] = useState<boolean>(true)
   const [inputs, setInputs] = useState<Record<string, any>>((() => {
     // if (session.inputs)
@@ -125,7 +125,7 @@ const Welcome: FC = () => {
 
   const canChat = () => {
     const inputLens = Object.values(inputs).length
-    const promptVariablesLens = Object.keys(serverConfig.promptVariables).length
+    const promptVariablesLens = serverConfig.variables.length
     const emptyInput = inputLens < promptVariablesLens || Object.values(inputs).filter(v => v === '').length > 0
     if (emptyInput) {
       logError(t('app.errorMessage.valueOfVarRequired'))
@@ -316,7 +316,8 @@ const Welcome: FC = () => {
         <Button className='mt-3 mobile:ml-0 tablet:ml-[128px]'
           onClick={handleChat}>开始对话</Button>
       </div>
-    </div >
+      <pre>{JSON.stringify(serverConfig, null, 2)}</pre>
+    </div>
   )
 }
 
