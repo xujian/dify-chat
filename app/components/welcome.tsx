@@ -2,12 +2,12 @@
 import type { FC } from 'react'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import TemplateVarPanel, { PanelTitle, VarOpBtnGroup } from '../value-panel'
-import { EditBtn, PromptTemplate } from './massive-component'
+import TemplateVarPanel, { PanelTitle, VarOpBtnGroup } from './value-panel'
+import { PromptTemplate } from './prompt-template'
 import Toast from '@/app/components/base/toast'
 import { useSelector, useDispatch } from 'react-redux'
 import type { RootState } from '@/app/store'
-import { Button } from '../ui'
+import { Button } from './ui'
 import { startChat } from '@/app/store/session'
 import { addConversation } from '@/app/store/conversations'
 import { greet } from '@/app/store/messages'
@@ -252,7 +252,7 @@ const Welcome: FC = () => {
             {isFold && (
               <div className='flex items-center justify-between mt-3 border-t border-indigo-100 pt-4 text-xs text-indigo-600'>
                 <span className='text-gray-700'>{t('app.chat.configStatusDes')}</span>
-                <EditBtn onClick={() => setIsFold(false)} />
+                <Button onClick={() => setIsFold(false)}>编辑</Button>
               </div>
             )}
           </>
