@@ -3,7 +3,6 @@ import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/tool
 import { deleteMessage, getMessages } from '@/service'
 import Toast from '@/app/components/base/toast'
 import { toJson } from '@/lib/utils'
-
 export interface MessagesState {
   value: Message[]
   loading: boolean
@@ -20,6 +19,14 @@ export const messagesSlice = createSlice({
   name: 'messages',
   initialState,
   reducers: {
+    greet: (state, action: PayloadAction<string>) => {
+      state.value.push({
+        id: '-1',
+        content: action.payload,
+        type: 'answer',
+        conversationId: '-1',
+      })
+    },
     addMessage: (state, action: PayloadAction<Message>) => {
       const message = action.payload
       state.value.push({
@@ -67,7 +74,7 @@ export const messagesSlice = createSlice({
   },
 })
 
-export const { addMessage, updateMessage, clearMessages, clearError } = messagesSlice.actions
+export const { addMessage, updateMessage, clearMessages, clearError, greet } = messagesSlice.actions
 
 export const fetchMessages = createAsyncThunk(
   'messages/fetchMessages',

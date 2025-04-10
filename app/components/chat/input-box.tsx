@@ -15,7 +15,7 @@ import { setCurrentConversation, setResponding } from '@/app/store/session'
 import { addMessage, updateMessage } from '@/app/store/messages'
 import { Annotation, Message, Media } from '@/models'
 import { WorkflowRunningStatus } from '@/models/workflow'
-
+import { updateConversation } from '@/app/store/conversations'
 interface InputBoxProps { }
 
 const InputBox: FC<InputBoxProps> = () => {
@@ -55,7 +55,7 @@ const InputBox: FC<InputBoxProps> = () => {
     }
     const data: SendChatMessageData = {
       query: message,
-      conversationId: session.currentConversation.id,
+      conversationId: session.currentConversation,
     }
 
     const t = Date.now()
@@ -63,7 +63,7 @@ const InputBox: FC<InputBoxProps> = () => {
     const question: Message = {
       id: questionId,
       content: message,
-      conversationId: session.currentConversation.id,
+      conversationId: session.currentConversation,
       createdAt: t,
       type: 'question',
       files: files,
@@ -75,7 +75,7 @@ const InputBox: FC<InputBoxProps> = () => {
       id: answerId,
       content: '',
       type: 'answer',
-      conversationId: session.currentConversation.id,
+      conversationId: session.currentConversation,
       createdAt: t,
       files: files,
       workflowRunId: '',
@@ -128,9 +128,9 @@ const InputBox: FC<InputBoxProps> = () => {
           return
         dispatch(setResponding(false))
         // refresh conversation name
-        const conversation = await generationConversationName(session.currentConversation.id)
-        dispatch(setCurrentConversation({
-          ...session.currentConversation,
+        const conversation = await generationConversationName(session.currentConversation)
+        dispatch(updateConversation({
+          id: session.currentConversation,
           name: conversation.name
         }))
       },

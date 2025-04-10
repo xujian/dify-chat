@@ -52,8 +52,8 @@ const Messages: FC<MessagesProps> = () => {
   }
 
   useEffect(() => {
-    if (session.currentConversation?.id !== '-1') {
-      dispatch(fetchMessages(session.currentConversation.id))
+    if (session.currentConversation !== '-1') {
+      dispatch(fetchMessages(session.currentConversation))
     }
   }, [session.currentConversation])
 

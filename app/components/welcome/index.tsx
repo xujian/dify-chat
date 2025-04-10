@@ -10,7 +10,7 @@ import type { RootState } from '@/app/store'
 import { Button } from '../ui'
 import { startChat } from '@/app/store/session'
 import { addConversation } from '@/app/store/conversations'
-import { addMessage } from '@/app/store/messages'
+import { greet } from '@/app/store/messages'
 // regex to match the {{}} and replace it with a span
 const regex = /\{\{([^}]+)\}\}/g
 
@@ -138,16 +138,12 @@ const Welcome: FC = () => {
     if (!canChat())
       return
     dispatch(addConversation({
-      id: 'new',
+      id: '-1',
       name: '新对话',
       introduction: '',
       inputs: {},
     }))
-    dispatch(addMessage({
-      id: '-1',
-      content: serverConfig.openingStatement,
-      type: 'answer',
-    }))
+    dispatch(greet(serverConfig.openingStatement))
     dispatch(startChat())
   }
 

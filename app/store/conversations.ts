@@ -22,12 +22,15 @@ export const conversationsSlice = createSlice({
   initialState,
   reducers: {
     newConversation: (state) => {
-      state.value.unshift({
+      // create a new conversation
+      // and startChat
+      const newConversation = {
         id: '-1',
-        name: 'New Conversation',
+        name: '新对话',
         introduction: '',
         inputs: {},
-      })
+      }
+      state.value.unshift(newConversation)
     },
     addConversation: (state, action: PayloadAction<Conversation>) => {
       // Redux Toolkit allows us to write "mutating" logic in reducers. It
@@ -35,6 +38,15 @@ export const conversationsSlice = createSlice({
       // which detects changes to a "draft state" and produces a brand new
       // immutable state based off those changes
       state.value.unshift(action.payload)
+    },
+    updateConversation: (state, action: PayloadAction<Conversation>) => {
+      const index = state.value.findIndex(item => item.id === action.payload.id)
+      if (index !== -1) {
+        state.value[index] = {
+          ...state.value[index],
+          ...action.payload
+        }
+      }
     },
     clearError: (state) => {
       state.error = null
@@ -63,7 +75,7 @@ export const conversationsSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { addConversation, clearError, newConversation } = conversationsSlice.actions
+export const { addConversation, clearError, newConversation, updateConversation } = conversationsSlice.actions
 
 export const fetchConversations = createAsyncThunk(
   'conversations/fetchConversations',

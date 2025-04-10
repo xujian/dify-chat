@@ -1,6 +1,9 @@
-import { createSlice } from '@reduxjs/toolkit'
-import { Conversation } from '@/models'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
+/**
+ * store the current conversation id to LocalStorage
+ * just save the ID, not the whole conversation
+ */
 const localStorageKey = 'conversation'
 
 const hasLocalStorage = () => !!globalThis.localStorage.getItem(localStorageKey)
@@ -20,7 +23,7 @@ const getCurrentConversationFromLocalStorage = () => {
 }
 
 export interface SessionState {
-  currentConversation: Conversation,
+  currentConversation: string,
   chatStarted: boolean,
   responding: boolean,
   inputs: Record<string, string>, // 输入变量
@@ -37,16 +40,21 @@ export const sessionSlice = createSlice({
   name: 'session',
   initialState: getInitialState(),
   reducers: {
-    setCurrentConversation: (state, action) => {
+    setCurrentConversation: (state, action: PayloadAction<string>) => {
       state.currentConversation = action.payload
       globalThis.localStorage.setItem(localStorageKey, action.payload)
+      // enters a conversation just created (id === '-1')
+      // display welcome and input
+      if (action.payload === '-1') {
+        state.chatStarted = false
+      }
     },
     startChat: (state) => {
       /**
        * 1. local storage 写入 conversation
        * 2. create a new conversation
        */
-      globalThis.localStorage.setItem(localStorageKey, JSON.stringify(state.currentConversation))
+      globalThis.localStorage.setItem(localStorageKey, state.currentConversation)
       state.chatStarted = true
     },
     setResponding: (state, action) => {

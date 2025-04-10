@@ -21,30 +21,41 @@ import {
   SidebarRail,
 } from '@/app/components/ui/sidebar'
 import { useEffect } from 'react'
-import { deleteConversation, fetchConversations, newConversation } from '@/app/store/conversations'
-import { Conversation } from '@/models'
 import { MessageSquare, PlusIcon, MoreHorizontalIcon } from 'lucide-react'
+import { addConversation, deleteConversation, fetchConversations } from '@/app/store/conversations'
+import { Conversation } from '@/models'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui'
-import { setCurrentConversation } from '@/app/store/session'
+import { setCurrentConversation, startChat } from '@/app/store/session'
+import { greet } from '@/app/store/messages'
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+
+  const serverConfig = useSelector((state: RootState) => state.server)
   const dispatch = useDispatch<AppDispatch>()
   const { value: conversations, loading, error, fufilled } = useSelector((state: RootState) => state.conversations)
   const session = useSelector((state: RootState) => state.session)
   const { t } = useTranslation()
 
   const handleConversationIdChange = (conversation: Conversation) => {
-    dispatch(setCurrentConversation(conversation))
+    dispatch(setCurrentConversation(conversation.id))
   }
 
   const handleDeleteConversation = async (conversationId: string) => {
     await dispatch(deleteConversation(conversationId))
-    dispatch(setCurrentConversation(conversations[0]))
+    dispatch(setCurrentConversation(''))
   }
 
   const createConversation = () => {
-    dispatch(newConversation())
-    dispatch(setCurrentConversation(conversations[conversations.length - 1]))
+    const conversation = {
+      id: '-1',
+      name: '新对话',
+      introduction: '',
+      inputs: {}
+    }
+    dispatch(addConversation(conversation))
+    dispatch(greet(serverConfig.openingStatement))
+    dispatch(setCurrentConversation('-1'))
+    dispatch(startChat())
   }
 
   // init
@@ -76,7 +87,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               {conversations.map((c: Conversation) => (
                 <SidebarMenuItem key={c.id} onClick={() => handleConversationIdChange(c)}>
                   <SidebarMenuButton asChild
-                    isActive={c.id === session.currentConversation?.id}>
+                    isActive={c.id === session.currentConversation}>
                     <a href={`#${c.id}`}>
                       <MessageSquare /> {c.name}
                     </a>
