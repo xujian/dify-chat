@@ -6,8 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { setAutoFreeze } from 'immer'
 import { useBoolean } from 'ahooks'
 import Header from '@/app/components/header'
-import type { PromptConfig, VisionSettings } from '@/types/app'
-import { Resolution, TransferMethod } from '@/types/app'
+import { Resolution, TransferMethod, PromptConfig, PromptVariable, MediaSettings } from '@/models'
 import { Messages } from '@/app/components/chat'
 import { setLocaleOnClient } from '@/i18n/client'
 import useBreakpoints, { MediaType } from '@/hooks/use-breakpoints'
@@ -42,11 +41,11 @@ const App: FC<AppProps> = () => {
   const [inited, setInited] = useState<boolean>(false)
   // in mobile, show sidebar by click button
   const [isShowSidebar, { setTrue: showSidebar, setFalse: hideSidebar }] = useBoolean(false)
-  const [visionConfig, setVisionConfig] = useState<VisionSettings | undefined>({
+  const [mediaConfig, setMediaConfig] = useState<MediaSettings | undefined>({
     enabled: false,
     number_limits: 2,
     detail: Resolution.low,
-    transfer_methods: [TransferMethod.local_file],
+    transfer_methods: ['local'],
   })
 
   useEffect(() => {

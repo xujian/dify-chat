@@ -1,14 +1,15 @@
 'use client'
-
+import { Media } from '@/models'
 import { upload } from '@/service/base'
 
 type ImageUploadParams = {
-  file: File
+  file: Media
   onProgressCallback: (progress: number) => void
   onSuccessCallback: (res: { id: string }) => void
   onErrorCallback: () => void
 }
 type ImageUpload = (v: ImageUploadParams) => void
+
 export const imageUpload: ImageUpload = ({
   file,
   onProgressCallback,

@@ -13,9 +13,8 @@ import { AppDispatch, RootState } from '@/app/store'
 import { generationConversationName, sendChatMessage, SendChatMessageData } from '@/service'
 import { setCurrentConversation, setResponding } from '@/app/store/session'
 import { addMessage, updateMessage } from '@/app/store/messages'
-import { Annotation, Message } from '@/models'
+import { Annotation, Message, Media } from '@/models'
 import { WorkflowRunningStatus } from '@/models/workflow'
-import { File } from '@/models/chat'
 
 interface InputBoxProps { }
 
@@ -49,7 +48,7 @@ const InputBox: FC<InputBoxProps> = () => {
     setIsTyping(false)
   }
 
-  const send = async (message: string, files?: File[]) => {
+  const send = async (message: string, files?: Media[]) => {
     console.log('send', message, files)
     if (session.responding) {
       return

@@ -3,7 +3,7 @@ import type { FC } from 'react'
 import Editor, { loader } from '@monaco-editor/react'
 import React, { useRef } from 'react'
 import Base from '../editor/base'
-import { CodeLanguage } from '@/types/app'
+import { CodeLanguage } from '@/models'
 import './style.css'
 
 // load file from local instead of cdn https://github.com/suren-atoyan/monaco-react/issues/482

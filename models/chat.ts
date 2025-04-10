@@ -1,5 +1,5 @@
-import { WorkflowRunningStatus } from '@/types/app'
 import { WorkflowProcess } from './workflow'
+import { Media } from './media'
 
 export type Citation = {
   id: string
@@ -52,18 +52,7 @@ export type Thought = {
   messageId: string
   observation: string
   position: number
-  files?: File[]
-}
-
-export type TransferMethod = 'all' | 'local_file' | 'remote_url'
-
-export type File = {
-  id?: string
-  type: string
-  transferMethod: TransferMethod
-  url: string
-  uploadId: string
-  belongsTo?: string
+  files?: Media[]
 }
 
 /**
@@ -103,7 +92,28 @@ export type Message = {
   suggestedQuestions?: string[]
   log?: { role: string; text: string }[]
   thoughts?: Thought[]
-  files?: File[]
+  files?: Media[]
   workflowProcess?: WorkflowProcess
   workflowRunId?: string
+}
+
+export enum CodeLanguage {
+  python3 = 'python3',
+  javascript = 'javascript',
+  json = 'json',
+}
+
+export enum BlockEnum {
+  Start = 'start',
+  End = 'end',
+  Answer = 'answer',
+  LLM = 'llm',
+  KnowledgeRetrieval = 'knowledge-retrieval',
+  QuestionClassifier = 'question-classifier',
+  IfElse = 'if-else',
+  Code = 'code',
+  TemplateTransform = 'template-transform',
+  HttpRequest = 'http-request',
+  VariableAssigner = 'variable-assigner',
+  Tool = 'tool',
 }

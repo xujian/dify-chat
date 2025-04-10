@@ -6,8 +6,7 @@ import XClose from '@/app/components/base/icons/line/x-close'
 import RefreshCcw01 from '@/app/components/base/icons/line/refresh-ccw-01'
 import AlertTriangle from '@/app/components/base/icons/solid/alert-triangle'
 import TooltipPlus from '@/app/components/base/tooltip-plus'
-import type { ImageFile } from '@/types/app'
-import { TransferMethod } from '@/types/app'
+import type { ImageFile } from '@/models'
 import ImagePreview from '@/app/components/base/image-uploader/image-preview'
 
 type ImageListProps = {
@@ -31,11 +30,11 @@ const ImageList: FC<ImageListProps> = ({
   const [imagePreviewUrl, setImagePreviewUrl] = useState('')
 
   const handleImageLinkLoadSuccess = (item: ImageFile) => {
-    if (item.type === TransferMethod.remote_url && onImageLinkLoadSuccess && item.progress !== -1)
+    if (item.type === 'remote' && onImageLinkLoadSuccess && item.progress !== -1)
       onImageLinkLoadSuccess(item._id)
   }
   const handleImageLinkLoadError = (item: ImageFile) => {
-    if (item.type === TransferMethod.remote_url && onImageLinkLoadError)
+    if (item.type === 'remote' && onImageLinkLoadError)
       onImageLinkLoadError(item._id)
   }
 
@@ -48,7 +47,7 @@ const ImageList: FC<ImageListProps> = ({
             className='group relative mr-1 border-[0.5px] border-black/5 rounded-lg'
           >
             {
-              item.type === TransferMethod.local_file && item.progress !== 100 && (
+              item.type === 'local' && item.progress !== 100 && (
                 <>
                   <div
                     className='absolute inset-0 flex items-center justify-center z-1 bg-black/30'
@@ -69,7 +68,7 @@ const ImageList: FC<ImageListProps> = ({
               )
             }
             {
-              item.type === TransferMethod.remote_url && item.progress !== 100 && (
+              item.type === 'remote' && item.progress !== 100 && (
                 <div className={`
                   absolute inset-0 flex items-center justify-center rounded-lg z-1 border
                   ${item.progress === -1 ? 'bg-[#FEF0C7] border-[#DC6803]' : 'bg-black/[0.16] border-transparent'}
@@ -94,7 +93,7 @@ const ImageList: FC<ImageListProps> = ({
               alt=''
               onLoad={() => handleImageLinkLoadSuccess(item)}
               onError={() => handleImageLinkLoadError(item)}
-              src={item.type === TransferMethod.remote_url ? item.url : item.base64Url}
+              src={item.type === 'remote' ? item.url : item.base64Url}
               onClick={() => item.progress === 100 && setImagePreviewUrl((item.type === TransferMethod.remote_url ? item.url : item.base64Url) as string)}
             />
             {

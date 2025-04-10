@@ -2,7 +2,7 @@ import { useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { imageUpload } from './utils'
 import Toast from '@/app/components/base/toast'
-import type { ImageFile } from '@/types/app'
+import type { ImageFile } from '@/models'
 
 export const useImageFiles = () => {
   const { t } = useTranslation()

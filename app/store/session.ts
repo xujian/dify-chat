@@ -1,5 +1,5 @@
-import { ConversationItem } from '@/types/app'
 import { createSlice } from '@reduxjs/toolkit'
+import { Conversation } from '@/models'
 
 const localStorageKey = 'conversation'
 
@@ -20,7 +20,7 @@ const getCurrentConversationFromLocalStorage = () => {
 }
 
 export interface SessionState {
-  currentConversation: ConversationItem,
+  currentConversation: Conversation,
   chatStarted: boolean,
   responding: boolean,
   inputs: Record<string, string>, // 输入变量

@@ -10,7 +10,7 @@ import Loading02 from '@/app/components/base/icons/line/loading-02'
 import ChevronDown from '@/app/components/base/icons/line/arrows/chevron-down'
 import CheckCircle from '@/app/components/base/icons/solid/general/check-circle'
 import DataSetIcon from '@/app/components/base/icons/public/data-set'
-import type { Emoji } from '@/types/tools'
+import type { Emoji } from '@/models/tools'
 import AppIcon from '@/app/components/base/app-icon'
 
 type Props = {

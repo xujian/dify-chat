@@ -4,14 +4,14 @@ import { useTranslation } from 'react-i18next'
 import Uploader from './uploader'
 import ImageLinkInput from './image-link-input'
 import ImagePlus from '@/app/components/base/icons/line/image-plus'
-import { Resolution, TransferMethod } from '@/types/app'
+import { Resolution, TransferMethod } from '@/models'
 import {
   PortalToFollowElem,
   PortalToFollowElemContent,
   PortalToFollowElemTrigger,
 } from '@/app/components/base/portal-to-follow-elem'
 import Upload03 from '@/app/components/base/icons/line/upload-03'
-import type { ImageFile, VisionSettings } from '@/types/app'
+import type { ImageFile, MediaSettings } from '@/models'
 
 type UploadOnlyFromLocalProps = {
   onUpload: (imageFile: ImageFile) => void
@@ -40,7 +40,7 @@ const UploadOnlyFromLocal: FC<UploadOnlyFromLocalProps> = ({
 }
 
 type UploaderButtonProps = {
-  methods: VisionSettings['transfer_methods']
+  methods: MediaSettings['transferMethods']
   onUpload: (imageFile: ImageFile) => void
   disabled?: boolean
   limit?: number
@@ -54,7 +54,7 @@ const UploaderButton: FC<UploaderButtonProps> = ({
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
 
-  const hasUploadFromLocal = methods.find(method => method === TransferMethod.local_file)
+  const hasUploadFromLocal = methods.find(method => method === 'local')
 
   const handleUpload = (imageFile: ImageFile) => {
     setOpen(false)
@@ -116,17 +116,17 @@ const UploaderButton: FC<UploaderButtonProps> = ({
 }
 
 type ChatImageUploaderProps = {
-  settings?: VisionSettings
+  settings?: MediaSettings
   onUpload: (imageFile: ImageFile) => void
   disabled?: boolean
 }
 
-const defaultSettings: VisionSettings = {
+const defaultSettings: MediaSettings = {
   enabled: true,
-  number_limits: 10,
+  limits: 10,
   detail: Resolution.high,
-  transfer_methods: [TransferMethod.all],
-  image_file_size_limit: 10
+  transferMethods: ['all'],
+  imageFileSizeLimit: 10
 }
 
 const ChatImageUploader: FC<ChatImageUploaderProps> = ({
@@ -134,25 +134,25 @@ const ChatImageUploader: FC<ChatImageUploaderProps> = ({
   onUpload,
   disabled,
 }) => {
-  const onlyUploadLocal = settings.transfer_methods.length === 1
-    && settings.transfer_methods[0] === TransferMethod.local_file
+  const onlyUploadLocal = settings.transferMethods.length === 1
+    && settings.transferMethods[0] === 'local'
 
   if (onlyUploadLocal) {
     return (
       <UploadOnlyFromLocal
         onUpload={onUpload}
         disabled={disabled}
-        limit={+settings.image_file_size_limit!}
+        limit={+settings.imageFileSizeLimit!}
       />
     )
   }
 
   return (
     <UploaderButton
-      methods={settings.transfer_methods}
+      methods={settings.transferMethods}
       onUpload={onUpload}
       disabled={disabled}
-      limit={+settings.image_file_size_limit!}
+      limit={+settings.imageFileSizeLimit!}
     />
   )
 }

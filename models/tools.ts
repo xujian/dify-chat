@@ -1,4 +1,4 @@
-import type { TypeWithI18N } from './base'
+import type { TypeWithI18N } from '../types/base'
 export enum LOC {
   tools = 'tools',
   app = 'app',

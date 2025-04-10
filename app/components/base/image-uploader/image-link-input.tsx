@@ -2,8 +2,7 @@ import type { FC } from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/app/components/ui'
-import type { ImageFile } from '@/types/app'
-import { TransferMethod } from '@/types/app'
+import type { ImageFile } from '@/models'
 
 type ImageLinkInputProps = {
   onUpload: (imageFile: ImageFile) => void
@@ -17,7 +16,7 @@ const ImageLinkInput: FC<ImageLinkInputProps> = ({
 
   const handleClick = () => {
     const imageFile = {
-      type: TransferMethod.remote_url,
+      type: 'local',
       _id: `${Date.now()}`,
       fileId: '',
       progress: regex.test(imageLink) ? 0 : -1,

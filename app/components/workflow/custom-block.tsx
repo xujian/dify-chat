@@ -1,5 +1,5 @@
 import React from 'react'
-import { CodeLanguage } from '@/types/app'
+import { CodeLanguage } from '@/models'
 import CodeEditor from './code-editor'
 import FormBlock from './custom/form-block'
 

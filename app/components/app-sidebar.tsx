@@ -44,6 +44,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   const createConversation = () => {
     dispatch(newConversation())
+    dispatch(setCurrentConversation(conversations[conversations.length - 1]))
   }
 
   // init

@@ -1,6 +1,6 @@
 import type { FC } from 'react'
 import { memo } from 'react'
-import { BlockEnum } from '@/types/app'
+import { BlockEnum } from '@/models'
 import {
   Answer,
   Code,

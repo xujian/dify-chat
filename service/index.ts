@@ -1,11 +1,11 @@
 import type { IOnCompleted, IOnData, IOnError, IOnFile, IOnMessageEnd, IOnMessageReplace, IOnNodeFinished, IOnNodeStarted, IOnThought, IOnWorkflowFinished, IOnWorkflowStarted } from './base'
 import { get, post, ssePost, remove } from './base'
-import type { Feedbacktype } from '@/types/app'
+import type { Media, Feedback } from '@/models'
 
 export type SendChatMessageData = {
   conversationId: string
   query: string
-  files?: File[]
+  files?: Media[]
   inputs?: Record<string, any>
 }
 
@@ -92,7 +92,7 @@ export const fetchAppParams = async () => {
   }
 }
 
-export const updateFeedback = async ({ url, body }: { url: string; body: Feedbacktype }) => {
+export const updateFeedback = async ({ url, body }: { url: string; body: Feedback }) => {
   return post(url, { body })
 }
 

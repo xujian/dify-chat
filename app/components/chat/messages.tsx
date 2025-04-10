@@ -5,13 +5,12 @@ import cn from 'classnames'
 import { useTranslation } from 'react-i18next'
 import Answer from './answer'
 import Question from './question'
-import { TransferMethod } from '@/types/app'
 import Toast from '@/app/components/base/toast'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '@/app/store'
 import { fetchMessages } from '@/app/store/messages'
 import InputBox from './input-box'
-import type { Message } from '@/models'
+import type { Message, TransferMethod } from '@/models'
 export type MessagesProps = {
 }
 
@@ -25,7 +24,7 @@ const Messages: FC<MessagesProps> = () => {
     enabled: true,
     number_limits: 2,
     detail: 'low',
-    transfer_methods: [TransferMethod.local_file],
+    transfer_methods: ['local'],
   }
 
   const { t } = useTranslation()

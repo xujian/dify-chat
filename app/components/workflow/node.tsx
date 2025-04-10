@@ -7,7 +7,7 @@ import AlertCircle from '@/app/components/base/icons/line/alert-circle'
 import AlertTriangle from '@/app/components/base/icons/line/alert-triangle'
 import Loading02 from '@/app/components/base/icons/line/loading-02'
 import CheckCircle from '@/app/components/base/icons/line/check-circle'
-import type { NodeTracing } from '@/types/app'
+import type { NodeTracing } from '@/models'
 
 type Props = {
   nodeInfo: NodeTracing

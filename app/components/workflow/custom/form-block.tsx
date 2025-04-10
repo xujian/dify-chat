@@ -1,9 +1,9 @@
 import React from 'react'
-import { CodeLanguage } from '@/types/app'
+import { CodeLanguage } from '@/models'
 import CodeEditor from '../code-editor'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { z } from "zod"
+import { z } from 'zod'
 
 import { Button } from "@/app/components/ui/button"
 import {

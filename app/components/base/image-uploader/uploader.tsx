@@ -4,8 +4,7 @@ import type { ChangeEvent, FC } from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { imageUpload } from './utils'
-import type { ImageFile } from '@/types/app'
-import { TransferMethod } from '@/types/app'
+import type { ImageFile } from '@/models'
 import Toast from '@/app/components/base/toast'
 
 type UploaderProps = {
@@ -41,7 +40,7 @@ const Uploader: FC<UploaderProps> = ({
       'load',
       () => {
         const imageFile = {
-          type: TransferMethod.local_file,
+          type: 'local',
           _id: `${Date.now()}`,
           fileId: '',
           file,

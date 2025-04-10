@@ -7,7 +7,7 @@ import {
   PencilIcon,
 } from '@heroicons/react/24/solid'
 import s from './style.module.css'
-import type { AppInfo } from '@/types/app'
+import type { AppInfo } from '@/models'
 import { Button } from '@/app/components/ui'
 
 export const AppInfoComp: FC<{ siteInfo: AppInfo }> = ({ siteInfo }) => {

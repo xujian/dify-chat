@@ -5,12 +5,11 @@ import {
 } from 'react'
 import cn from 'classnames'
 import NodePanel from './node'
-import type { WorkflowProcess } from '@/types/app'
+import type { WorkflowProcess, WorkflowRunningStatus } from '@/models'
 import CheckCircle from '@/app/components/base/icons/solid/general/check-circle'
 import AlertCircle from '@/app/components/base/icons/solid/alert-circle'
 import Loading02 from '@/app/components/base/icons/line/loading-02'
 import ChevronRight from '@/app/components/base/icons/line/chevron-right'
-import { WorkflowRunningStatus } from '@/types/app'
 
 type WorkflowProcessProps = {
   data: WorkflowProcess

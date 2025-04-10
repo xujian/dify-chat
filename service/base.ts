@@ -1,7 +1,6 @@
 import { API_PREFIX } from '@/config'
 import Toast from '@/app/components/base/toast'
 import type { AnnotationReply, MessageEnd, MessageReplace, ThoughtItem } from '@/app/components/chat/type'
-import type { VisionFile } from '@/types/app'
 
 const TIME_OUT = 100000
 
@@ -207,7 +206,7 @@ const handleStream = (
               onThought?.(bufferObj as ThoughtItem)
             }
             else if (bufferObj.event === 'message_file') {
-              onFile?.(bufferObj as VisionFile)
+              onFile?.(bufferObj as File)
             }
             else if (bufferObj.event === 'message_end') {
               onMessageEnd?.(bufferObj as MessageEnd)

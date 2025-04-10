@@ -5,15 +5,35 @@ export enum WorkflowRunningStatus {
 }
 
 export type NodeTracing = {
-  node_id: string
-  node_type: string
-  node_label: string
-  node_message: string
+  nodeId: string
+  nodeType: string
+  nodeLabel: string
+  nodeMessage: string
   status: WorkflowRunningStatus
   inputs: Record<string, any>
   outputs: Record<string, any>
+  id: string
+  index: number
+  predecessorNodeId: string
+  title: string
+  processData: any
+  error?: string
+  elapsedTime: number
+  executionMetadata: {
+    totalTokens: number
+    totalPrice: number
+    currency: string
+  }
+  createdAt: number
+  createdBy: {
+    id: string
+    name: string
+    email: string
+  }
+  finishedAt: number
+  extras?: any
+  expand?: boolean // for UI
 }
-
 
 
 export type WorkflowProcess = {

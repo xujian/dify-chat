@@ -3,7 +3,7 @@ import type { FC } from 'react'
 import React from 'react'
 import type { ThoughtItem, ToolInfoInThought } from '../type'
 import Tool from './tool'
-import type { Emoji } from '@/types/tools'
+import type { Emoji } from '@/models/tools'
 
 export type IThoughtProps = {
   thought: ThoughtItem
