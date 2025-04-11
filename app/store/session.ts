@@ -1,5 +1,5 @@
 'use client'
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 /**
  * store the current conversation id to LocalStorage
@@ -14,36 +14,39 @@ const hasLocalStorage = () => {
   return !!localStorage.getItem(localStorageKey)
 }
 
-const getCurrentConversationFromLocalStorage = () => {
-  try {
-    const c = globalThis.localStorage.getItem(localStorageKey) || ''
-    return JSON.parse(c)
-  } catch (error) {
-    return {
-      id: '-1',
-      name: '新对话',
-      introduction: '',
-      inputs: {},
-    }
-  }
-}
-
 export interface SessionState {
   currentConversation: string,
   chatStarted: boolean,
   responding: boolean,
 }
 
-const getInitialState: () => SessionState = () => ({
-  currentConversation: getCurrentConversationFromLocalStorage(),
-  chatStarted: hasLocalStorage(),
+const initialState: SessionState = {
+  currentConversation: '',
+  chatStarted: false,
   responding: false,
-  inputs: {},
-})
+}
+
+// move getInitialState thunk
+export const initSession = createAsyncThunk(
+  'session/getInitialState',
+  async () => {
+    let conversationSavedLocalStorage = ''
+    if (typeof window !== 'undefined') {
+      conversationSavedLocalStorage = globalThis.localStorage.getItem(localStorageKey) || ''
+    }
+    return Promise.resolve({
+      currentConversation: conversationSavedLocalStorage,
+      // if conversationSavedLocalStorage has value then start chat
+      // display chat interface immediately
+      chatStarted: conversationSavedLocalStorage !== ''
+        && conversationSavedLocalStorage !== '-1',
+    })
+  }
+)
 
 export const sessionSlice = createSlice({
   name: 'session',
-  initialState: getInitialState(),
+  initialState,
   reducers: {
     setCurrentConversation: (state, action: PayloadAction<string>) => {
       state.currentConversation = action.payload
@@ -65,6 +68,12 @@ export const sessionSlice = createSlice({
     setResponding: (state, action) => {
       state.responding = action.payload
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(initSession.fulfilled, (state, action) => {
+      state.currentConversation = action.payload.currentConversation
+      state.chatStarted = action.payload.chatStarted
+    })
   }
 })
 

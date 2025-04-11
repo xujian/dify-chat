@@ -2,11 +2,8 @@
 'use client'
 import type { FC } from 'react'
 import React, { useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { setAutoFreeze } from 'immer'
 import { useBoolean } from 'ahooks'
 import Header from '@/app/components/header'
-import { Resolution, TransferMethod, PromptConfig, PromptVariable, MediaSettings } from '@/models'
 import { Messages } from '@/app/components/chat'
 import { setLocaleOnClient } from '@/i18n/client'
 import useBreakpoints, { MediaType } from '@/hooks/use-breakpoints'
@@ -19,7 +16,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import type { RootState, AppDispatch } from './store/index'
 import { fetchServerConfig } from './store/server'
 import Welcome from './components/welcome'
-
+import { initSession } from './store/session'
 export type AppProps = {
   params: any
 }
@@ -34,16 +31,11 @@ const App: FC<AppProps> = () => {
 
   const [appUnavailable, setAppUnavailable] = useState<boolean>(false)
   const [isUnknownReason, setIsUnknownReason] = useState<boolean>(false)
-  const [promptConfig, setPromptConfig] = useState<PromptConfig | null>(null)
   const [inited, setInited] = useState<boolean>(false)
   const [isShowSidebar, { setTrue: showSidebar, setFalse: hideSidebar }] = useBoolean(false)
 
   useEffect(() => {
-    if (APP_INFO?.title)
-      document.title = `${APP_INFO.title}`
-  }, [APP_INFO?.title])
-
-  useEffect(() => {
+    dispatch(initSession())
     console.log('init===serverConfig 1', serverConfig)
     if (!hasSetAppConfig) {
       setAppUnavailable(true)
