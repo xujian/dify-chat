@@ -78,8 +78,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         {/* We create a SidebarGroup for each parent. */}
         <SidebarGroup>
-          <SidebarGroupLabel>Conversations</SidebarGroupLabel>
-          <SidebarGroupAction title="Add Project" onClick={createConversation}>
+          <SidebarGroupLabel>历史对话</SidebarGroupLabel>
+          <SidebarGroupAction title="新建对话" onClick={createConversation}>
             <PlusIcon />
           </SidebarGroupAction>
           <SidebarGroupContent>
