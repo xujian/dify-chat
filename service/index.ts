@@ -66,7 +66,19 @@ export const sendChatMessage = async (
 }
 
 export const getConversations = async () => {
-  return get('conversations', { params: { limit: 100, first_id: '' } })
+  return get('conversations', { params: { limit: 100, first_id: '' } }).then((res: any) => {
+    const data = res.data.map((item: any) => ({
+      id: item.id,
+      name: item.name.replace(/\p{Emoji}/gu, ''),
+      introduction: item.introduction,
+      createdAt: item.created_at,
+      status: item.status,
+    }))
+    return {
+      data,
+      error: res.error,
+    }
+  })
 }
 
 export const removeConversation = async (conversationId: string) => {
@@ -74,7 +86,13 @@ export const removeConversation = async (conversationId: string) => {
 }
 
 export const getMessages = async (conversationId: string) => {
-  return get('messages', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+  return get('messages', {
+    params: {
+      conversation_id: conversationId,
+      limit: 20,
+      last_id: ''
+    }
+  })
 }
 
 export const deleteMessage = async (messageId: string) => {
