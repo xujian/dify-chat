@@ -8,7 +8,7 @@ import Question from './question'
 import Toast from '@/app/components/base/toast'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '@/app/store'
-import { fetchMessages } from '@/app/store/messages'
+import { clearMessages, fetchMessages } from '@/app/store/messages'
 import InputBox from './input-box'
 import type { Message, TransferMethod } from '@/models'
 export type MessagesProps = {
@@ -54,6 +54,9 @@ const Messages: FC<MessagesProps> = () => {
   useEffect(() => {
     if (session.currentConversation !== '-1') {
       dispatch(fetchMessages(session.currentConversation))
+    } else {
+      // just created conversation, clear messages
+      dispatch(clearMessages())
     }
   }, [session.currentConversation])
 

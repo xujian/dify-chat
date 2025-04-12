@@ -38,6 +38,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   const handleConversationIdChange = (conversation: Conversation) => {
     dispatch(setCurrentConversation(conversation.id))
+    dispatch(startChat())
   }
 
   const handleDeleteConversation = async (conversationId: string) => {

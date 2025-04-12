@@ -56,6 +56,11 @@ const InputBox: FC<InputBoxProps> = () => {
     const data: SendChatMessageData = {
       query: message,
       conversationId: session.currentConversation,
+      inputs: {
+        phone: '13800138000',
+        age: 20,
+        gender: '男',
+      },
     }
 
     const t = Date.now()
