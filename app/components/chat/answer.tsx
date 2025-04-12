@@ -13,7 +13,7 @@ import Tooltip from '@/app/components/base/tooltip'
 import WorkflowProcess from '@/app/components/workflow/workflow-process'
 import { Markdown } from '@/app/components/base/markdown'
 import type { Emoji } from '@/models/tools'
-import CustomBlock from '../workflow/custom-block'
+import CustomBlock from '../custom-block'
 import { Message } from '@/models'
 
 const OperationBtn = ({ innerContent, onClick, className }: { innerContent: React.ReactNode; onClick?: () => void; className?: string }) => (
