@@ -5,7 +5,7 @@ import {
 } from 'react'
 import cn from 'classnames'
 import NodePanel from './node'
-import type { WorkflowProcess, WorkflowRunningStatus } from '@/models'
+import { WorkflowProcess, WorkflowRunningStatus } from '@/models'
 import CheckCircle from '@/app/components/base/icons/solid/general/check-circle'
 import AlertCircle from '@/app/components/base/icons/solid/alert-circle'
 import Loading02 from '@/app/components/base/icons/line/loading-02'
@@ -25,7 +25,7 @@ const WorkflowProcessItem = ({
 }: WorkflowProcessProps) => {
   const [collapse, setCollapse] = useState(!expand)
   const running = data.status === WorkflowRunningStatus.Running
-  const succeeded = data.status === WorkflowRunningStatus.Succeeded
+  const succeeded = data.status === WorkflowRunningStatus.Completed
   const failed = data.status === WorkflowRunningStatus.Failed || data.status === WorkflowRunningStatus.Stopped
 
   const background = useMemo(() => {
