@@ -9,6 +9,7 @@ export type AppInfo = {
 }
 
 export type InputProps = {
+  type: string
   name: string
   label: string
   default?: string | number
