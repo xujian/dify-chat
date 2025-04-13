@@ -46,6 +46,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     dispatch(setCurrentConversation(''))
   }
 
+  const handleRenameConversation = (conversationId: string) => {
+    console.log(conversationId)
+  }
+
   const createConversation = () => {
     const conversation = {
       id: '-1',
@@ -100,11 +104,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       </SidebarMenuAction>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent side="right" align="start">
-                      <DropdownMenuItem>
-                        <span>Edit Project</span>
+                      <DropdownMenuItem onClick={() => handleRenameConversation(c.id)}>
+                        <span>改名</span>
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => handleDeleteConversation(c.id)}>
-                        <span>Delete Project</span>
+                        <span>删除</span>
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
