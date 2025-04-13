@@ -69,7 +69,7 @@ export const conversationsSlice = createSlice({
         Toast.notify({ type: 'error', message: state.error })
       })
       .addCase(deleteConversation.fulfilled, (state, action) => {
-        state.value = state.value.filter(item => item.id !== action.payload)
+        state.value = state.value.filter(item => item.id !== action.payload.conversationId)
       })
   },
 })
@@ -101,7 +101,9 @@ export const deleteConversation = createAsyncThunk(
   async (conversationId: string, { rejectWithValue }) => {
     try {
       const response = await removeConversation(conversationId)
-      return response
+      return {
+        conversationId,
+      }
     } catch (error: any) {
       return rejectWithValue(error.message || 'Failed to delete conversation')
     }
