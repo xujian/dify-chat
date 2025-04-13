@@ -23,7 +23,13 @@ const select: FC<Field> = (props) => {
           <SelectGroup>
             <SelectLabel>{props.label}</SelectLabel>
             {props.options?.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
+              <SelectItem
+                value={typeof option === 'string'
+                  ? option
+                  : option.value}
+                key={typeof option === 'string'
+                  ? option
+                  : option.value}>
                 {option.label}
               </SelectItem>
             ))}
