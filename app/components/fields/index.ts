@@ -3,9 +3,9 @@ import select from './select'
 import number from './number'
 import dummy from './dummy'
 import { FC } from 'react'
-import { InputProps } from '@/models'
+import { Field } from '@/models'
 
-const fields: Record<string, FC<InputProps>> = {
+const fields: Record<string, FC<Field>> = {
   text, select, number, dummy
 }
 

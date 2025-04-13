@@ -8,21 +8,6 @@ export type AppInfo = {
   privacyPolicy?: string
 }
 
-export type InputProps = {
-  type: string
-  name: string
-  label: string
-  default?: string | number
-  options?: string[]
-  maxLength?: number
-  required: boolean
-}
-
-export type Variable = InputProps & {
-  key: string
-  type: string
-}
-
 export type TypeWithI18N<T = string> = {
   'en_US': T
   'zh_Hans': T

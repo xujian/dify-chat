@@ -11,6 +11,12 @@ export type Field = {
   label: string
   type: string
   required: boolean
+  default?: string | number
   maxLength?: number
   options?: string[] | LabelValuePair[]
+}
+
+export type Variable = Field & {
+  key: string
+  type: string
 }

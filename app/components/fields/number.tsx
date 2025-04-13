@@ -1,9 +1,9 @@
 import { FC } from 'react'
 import { Input } from '@/app/components/ui/input'
 import { Label } from '@/app/components/ui/label'
-import { InputProps } from '@/models';
+import { Field } from '@/models'
 
-const number: FC<InputProps> = (props) => {
+const number: FC<Field> = (props) => {
   return (
     <div className="grid w-full max-w-sm items-center gap-1.5">
       <Label>{props.label}1</Label>

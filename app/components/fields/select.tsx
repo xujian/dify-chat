@@ -9,9 +9,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/app/components/ui/select'
-import { InputProps } from '@/models'
+import { Field } from '@/models'
 
-const select: FC<InputProps> = (props) => {
+const select: FC<Field> = (props) => {
   return (
     <div className="grid w-full max-w-sm items-center gap-1.5">
       <Label>{props.label}</Label>
@@ -23,8 +23,8 @@ const select: FC<InputProps> = (props) => {
           <SelectGroup>
             <SelectLabel>{props.label}</SelectLabel>
             {props.options?.map((option) => (
-              <SelectItem key={option} value={option}>
-                {option}
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
               </SelectItem>
             ))}
           </SelectGroup>
