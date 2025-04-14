@@ -38,12 +38,12 @@ const ImageList: FC<ImageListProps> = ({
   }
 
   return (
-    <div className='flex flex-wrap'>
+    <div className='flex flex-row flex-wrap p-1'>
       {
         list.map(item => (
           <div
             key={item._id}
-            className='group relative mr-1 border-[0.5px] border-black/5 rounded-lg'
+            className='group relative mr-1 border rounded-md'
           >
             {
               item.type === 'local' && item.progress !== 100 && (

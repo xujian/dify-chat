@@ -214,22 +214,19 @@ const InputBox: FC<InputBoxProps> = () => {
 
   return (
     <div className="relative my-3 flex flex-col w-full">
-      <div className="w-full flex flex-row justify-between">
+      <div className="w-full flex flex-col justify-between border rounded-lg">
         {files.length > 0 && (
-          <div className='pl-[52px]'>
-            <ImageList
-              list={files}
-              onRemove={onRemove}
-              onReUpload={onReUpload}
-              onImageLinkLoadSuccess={onImageLinkLoadSuccess}
-              onImageLinkLoadError={onImageLinkLoadError}
-            />
-          </div>
+          <ImageList
+            list={files}
+            onRemove={onRemove}
+            onReUpload={onReUpload}
+            onImageLinkLoadSuccess={onImageLinkLoadSuccess}
+            onImageLinkLoadError={onImageLinkLoadError}
+          />
         )}
         <TextareaAutosize
           className={cn(
             [
-              'border',
               'ring-offset-background',
               'placeholder:text-muted-foreground',
               'focus-visible:ring-ring',

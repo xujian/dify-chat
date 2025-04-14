@@ -131,6 +131,7 @@ const ChatImageUploader: FC<ChatImageUploaderProps> = ({
   onUpload,
   disabled,
 }) => {
+  console.log('ChatImageUploader, settings', settings)
   if (settings.transferMethod === 'local') {
     return (
       <UploadOnlyFromLocal
@@ -143,7 +144,7 @@ const ChatImageUploader: FC<ChatImageUploaderProps> = ({
 
   return (
     <UploaderButton
-      method={settings.transferMethod}
+      method="local"
       onUpload={onUpload}
       disabled={disabled}
       limit={+settings.imageFileSizeLimit!}
