@@ -12,7 +12,7 @@ const Inputs: FC<InputsProps> = ({ fields }) => {
       {fields.map((field) => {
         const r = fieldComponents[field.type] as FC<Field>
         if (!r) return (
-          <fieldComponents.dummy {...field} />
+          <fieldComponents.dummy key={field.name} {...field} />
         )
         const Component = () => r(field)
         return (
