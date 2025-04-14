@@ -1,7 +1,7 @@
 import type { FC } from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button } from '@/app/components/ui'
+import { Button } from '@/components/ui'
 import type { ImageFile } from '@/models'
 
 type ImageLinkInputProps = {

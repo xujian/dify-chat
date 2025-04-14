@@ -3,7 +3,7 @@ import type { FC } from 'react'
 import React, { useState } from 'react'
 import cn from 'classnames'
 import s from './image-gallery.module.css'
-import ImagePreview from '@/app/components/image-uploader/image-preview'
+import ImagePreview from '@/components/image-uploader/image-preview'
 
 type Props = {
   srcs: string[]

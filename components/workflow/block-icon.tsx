@@ -14,7 +14,7 @@ import {
   LayoutDashboard,
   Variable
 } from 'lucide-react'
-import AppIcon from '@/app/components/app-icon'
+import AppIcon from '@/components/app-icon'
 
 type BlockIconProps = {
   type: BlockEnum

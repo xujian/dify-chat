@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import { Field } from '@/models'
-import { Label } from '@/app/components/ui/label'
+import { Label } from '@/components/ui/label'
 import { Input } from '@headlessui/react'
 
 const Dummy: FC<Field> = (props) => {

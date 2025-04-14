@@ -1,5 +1,5 @@
 import { FC, useState, useEffect } from 'react'
-import fieldComponents from '@/app/components/fields'
+import fieldComponents from '@/components/fields'
 import { Field } from '@/models'
 
 export type InputsProps = {

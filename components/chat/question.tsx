@@ -5,8 +5,8 @@ import { CircleUserRound } from 'lucide-react'
 import type { Message } from '@/models'
 import s from './style.module.css'
 
-import { Markdown } from '@/app/components/markdown'
-import ImageGallery from '@/app/components/image-gallery'
+import { Markdown } from '@/components/markdown'
+import ImageGallery from '@/components/image-gallery'
 
 type QuestionProps = Pick<react, 'id' | 'content' | 'useCurrentUserAvatar'> & {
   imgSrcs?: string[]

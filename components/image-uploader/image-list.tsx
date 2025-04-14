@@ -5,7 +5,7 @@ import { CircleX } from 'lucide-react'
 import { RefreshCcw } from 'lucide-react'
 import { AlertTriangle } from 'lucide-react'
 import type { ImageFile } from '@/models'
-import ImagePreview from '@/app/components/image-uploader/image-preview'
+import ImagePreview from '@/components/image-uploader/image-preview'
 import { LoaderCircle } from 'lucide-react'
 
 type ImageListProps = {

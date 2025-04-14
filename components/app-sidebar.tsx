@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import type { RootState, AppDispatch } from '@/app/store'
 
-import { AppSearch } from '@/app/components'
-import { VersionSwitcher } from '@/app/components'
+import { AppSearch } from '@/components'
+import { VersionSwitcher } from '@/components'
 import {
   Sidebar,
   SidebarContent,
@@ -19,7 +19,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
-} from '@/app/components/ui/sidebar'
+} from '@/components/ui/sidebar'
 import { useEffect } from 'react'
 import { MessageSquare, PlusIcon, MoreHorizontalIcon } from 'lucide-react'
 import { addConversation, deleteConversation, fetchConversations } from '@/app/store/conversations'

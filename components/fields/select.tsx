@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { Label } from '@/app/components/ui/label'
+import { Label } from '@/components/ui/label'
 import {
   Select,
   SelectContent,
@@ -8,7 +8,7 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from '@/app/components/ui/select'
+} from '@/components/ui/select'
 import { Field } from '@/models'
 
 const select: FC<Field> = (props) => {
