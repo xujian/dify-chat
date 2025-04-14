@@ -4,7 +4,7 @@ import { FC, useRef, useState } from 'react'
 import { useTranslation } from "react-i18next"
 import { Input } from "../ui/input"
 import { TextareaAutosize } from "../ui/textarea-autosize"
-import { CirclePlus, CircleStop, SendHorizonal } from 'lucide-react'
+import { CirclePlus, CircleStop, FilePlus, SendHorizonal } from 'lucide-react'
 import ChatImageUploader from '@/components/image-uploader/chat-image-uploader'
 import ImageList from '@/components/image-uploader/image-list'
 import { useImageFiles } from '../image-uploader/hooks'
@@ -20,7 +20,6 @@ interface InputBoxProps { }
 
 const InputBox: FC<InputBoxProps> = () => {
   const { t } = useTranslation()
-  const chatInputRef = useRef<HTMLTextAreaElement>(null)
   const session = useSelector((state: RootState) => state.session)
   const dispatch = useDispatch<AppDispatch>()
   const [isTyping, setIsTyping] = useState<boolean>(false)
@@ -214,20 +213,8 @@ const InputBox: FC<InputBoxProps> = () => {
   }
 
   return (
-    <div className="border-input relative my-3 bg-white flex min-h-[60px] w-full items-center justify-center rounded-xl border">
-      <>
-        <CirclePlus
-          className="absolute bottom-[12px] left-3 cursor-pointer p-1 hover:opacity-50"
-          size={32}
-          onClick={() => fileInputRef.current?.click()}
-        />
-        <div className='bottom-2 left-2 flex items-center'>
-          <ChatImageUploader
-            onUpload={onUpload}
-            disabled={files.length >= 2}
-          />
-          <div className='mx-1 w-[1px] h-4 bg-black/5' />
-        </div>
+    <div className="relative my-3 flex flex-col w-full">
+      <div className="w-full flex flex-row justify-between">
         {files.length > 0 && (
           <div className='pl-[52px]'>
             <ImageList
@@ -239,6 +226,34 @@ const InputBox: FC<InputBoxProps> = () => {
             />
           </div>
         )}
+        <TextareaAutosize
+          className={cn(
+            [
+              'border',
+              'ring-offset-background',
+              'placeholder:text-muted-foreground',
+              'focus-visible:ring-ring',
+              'text-md',
+              'w-full',
+              'rounded-lg',
+              'focus-visible:outline-hidden',
+              'disabled:cursor-not-allowed',
+              'disabled:opacity-50'
+            ]
+          )}
+          onValueChange={handleInputChange}
+          value={userInput}
+          minRows={2}
+          maxRows={4}
+          onCompositionStart={() => setIsTyping(true)}
+          onCompositionEnd={() => setIsTyping(false)}
+        />
+      </div>
+      <div className="flex flex-row border border-t-0 rounded-b-lg mx-2 p-1">
+        <ChatImageUploader
+          onUpload={onUpload}
+          disabled={files.length >= 2}
+        />
         <Input
           ref={fileInputRef}
           className="hidden"
@@ -248,39 +263,30 @@ const InputBox: FC<InputBoxProps> = () => {
           }}
           accept={'*'}
         />
-      </>
-      <TextareaAutosize
-        textareaRef={chatInputRef}
-        className="ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring text-md flex w-full resize-none rounded-md border-none bg-transparent px-1 py-2 focus-visible:outline-hidden disabled:cursor-not-allowed disabled:opacity-50"
-        onValueChange={handleInputChange}
-        value={userInput}
-        minRows={1}
-        maxRows={18}
-        onCompositionStart={() => setIsTyping(true)}
-        onCompositionEnd={() => setIsTyping(false)}
-      />
-      <div className="absolute bottom-[14px] right-3 cursor-pointer hover:opacity-50">
-        {isGenerating
-          ? (
-            <CircleStop
-              className="hover:bg-background animate-pulse rounded bg-transparent p-1"
-              onClick={handleStopMessage}
-              size={30}
-            />
-          )
-          : (
-            <SendHorizonal
-              className={cn(
-                "bg-primary text-secondary rounded p-1",
-                !userInput && "cursor-not-allowed opacity-50"
-              )}
-              onClick={() => {
-                if (!userInput) return
-                send(userInput)
-              }}
-              size={30}
-            />
-          )}
+        <div className="flex flex-row grow justify-end"></div>
+        <div className="cursor-pointer hover:opacity-50">
+          {isGenerating
+            ? (
+              <CircleStop
+                className="hover:bg-background animate-pulse rounded bg-transparent p-1"
+                onClick={handleStopMessage}
+                size={30}
+              />
+            )
+            : (
+              <SendHorizonal
+                className={cn(
+                  "bg-primary text-secondary rounded p-1",
+                  !userInput && "cursor-not-allowed opacity-50"
+                )}
+                onClick={() => {
+                  if (!userInput) return
+                  send(userInput)
+                }}
+                size={30}
+              />
+            )}
+        </div>
       </div>
     </div>
   )

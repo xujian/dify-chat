@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import Uploader from './uploader'
 import ImageLinkInput from './image-link-input'
-import { ImagePlus, CloudUpload } from 'lucide-react'
+import { ImageUp, CloudUpload } from 'lucide-react'
 import { Resolution, TransferMethod } from '@/models'
 import {
   PortalToFollowElem,
@@ -30,7 +30,7 @@ const UploadOnlyFromLocal: FC<UploadOnlyFromLocalProps> = ({
             relative flex items-center justify-center w-8 h-8 rounded-lg cursor-pointer
             ${hovering && 'bg-gray-100'}
           `}>
-            <ImagePlus className='w-4 h-4 text-gray-500' />
+            <ImageUp className='w-4 h-4 text-gray-500' />
           </div>
         )
       }
@@ -39,21 +39,19 @@ const UploadOnlyFromLocal: FC<UploadOnlyFromLocalProps> = ({
 }
 
 type UploaderButtonProps = {
-  methods: MediaSettings['transferMethods']
+  method: MediaSettings['transferMethod']
   onUpload: (imageFile: ImageFile) => void
   disabled?: boolean
   limit?: number
 }
 const UploaderButton: FC<UploaderButtonProps> = ({
-  methods,
+  method,
   onUpload,
   disabled,
   limit,
 }) => {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
-
-  const hasUploadFromLocal = methods.find(method => method === 'local')
 
   const handleUpload = (imageFile: ImageFile) => {
     setOpen(false)
@@ -78,14 +76,14 @@ const UploaderButton: FC<UploaderButtonProps> = ({
           relative flex items-center justify-center w-8 h-8 hover:bg-gray-100 rounded-lg
           ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'}
         `}>
-          <ImagePlus className='w-4 h-4 text-gray-500' />
+          <ImageUp className='w-4 h-4 text-gray-500' />
         </div>
       </PortalToFollowElemTrigger>
       <PortalToFollowElemContent className='z-50'>
         <div className='p-2 w-[260px] bg-white rounded-lg border-[0.5px] border-gray-200 shadow-lg'>
           <ImageLinkInput onUpload={handleUpload} />
           {
-            hasUploadFromLocal && (
+            method === 'local' && (
               <>
                 <div className='flex items-center mt-2 px-2 text-xs font-medium text-gray-400'>
                   <div className='mr-3 w-[93px] h-[1px] bg-linear-to-l from-[#F3F4F6]' />
@@ -124,7 +122,7 @@ const defaultSettings: MediaSettings = {
   enabled: true,
   limits: 10,
   detail: Resolution.high,
-  transferMethods: ['all'],
+  transferMethod: 'all',
   imageFileSizeLimit: 10
 }
 
@@ -133,10 +131,7 @@ const ChatImageUploader: FC<ChatImageUploaderProps> = ({
   onUpload,
   disabled,
 }) => {
-  const onlyUploadLocal = settings.transferMethods.length === 1
-    && settings.transferMethods[0] === 'local'
-
-  if (onlyUploadLocal) {
+  if (settings.transferMethod === 'local') {
     return (
       <UploadOnlyFromLocal
         onUpload={onUpload}
@@ -148,7 +143,7 @@ const ChatImageUploader: FC<ChatImageUploaderProps> = ({
 
   return (
     <UploaderButton
-      methods={settings.transferMethods}
+      method={settings.transferMethod}
       onUpload={onUpload}
       disabled={disabled}
       limit={+settings.imageFileSizeLimit!}

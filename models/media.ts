@@ -8,7 +8,7 @@ export type MediaSettings = {
   enabled: boolean
   limits: number
   detail: Resolution
-  transferMethods: TransferMethod[]
+  transferMethod: TransferMethod
   imageFileSizeLimit?: number | string
 }
 
