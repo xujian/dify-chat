@@ -1,7 +1,7 @@
 import { Conversation } from '@/models'
 import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit'
 import { getConversations, removeConversation } from '@/service'
-import Toast from '@/app/components/base/toast'
+// import Toast from '@/app/components/base/toast'
 
 export interface ConversationsState {
   value: Conversation[]
@@ -66,7 +66,7 @@ export const conversationsSlice = createSlice({
       .addCase(fetchConversations.rejected, (state, action) => {
         state.loading = false
         state.error = action.error.message || 'Failed to fetch conversations'
-        Toast.notify({ type: 'error', message: state.error })
+        // Toast.notify({ type: 'error', message: state.error })
       })
       .addCase(deleteConversation.fulfilled, (state, action) => {
         state.value = state.value.filter(item => item.id !== action.payload.conversationId)

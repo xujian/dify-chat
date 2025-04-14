@@ -5,7 +5,6 @@ import Loading02 from '@/app/components/base/icons/line/loading-02'
 import XClose from '@/app/components/base/icons/line/x-close'
 import RefreshCcw01 from '@/app/components/base/icons/line/refresh-ccw-01'
 import AlertTriangle from '@/app/components/base/icons/solid/alert-triangle'
-import TooltipPlus from '@/app/components/base/tooltip-plus'
 import type { ImageFile } from '@/models'
 import ImagePreview from '@/app/components/base/image-uploader/image-preview'
 
@@ -80,9 +79,9 @@ const ImageList: FC<ImageListProps> = ({
                   }
                   {
                     item.progress === -1 && (
-                      <TooltipPlus popupContent={t('common.imageUploader.pasteImageLinkInvalid')}>
-                        <AlertTriangle className='w-4 h-4 text-[#DC6803]' />
-                      </TooltipPlus>
+
+                      <AlertTriangle className='w-4 h-4 text-[#DC6803]' />
+
                     )
                   }
                 </div>

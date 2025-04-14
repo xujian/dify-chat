@@ -7,7 +7,6 @@ import Header from '@/app/components/header'
 import { Messages } from '@/app/components/chat'
 import { setLocaleOnClient } from '@/i18n/client'
 import useBreakpoints, { MediaType } from '@/hooks/use-breakpoints'
-import Loading from '@/app/components/base/loading'
 import AppUnavailable from '@/app/components/app-unavailable'
 import { API_KEY, APP_ID, APP_INFO } from '@/config'
 import { SidebarInset, SidebarProvider } from './components/ui/sidebar'
@@ -65,7 +64,7 @@ const App: FC<AppProps> = () => {
       : ''} />
 
   if (!APP_ID || !APP_INFO)
-    return <Loading type='app' />
+    return <div>APP_ID/APP_INFO not set</div>
 
   return (
     <SidebarProvider>

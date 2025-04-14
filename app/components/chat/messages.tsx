@@ -5,7 +5,7 @@ import cn from 'classnames'
 import { useTranslation } from 'react-i18next'
 import Answer from './answer'
 import Question from './question'
-import Toast from '@/app/components/base/toast'
+// import Toast from '@/app/components/base/toast'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '@/app/store'
 import { clearMessages, fetchMessages } from '@/app/store/messages'
@@ -28,7 +28,7 @@ const Messages: FC<MessagesProps> = () => {
   }
 
   const { t } = useTranslation()
-  const { notify } = Toast
+  // const { notify } = Toast//
   const isUseInputMethod = useRef(false)
 
   const container = useRef<HTMLDivElement>(null)
@@ -40,7 +40,7 @@ const Messages: FC<MessagesProps> = () => {
   }
 
   const logError = (message: string) => {
-    notify({ type: 'error', message, duration: 3000 })
+    // notify({ type: 'error', message, duration: 3000 })
   }
 
   const valid = () => {

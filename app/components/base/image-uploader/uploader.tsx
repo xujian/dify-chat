@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { imageUpload } from './utils'
 import type { ImageFile } from '@/models'
-import Toast from '@/app/components/base/toast'
+// import Toast from '@/app/components/base/toast'
 
 type UploaderProps = {
   children: (hovering: boolean) => JSX.Element
@@ -21,7 +21,7 @@ const Uploader: FC<UploaderProps> = ({
   disabled,
 }) => {
   const [hovering, setHovering] = useState(false)
-  const { notify } = Toast
+  // const { notify } = Toast
   const { t } = useTranslation()
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -58,7 +58,7 @@ const Uploader: FC<UploaderProps> = ({
             onUpload({ ...imageFile, fileId: res.id, progress: 100 })
           },
           onErrorCallback: () => {
-            notify({ type: 'error', message: t('common.imageUploader.uploadFromComputerUploadError') })
+            //notify({ type: 'error', message: t('common.imageUploader.uploadFromComputerUploadError') })
             onUpload({ ...imageFile, progress: -1 })
           },
         })
@@ -68,7 +68,7 @@ const Uploader: FC<UploaderProps> = ({
     reader.addEventListener(
       'error',
       () => {
-        notify({ type: 'error', message: t('common.imageUploader.uploadFromComputerReadError') })
+        //notify({ type: 'error', message: t('common.imageUploader.uploadFromComputerReadError') })
       },
       false,
     )

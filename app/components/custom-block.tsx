@@ -1,6 +1,5 @@
 import React from 'react'
 import { CodeLanguage } from '@/models'
-import CodeEditor from './workflow/code-editor'
 import { FormBlock, CardBlock } from './blocks'
 
 interface CustomBlockProps {
@@ -28,13 +27,6 @@ const CustomBlock: React.FC<CustomBlockProps> = ({ data = {}, type = 'json' }) =
 
   return (
     <div className="json-output-wrapper">
-      <CodeEditor
-        value={data}
-        title={<div className='text-sm text-gray-500'>Output</div>}
-        language={CodeLanguage.json}
-        readOnly={true}
-        isJSONStringifyBeauty={true}
-      />
     </div>
   )
 }
