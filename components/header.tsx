@@ -7,6 +7,7 @@ import {
 } from '@heroicons/react/24/solid'
 import AppIcon from '@/components/app-icon'
 import { SidebarTrigger } from './ui/sidebar'
+
 export type IHeaderProps = {
   title: string
   isMobile?: boolean

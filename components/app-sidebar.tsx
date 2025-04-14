@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import type { RootState, AppDispatch } from '@/app/store'
 
-import { AppSearch } from '@/components'
-import { VersionSwitcher } from '@/components'
+import { AppSearch } from '@/components/app-search'
+import { VersionSwitcher } from '@/components/version-switcher'
 import {
   Sidebar,
   SidebarContent,
@@ -71,6 +71,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   }, [])
 
   const versions = ['1.0.1', '1.1.0-alpha', '2.0.0-beta1']
+  console.log('VersionSwitcher', VersionSwitcher)
   return (
     <Sidebar {...props}>
       <SidebarHeader>

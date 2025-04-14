@@ -1,7 +1,6 @@
 import { Message } from '@/models'
 import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit'
 import { deleteMessage, getMessages } from '@/service'
-// import Toast from '@/app/components/base/toast'
 import { toJson } from '@/lib/utils'
 export interface MessagesState {
   value: Message[]

@@ -5,7 +5,6 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { imageUpload } from './utils'
 import type { ImageFile } from '@/models'
-// import Toast from '@/app/components/base/toast'
 
 type UploaderProps = {
   children: (hovering: boolean) => JSX.Element
