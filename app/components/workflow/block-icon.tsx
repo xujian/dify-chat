@@ -2,18 +2,18 @@ import type { FC } from 'react'
 import { memo } from 'react'
 import { BlockEnum } from '@/models'
 import {
-  Answer,
-  Code,
-  End,
+  MessageSquareReply,
+  CodeXml,
+  LandPlot,
   Home,
-  Http,
-  IfElse,
-  KnowledgeRetrieval,
-  Llm,
-  QuestionClassifier,
-  TemplatingTransform,
-  VariableX,
-} from '@/app/components/base/icons/workflow'
+  EthernetPort,
+  Split,
+  BookOpenText,
+  Brain,
+  Layers,
+  LayoutDashboard,
+  Variable
+} from 'lucide-react'
 import AppIcon from '@/app/components/base/app-icon'
 
 type BlockIconProps = {
@@ -30,17 +30,17 @@ const ICON_CONTAINER_CLASSNAME_SIZE_MAP: Record<string, string> = {
 const getIcon = (type: BlockEnum, className: string) => {
   return {
     [BlockEnum.Start]: <Home className={className} />,
-    [BlockEnum.LLM]: <Llm className={className} />,
-    [BlockEnum.Code]: <Code className={className} />,
+    [BlockEnum.LLM]: <Brain className={className} />,
+    [BlockEnum.Code]: <CodeXml className={className} />,
     [BlockEnum.End]: <End className={className} />,
-    [BlockEnum.IfElse]: <IfElse className={className} />,
-    [BlockEnum.HttpRequest]: <Http className={className} />,
+    [BlockEnum.IfElse]: <Split className={className} />,
+    [BlockEnum.HttpRequest]: <EthernetPort className={className} />,
     [BlockEnum.Answer]: <Answer className={className} />,
-    [BlockEnum.KnowledgeRetrieval]: <KnowledgeRetrieval className={className} />,
-    [BlockEnum.QuestionClassifier]: <QuestionClassifier className={className} />,
-    [BlockEnum.TemplateTransform]: <TemplatingTransform className={className} />,
-    [BlockEnum.VariableAssigner]: <VariableX className={className} />,
-    [BlockEnum.Tool]: <VariableX className={className} />,
+    [BlockEnum.KnowledgeRetrieval]: <BookOpenText className={className} />,
+    [BlockEnum.QuestionClassifier]: <Layers className={className} />,
+    [BlockEnum.TemplateTransform]: <LayoutDashboard className={className} />,
+    [BlockEnum.VariableAssigner]: <Variable className={className} />,
+    [BlockEnum.Tool]: <Variable className={className} />,
   }[type]
 }
 const ICON_CONTAINER_BG_COLOR_MAP: Record<string, string> = {
