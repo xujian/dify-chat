@@ -9,7 +9,7 @@ import Panel from './panel'
 import { ChevronDown, CheckCircle, Database } from 'lucide-react'
 
 import type { Emoji } from '@/models/tools'
-import AppIcon from '@/app/components/base/app-icon'
+import AppIcon from '@/app/components/app-icon'
 
 type Props = {
   payload: ToolInfoInThought

@@ -5,7 +5,7 @@ import {
   Bars3Icon,
   PencilSquareIcon,
 } from '@heroicons/react/24/solid'
-import AppIcon from '@/app/components/base/app-icon'
+import AppIcon from '@/app/components/app-icon'
 import { SidebarTrigger } from './ui/sidebar'
 export type IHeaderProps = {
   title: string

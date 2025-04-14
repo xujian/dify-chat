@@ -1,6 +1,5 @@
 import type { FC } from 'react'
 import classNames from 'classnames'
-import style from './style.module.css'
 
 export type AppIconProps = {
   size?: 'xs' | 'tiny' | 'small' | 'medium' | 'large'

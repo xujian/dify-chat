@@ -5,9 +5,9 @@ import { useTranslation } from "react-i18next"
 import { Input } from "../ui/input"
 import { TextareaAutosize } from "../ui/textarea-autosize"
 import { CirclePlus, CircleStop, SendHorizonal } from 'lucide-react'
-import ChatImageUploader from '@/app/components/base/image-uploader/chat-image-uploader'
-import ImageList from '@/app/components/base/image-uploader/image-list'
-import { useImageFiles } from '../base/image-uploader/hooks'
+import ChatImageUploader from '@/app/components/image-uploader/chat-image-uploader'
+import ImageList from '@/app/components/image-uploader/image-list'
+import { useImageFiles } from '../image-uploader/hooks'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '@/app/store'
 import { generationConversationName, sendChatMessage, SendChatMessageData } from '@/service'
