@@ -3,14 +3,13 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import Uploader from './uploader'
 import ImageLinkInput from './image-link-input'
-import ImagePlus from '@/app/components/base/icons/line/image-plus'
+import { ImagePlus, CloudUpload } from 'lucide-react'
 import { Resolution, TransferMethod } from '@/models'
 import {
   PortalToFollowElem,
   PortalToFollowElemContent,
   PortalToFollowElemTrigger,
 } from '@/app/components/base/portal-to-follow-elem'
-import Upload03 from '@/app/components/base/icons/line/upload-03'
 import type { ImageFile, MediaSettings } from '@/models'
 
 type UploadOnlyFromLocalProps = {
@@ -100,7 +99,7 @@ const UploaderButton: FC<UploaderButtonProps> = ({
                         flex items-center justify-center h-8 text-[13px] font-medium text-[#155EEF] rounded-lg cursor-pointer
                         ${hovering && 'bg-primary-50'}
                       `}>
-                        <Upload03 className='mr-1 w-4 h-4' />
+                        <CloudUpload className='mr-1 w-4 h-4' />
                         {t('common.imageUploader.uploadFromComputer')}
                       </div>
                     )

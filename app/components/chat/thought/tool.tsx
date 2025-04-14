@@ -2,14 +2,12 @@
 import type { FC } from 'react'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-
+import { LoaderCircle } from 'lucide-react'
 import cn from 'classnames'
-import type { ToolInfoInThought } from '../type'
 import Panel from './panel'
-import Loading02 from '@/app/components/base/icons/line/loading-02'
-import ChevronDown from '@/app/components/base/icons/line/arrows/chevron-down'
-import CheckCircle from '@/app/components/base/icons/solid/general/check-circle'
-import DataSetIcon from '@/app/components/base/icons/public/data-set'
+
+import { ChevronDown, CheckCircle, Database } from 'lucide-react'
+
 import type { Emoji } from '@/models/tools'
 import AppIcon from '@/app/components/base/app-icon'
 
@@ -20,7 +18,7 @@ type Props = {
 
 const getIcon = (toolName: string, allToolIcons: Record<string, string | Emoji>) => {
   if (toolName.startsWith('dataset-'))
-    return <DataSetIcon className='shrink-0'></DataSetIcon>
+    return <Database className='shrink-0'></Database>
   const icon = allToolIcons[toolName]
   if (!icon)
     return null
@@ -61,7 +59,7 @@ const Tool: FC<Props> = ({
           onClick={() => setIsShowDetail(!isShowDetail)}
         >
           {!isFinished && (
-            <Loading02 className='w-3 h-3 text-gray-500 animate-spin shrink-0' />
+            <LoaderCircle className='w-3 h-3 text-gray-500 animate-spin shrink-0' />
           )}
           {isFinished && !isShowDetail && (
             <CheckCircle className='w-3 h-3 text-[#12B76A] shrink-0' />

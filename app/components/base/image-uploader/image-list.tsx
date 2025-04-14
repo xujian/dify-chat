@@ -1,12 +1,12 @@
 import type { FC } from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import Loading02 from '@/app/components/base/icons/line/loading-02'
-import XClose from '@/app/components/base/icons/line/x-close'
-import RefreshCcw01 from '@/app/components/base/icons/line/refresh-ccw-01'
-import AlertTriangle from '@/app/components/base/icons/solid/alert-triangle'
+import { CircleX } from 'lucide-react'
+import { RefreshCcw } from 'lucide-react'
+import { AlertTriangle } from 'lucide-react'
 import type { ImageFile } from '@/models'
 import ImagePreview from '@/app/components/base/image-uploader/image-preview'
+import { LoaderCircle } from 'lucide-react'
 
 type ImageListProps = {
   list: ImageFile[]
@@ -54,7 +54,7 @@ const ImageList: FC<ImageListProps> = ({
                   >
                     {
                       item.progress === -1 && (
-                        <RefreshCcw01 className='w-5 h-5 text-white' onClick={() => onReUpload && onReUpload(item._id)} />
+                        <RefreshCcw className='w-5 h-5 text-white' onClick={() => onReUpload && onReUpload(item._id)} />
                       )
                     }
                   </div>
@@ -74,7 +74,7 @@ const ImageList: FC<ImageListProps> = ({
                 `}>
                   {
                     item.progress > -1 && (
-                      <Loading02 className='animate-spin w-5 h-5 text-white' />
+                      <LoaderCircle className='animate-spin w-5 h-5 text-white' />
                     )
                   }
                   {
@@ -106,7 +106,7 @@ const ImageList: FC<ImageListProps> = ({
                   `}
                   onClick={() => onRemove && onRemove(item._id)}
                 >
-                  <XClose className='w-3 h-3 text-gray-500' />
+                  <CircleX className='w-3 h-3 text-gray-500' />
                 </div>
               )
             }

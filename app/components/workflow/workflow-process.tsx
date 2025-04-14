@@ -4,12 +4,10 @@ import {
   useState,
 } from 'react'
 import cn from 'classnames'
+import { LoaderCircle } from 'lucide-react'
 import NodePanel from './node'
 import { WorkflowProcess, WorkflowRunningStatus } from '@/models'
-import CheckCircle from '@/app/components/base/icons/solid/general/check-circle'
-import AlertCircle from '@/app/components/base/icons/solid/alert-circle'
-import Loading02 from '@/app/components/base/icons/line/loading-02'
-import ChevronRight from '@/app/components/base/icons/line/chevron-right'
+import { CheckCircle, AlertCircle, ChevronRight } from 'lucide-react'
 
 type WorkflowProcessProps = {
   data: WorkflowProcess
@@ -64,7 +62,7 @@ const WorkflowProcessItem = ({
       >
         {
           running && (
-            <Loading02 className='shrink-0 mr-1 w-3 h-3 text-[#667085] animate-spin' />
+            <LoaderCircle className='shrink-0 mr-1 w-3 h-3 text-[#667085] animate-spin' />
           )
         }
         {

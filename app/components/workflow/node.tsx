@@ -3,10 +3,7 @@ import type { FC } from 'react'
 import { useEffect, useState } from 'react'
 import cn from 'classnames'
 import BlockIcon from './block-icon'
-import AlertCircle from '@/app/components/base/icons/line/alert-circle'
-import AlertTriangle from '@/app/components/base/icons/line/alert-triangle'
-import Loading02 from '@/app/components/base/icons/line/loading-02'
-import CheckCircle from '@/app/components/base/icons/line/check-circle'
+import { AlertCircle, AlertTriangle, CheckCircle, LoaderCircle } from 'lucide-react'
 import type { NodeTracing } from '@/models'
 
 type Props = {
@@ -68,7 +65,7 @@ const NodePanel: FC<Props> = ({ nodeInfo, hideInfo = false }) => {
           )}
           {nodeInfo.status === 'running' && (
             <div className='shrink-0 flex items-center text-primary-600 text-[13px] leading-[16px] font-medium'>
-              <Loading02 className='mr-1 w-3.5 h-3.5 animate-spin' />
+              <LoaderCircle className='mr-1 w-3.5 h-3.5 animate-spin' />
               <span>Running</span>
             </div>
           )}
