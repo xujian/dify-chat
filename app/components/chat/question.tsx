@@ -1,6 +1,7 @@
 'use client'
 import type { FC } from 'react'
 import React from 'react'
+import { CircleUserRound } from 'lucide-react'
 import type { Message } from '@/models'
 import s from './style.module.css'
 
@@ -27,15 +28,9 @@ const Question: FC<QuestionProps> = ({ id, content, useCurrentUserAvatar, imgSrc
           </div>
         </div>
       </div>
-      {useCurrentUserAvatar
-        ? (
-          <div className='w-10 h-10 shrink-0 leading-10 text-center mr-2 rounded-full bg-primary-600 text-white'>
-            {userName?.[0].toLocaleUpperCase()}
-          </div>
-        )
-        : (
-          <div className={`${s.questionIcon} w-10 h-10 shrink-0 `}></div>
-        )}
+      <div className={`${s.questionIcon} w-10 h-10 shrink-0 flex items-center justify-center`}>
+        <CircleUserRound className='w-8 h-8' />
+      </div>
     </div>
   )
 }

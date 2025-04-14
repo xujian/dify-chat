@@ -170,9 +170,16 @@ const Answer: FC<AnswerProps> = ({
     <div key={id} className='answer flex items-start py-1'>
       <div className={`${s.answerIcon} ml-2 w-10 h-10 shrink-0`}>
         {isResponding
-          && <div className={s.typeingIcon}>
-            <Loading type='avatar' />
-          </div>
+          ? (
+            <div className={s.typeingIcon}>
+              <Loading type='avatar' />
+            </div>
+          )
+          : (
+            <div className={s.answerIcon}>
+              <img src="/logo.png" alt="logo" width={32} height={32} />
+            </div>
+          )
         }
       </div>
       <div className={`${s.answerWrap}`}>
