@@ -2,6 +2,7 @@ import { Message } from '@/models'
 import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit'
 import { deleteMessage, getMessages } from '@/service'
 import { toJson } from '@/lib/utils'
+import { toast } from '@/components/toast'
 export interface MessagesState {
   value: Message[]
   loading: boolean
@@ -65,7 +66,7 @@ export const messagesSlice = createSlice({
       .addCase(fetchMessages.rejected, (state, action) => {
         state.loading = false
         state.error = action.error.message || 'Failed to fetch messages'
-        // Toast.notify({ type: 'error', message: state.error })
+        toast({ type: 'error', message: state.error })
       })
       .addCase(removeMessage.fulfilled, (state, action) => {
         state.value = state.value.filter(item => item.id !== action.payload)

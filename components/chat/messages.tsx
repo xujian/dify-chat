@@ -9,7 +9,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '@/app/store'
 import { clearMessages, fetchMessages } from '@/app/store/messages'
 import InputBox from './input-box'
-import type { Message, TransferMethod } from '@/models'
+import { toast } from '@/components/toast'
+
 export type MessagesProps = {
 }
 
@@ -27,7 +28,6 @@ const Messages: FC<MessagesProps> = () => {
   }
 
   const { t } = useTranslation()
-  // const { notify } = Toast//
   const isUseInputMethod = useRef(false)
 
   const container = useRef<HTMLDivElement>(null)
@@ -39,7 +39,7 @@ const Messages: FC<MessagesProps> = () => {
   }
 
   const logError = (message: string) => {
-    // notify({ type: 'error', message, duration: 3000 })
+    toast({ type: 'error', message })
   }
 
   const valid = () => {
@@ -63,6 +63,7 @@ const Messages: FC<MessagesProps> = () => {
     if (container.current) {
       container.current.scrollTop = container.current.scrollHeight
     }
+    toast('test')
   }, [messages])
 
 

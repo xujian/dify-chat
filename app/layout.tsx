@@ -1,3 +1,4 @@
+import { Toaster } from 'sonner'
 import { getLocaleOnServer } from '@/i18n/server'
 
 import './styles/globals.css'
@@ -15,6 +16,7 @@ const LocaleLayout = async ({
         <div className="overflow-x-auto">
           <div className="w-screen h-screen min-w-[300px]">
             {children}
+            <Toaster position="top-right" />
           </div>
         </div>
       </body>
