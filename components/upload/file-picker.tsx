@@ -1,19 +1,21 @@
 'use client'
 
-import type { ChangeEvent, FC } from 'react'
+import type { ChangeEvent, FC, JSX } from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { imageUpload } from './utils'
-import type { ImageFile } from '@/models'
+import { uploadFile } from './utils'
+import type { UploadedFile } from '@/models'
+import { toast } from '@/components/toast'
+import { upload } from '@/service/base'
 
-type UploaderProps = {
+type FilePickerProps = {
   children: (hovering: boolean) => JSX.Element
-  onUpload: (imageFile: ImageFile) => void
+  onUpload: (file: UploadedFile) => void
   limit?: number
   disabled?: boolean
 }
 
-const Uploader: FC<UploaderProps> = ({
+const FilePicker: FC<FilePickerProps> = ({
   children,
   onUpload,
   limit,
@@ -25,41 +27,43 @@ const Uploader: FC<UploaderProps> = ({
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-
     if (!file)
       return
-
     if (limit && file.size > limit * 1024 * 1024) {
-      notify({ type: 'error', message: t('common.imageUploader.uploadFromComputerLimit', { size: limit }) })
+      toast({ type: 'error', message: t('common.imageUploader.uploadFromComputerLimit', { size: limit }) })
       return
     }
-
     const reader = new FileReader()
     reader.addEventListener(
       'load',
       () => {
-        const imageFile = {
-          type: 'local',
-          _id: `${Date.now()}`,
-          fileId: '',
+        const imageFile: UploadedFile = {
+          id: `${Date.now()}`,
+          uploadId: '',
           file,
           url: reader.result as string,
-          base64Url: reader.result as string,
           progress: 0,
+          transferMethod: 'local',
+          type: 'image',
         }
         onUpload(imageFile)
-        imageUpload({
-          file: imageFile.file,
-          onProgressCallback: (progress) => {
+        const formData = new FormData()
+        formData.append('file', file)
+        upload({
+          xhr: new XMLHttpRequest(),
+          data: formData,
+          onprogress: (progress: number) => {
             onUpload({ ...imageFile, progress })
           },
-          onSuccessCallback: (res) => {
-            onUpload({ ...imageFile, fileId: res.id, progress: 100 })
-          },
-          onErrorCallback: () => {
-            //notify({ type: 'error', message: t('common.imageUploader.uploadFromComputerUploadError') })
-            onUpload({ ...imageFile, progress: -1 })
-          },
+        }).then((res: { id: string }) => {
+          onUpload({
+            ...imageFile,
+            file: imageFile.file!,
+            progress: 100,
+            uploadId: res.id,
+          })
+        }).catch(() => {
+          onUpload({ ...imageFile, progress: -1 })
         })
       },
       false,
@@ -96,4 +100,4 @@ const Uploader: FC<UploaderProps> = ({
   )
 }
 
-export default Uploader
+export default FilePicker

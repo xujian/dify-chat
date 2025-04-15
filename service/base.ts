@@ -382,7 +382,9 @@ export const ssePost = (
   }, fetchOptions)
 
   const urlPrefix = API_PREFIX
-  const urlWithPrefix = `${urlPrefix}${url.startsWith('/') ? url : `/${url}`}`
+  const urlWithPrefix = `${urlPrefix}${url.startsWith('/')
+    ? url
+    : `/${url}`}`
 
   const { body } = options
   if (body)

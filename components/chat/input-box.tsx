@@ -4,10 +4,10 @@ import { FC, useRef, useState } from 'react'
 import { useTranslation } from "react-i18next"
 import { Input } from "../ui/input"
 import { TextareaAutosize } from "../ui/textarea-autosize"
-import { CirclePlus, CircleStop, FilePlus, SendHorizonal } from 'lucide-react'
-import ChatImageUploader from '@/components/image-uploader/chat-image-uploader'
-import ImageList from '@/components/image-uploader/image-list'
-import { useImageFiles } from '../image-uploader/hooks'
+import { CircleStop, SendHorizonal } from 'lucide-react'
+import FileUploader from '@/components/upload/file-uploader'
+import ImageList from '@/components/upload/image-list'
+import { useImageFiles } from '../upload/hooks'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '@/app/store'
 import { generationConversationName, sendChatMessage, SendChatMessageData } from '@/service'
@@ -36,8 +36,6 @@ const InputBox: FC<InputBoxProps> = () => {
     onImageLinkLoadSuccess,
     onClear,
   } = useImageFiles()
-
-  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleInputChange = (value: string) => {
     setUserInput(value)
@@ -214,6 +212,7 @@ const InputBox: FC<InputBoxProps> = () => {
 
   return (
     <div className="relative my-3 flex flex-col w-full">
+      <pre>{JSON.stringify(files, null, 2)}</pre>
       <div className="w-full flex flex-col justify-between border rounded-lg">
         {files.length > 0 && (
           <ImageList
@@ -247,25 +246,16 @@ const InputBox: FC<InputBoxProps> = () => {
         />
       </div>
       <div className="flex flex-row border border-t-0 rounded-b-lg mx-2 p-1">
-        <ChatImageUploader
+        <FileUploader
           onUpload={onUpload}
           disabled={files.length >= 2}
         />
-        <Input
-          ref={fileInputRef}
-          className="hidden"
-          type="file"
-          onChange={e => {
-            if (!e.target.files) return
-          }}
-          accept={'*'}
-        />
         <div className="flex flex-row grow justify-end"></div>
-        <div className="cursor-pointer hover:opacity-50">
+        <div className="flex items-center justify-center cursor-pointer hover:bg-gray-50 w-8 h-8">
           {isGenerating
             ? (
               <CircleStop
-                className="hover:bg-background animate-pulse rounded bg-transparent p-1"
+                className="animate-pulse rounded bg-transparent w-4 h-4"
                 onClick={handleStopMessage}
                 size={30}
               />
@@ -273,8 +263,9 @@ const InputBox: FC<InputBoxProps> = () => {
             : (
               <SendHorizonal
                 className={cn(
-                  "bg-primary text-secondary rounded p-1",
-                  !userInput && "cursor-not-allowed opacity-50"
+                  'w-4 h-4',
+                  !userInput && 'cursor-not-allowed',
+                  'text-gray-500'
                 )}
                 onClick={() => {
                   if (!userInput) return

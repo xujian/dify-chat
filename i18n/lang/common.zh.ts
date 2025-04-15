@@ -19,9 +19,9 @@ const translation = {
     ok: '好的',
   },
   imageUploader: {
-    uploadFromComputer: '从本地上传',
-    uploadFromComputerReadError: '图片读取失败，请重新选择。',
-    uploadFromComputerUploadError: '图片上传失败，请重新上传。',
+    uploadFromComputer: '上传',
+    uploadFromComputerReadError: '图片读取失败，请重新选择',
+    uploadFromComputerUploadError: '图片上传失败，请重新上传',
     uploadFromComputerLimit: '上传图片不能超过 {{size}} MB',
     pasteImageLink: '粘贴图片链接',
     pasteImageLinkInputPlaceholder: '将图像链接粘贴到此处',

@@ -17,19 +17,13 @@ export type TransferMethod = 'all' | 'local' | 'remote'
 export type Media = {
   id?: string
   type: string
-  transferMethod: TransferMethod
-  url: string
-  uploadId: string
-  belongsTo?: string
+  transferMethod?: TransferMethod
+  url?: string
+  uploadId?: string
 }
 
-export type ImageFile = {
-  type: TransferMethod
-  _id: string
-  fileId: string
-  file?: Media
+export type UploadedFile = Media & {
   progress: number
-  url: string
-  base64Url?: string
   deleted?: boolean
+  file?: File
 }

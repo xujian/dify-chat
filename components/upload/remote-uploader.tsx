@@ -1,14 +1,15 @@
 import type { FC } from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button } from '@/components/ui'
-import type { ImageFile } from '@/models'
+import { Button, Input } from '@/components/ui'
+import type { UploadedFile } from '@/models'
 
-type ImageLinkInputProps = {
-  onUpload: (imageFile: ImageFile) => void
+type RemoteUploaderProps = {
+  onUpload: (imageFile: UploadedFile) => void
 }
 const regex = /^(https?|ftp):\/\//
-const ImageLinkInput: FC<ImageLinkInputProps> = ({
+
+const RemoteUploader: FC<RemoteUploaderProps> = ({
   onUpload,
 }) => {
   const { t } = useTranslation()
@@ -17,26 +18,24 @@ const ImageLinkInput: FC<ImageLinkInputProps> = ({
   const handleClick = () => {
     const imageFile = {
       type: 'local',
-      _id: `${Date.now()}`,
+      id: `${Date.now()}`,
       fileId: '',
       progress: regex.test(imageLink) ? 0 : -1,
       url: imageLink,
     }
-
     onUpload(imageFile)
   }
 
   return (
-    <div className='flex items-center pl-1.5 pr-1 h-8 border border-gray-200 bg-white shadow-2xs rounded-lg'>
-      <input
-        className='grow mr-0.5 px-1 h-[18px] text-[13px] outline-hidden appearance-none'
+    <div className='flex items-center h-8 relative'>
+      <Input
+        className='px-1 border w-full h-full text-[12px]'
         value={imageLink}
         onChange={e => setImageLink(e.target.value)}
         placeholder={t('common.imageUploader.pasteImageLinkInputPlaceholder') || ''}
       />
       <Button
-        type='primary'
-        className='h-6! text-xs font-medium'
+        className='absolute right-0 h-8 text-xs font-medium'
         disabled={!imageLink}
         onClick={handleClick}
       >
@@ -46,4 +45,4 @@ const ImageLinkInput: FC<ImageLinkInputProps> = ({
   )
 }
 
-export default ImageLinkInput
+export default RemoteUploader
