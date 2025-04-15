@@ -16,7 +16,7 @@ const FormBlock: React.FC<FormProps> = ({ fields }) => {
   return (
     <form className='flex flex-col gap-1 space-y-4'>
       <Inputs fields={fields} />
-      <Button type="submit">提交</Button>
+      <Button type="submit" className='bg-primary-600 text-white'>提交</Button>
     </form>
   )
 }

@@ -29,7 +29,7 @@ const RemoteUploader: FC<RemoteUploaderProps> = ({
   return (
     <div className='flex items-center h-8 relative'>
       <Input
-        className='px-1 border w-full h-full text-[12px]'
+        className='px-1 border w-full h-full focus:outline-none'
         value={imageLink}
         onChange={e => setImageLink(e.target.value)}
         placeholder={t('common.imageUploader.pasteImageLinkInputPlaceholder') || ''}

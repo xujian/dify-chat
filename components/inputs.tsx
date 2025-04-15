@@ -1,6 +1,6 @@
 import { FC, useState, useEffect } from 'react'
 import fieldComponents from '@/components/fields'
-import { Field } from '@/models'
+import type { Field } from '@/models'
 
 export type InputsProps = {
   fields: Field[]
