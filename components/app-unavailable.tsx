@@ -1,5 +1,5 @@
 'use client'
-import type { FC } from 'react'
+import type { FC, MemoExoticComponent } from 'react'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -8,10 +8,10 @@ type IAppUnavailableProps = {
   errMessage?: string
 }
 
-const AppUnavailable: FC<IAppUnavailableProps> = ({
+export const AppUnavailable: MemoExoticComponent<FC<IAppUnavailableProps>> = React.memo(({
   isUnknownReason,
   errMessage,
-}) => {
+}: IAppUnavailableProps) => {
   const { t } = useTranslation()
   let message = errMessage
   if (!errMessage)
@@ -26,5 +26,5 @@ const AppUnavailable: FC<IAppUnavailableProps> = ({
       <div className='text-sm'>{message}</div>
     </div>
   )
-}
-export default React.memo(AppUnavailable)
+})
+

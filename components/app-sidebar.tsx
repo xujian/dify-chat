@@ -71,7 +71,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   }, [])
 
   const versions = ['1.0.1', '1.1.0-alpha', '2.0.0-beta1']
-  console.log('VersionSwitcher', VersionSwitcher)
   return (
     <Sidebar {...props}>
       <SidebarHeader>

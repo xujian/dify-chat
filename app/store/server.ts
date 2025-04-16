@@ -25,7 +25,6 @@ export const fetchServerConfig = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await fetchAppParams()
-      console.log('fetchServerConfig', response)
       return response as ServerConfig
     } catch (error: any) {
       return rejectWithValue(error.message || 'Failed to fetch app parameters')
