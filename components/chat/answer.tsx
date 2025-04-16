@@ -198,7 +198,7 @@ const Answer: FC<AnswerProps> = ({
                 ? agentModeAnswer
                 : (
                   item.format === 'json'
-                    ? <CustomBlock type='form' data={item.customContent} />
+                    ? <CustomBlock data={item.customContent} />
                     : <Markdown content={content} />
                 )
               )}

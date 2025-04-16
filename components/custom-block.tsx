@@ -1,11 +1,7 @@
 import React from 'react'
 import { CodeLanguage } from '@/models'
 import { FormBlock, CardBlock } from './blocks'
-
-interface CustomBlockProps {
-  data?: Record<string, any>
-  type?: 'form' | 'card' | 'custom'
-}
+import { CustomBlockProps } from './types'
 
 /**
  * 在对话中显示自定义内容
@@ -13,15 +9,16 @@ interface CustomBlockProps {
  * @returns 
  */
 const CustomBlock: React.FC<CustomBlockProps> = ({ data = {}, type = 'json' }) => {
-  if (type === 'form' && Array.isArray(data.fields)) {
+
+  if (data.type === 'form') {
     return (
-      <FormBlock fields={data.fields} />
+      <FormBlock data={data} />
     )
   }
 
-  if (type === 'card') {
+  if (data.type === 'card') {
     return (
-      <CardBlock fields={data.fields} />
+      <CardBlock data={data} />
     )
   }
 
