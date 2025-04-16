@@ -2,17 +2,19 @@
 import type { FC } from 'react'
 import React from 'react'
 import { CircleUserRound } from 'lucide-react'
-import type { Message } from '@/models'
+import type { Media, Message } from '@/models'
 import s from './style.module.css'
 
 import { Markdown } from '@/components/markdown'
 import ImageGallery from '@/components/image-gallery'
 
-type QuestionProps = Pick<react, 'id' | 'content' | 'useCurrentUserAvatar'> & {
-  imgSrcs?: string[]
+type QuestionProps = {
+  id: string
+  content: string
+  files?: Media[]
 }
 
-const Question: FC<QuestionProps> = ({ id, content, useCurrentUserAvatar, imgSrcs }) => {
+const Question: FC<QuestionProps> = ({ id, content, files }) => {
   const userName = ['']
   return (
     <div className='flex items-start justify-end py-1' key={id}>
@@ -21,8 +23,8 @@ const Question: FC<QuestionProps> = ({ id, content, useCurrentUserAvatar, imgSrc
           <div
             className={'mr-2 py-3 px-4 bg-blue-500 rounded-tl-2xl rounded-b-2xl'}
           >
-            {imgSrcs && imgSrcs.length > 0 && (
-              <ImageGallery srcs={imgSrcs} />
+            {files && files.length > 0 && (
+              <ImageGallery items={files} />
             )}
             <Markdown content={content} />
           </div>

@@ -5,7 +5,8 @@ export type AppInfo = {
   description: string
   defaultLanguage: Locale
   copyright?: string
-  privacyPolicy?: string
+  privacyPolicy?: string,
+  server: string,
 }
 
 export type TypeWithI18N<T = string> = {

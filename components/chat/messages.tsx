@@ -24,7 +24,7 @@ const Messages: FC<MessagesProps> = () => {
     enabled: true,
     number_limits: 2,
     detail: 'low',
-    transfer_methods: ['local'],
+    transfeMethods: ['local'],
   }
 
   const { t } = useTranslation()
@@ -63,7 +63,6 @@ const Messages: FC<MessagesProps> = () => {
     if (container.current) {
       container.current.scrollTop = container.current.scrollHeight
     }
-    toast('test')
   }, [messages])
 
 
@@ -86,8 +85,7 @@ const Messages: FC<MessagesProps> = () => {
               key={item.id}
               id={item.id}
               content={item.content}
-              useCurrentUserAvatar={true} //{useCurrentUserAvatar}
-              imgSrcs={(item.files && item.files?.length > 0) ? item.files.map(item => item.url) : []}
+              files={item.files || []}
             />
           )
         })}

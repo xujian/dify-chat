@@ -1,11 +1,10 @@
 import { useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { uploadFile } from './utils'
 import type { UploadedFile } from '@/models'
 import { toast } from '../toast'
 import { upload } from '@/service/base'
 
-export const useImageFiles = () => {
+export const useUploadedFiles = () => {
   const { t } = useTranslation()
   const [files, setFiles] = useState<UploadedFile[]>([])
   const filesRef = useRef<UploadedFile[]>([])
@@ -30,9 +29,9 @@ export const useImageFiles = () => {
       filesRef.current = newFiles
     }
   }
-  const handleRemove = (imageFileId: string) => {
+  const handleRemove = (file: UploadedFile) => {
     const files = filesRef.current
-    const index = files.findIndex(f => f.id === imageFileId)
+    const index = files.findIndex(f => f.id === file.id)
 
     if (index > -1) {
       const currentFile = files[index]
@@ -47,9 +46,9 @@ export const useImageFiles = () => {
       filesRef.current = newFiles
     }
   }
-  const handleImageLinkLoadError = (imageFileId: string) => {
+  const onImageError = (file: UploadedFile) => {
     const files = filesRef.current
-    const index = files.findIndex(f => f.id === imageFileId)
+    const index = files.findIndex(f => f.id === file.id)
 
     if (index > -1) {
       const currentFile = files[index]
@@ -62,9 +61,9 @@ export const useImageFiles = () => {
       setFiles(newFiles)
     }
   }
-  const handleImageLinkLoadSuccess = (imageFileId: string) => {
+  const onImageLoad = (file: UploadedFile) => {
     const files = filesRef.current
-    const index = files.findIndex(f => f.id === imageFileId)
+    const index = files.findIndex(f => f.id === file.id)
 
     if (index > -1) {
       const currentImageFile = files[index]
@@ -77,9 +76,9 @@ export const useImageFiles = () => {
       setFiles(newFiles)
     }
   }
-  const handleReUpload = (imageFileId: string) => {
+  const handleReUpload = (file: UploadedFile) => {
     const files = filesRef.current
-    const index = files.findIndex(f => f.id === imageFileId)
+    const index = files.findIndex(f => f.id === file.id)
 
     if (index > -1) {
       const currentImageFile = files[index]
@@ -134,8 +133,8 @@ export const useImageFiles = () => {
     files: filteredFiles,
     onUpload: handleUpload,
     onRemove: handleRemove,
-    onImageLinkLoadError: handleImageLinkLoadError,
-    onImageLinkLoadSuccess: handleImageLinkLoadSuccess,
+    onImageLoad,
+    onImageError,
     onReUpload: handleReUpload,
     onClear: handleClear,
   }

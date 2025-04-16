@@ -4,9 +4,10 @@ import React, { useState } from 'react'
 import cn from 'classnames'
 import s from './image-gallery.module.css'
 import ImagePreview from '@/components/upload/image-preview'
+import { Media } from '@/models'
 
 type Props = {
-  srcs: string[]
+  items: Media[]
 }
 
 const getWidthStyle = (imgNum: number) => {
@@ -28,23 +29,23 @@ const getWidthStyle = (imgNum: number) => {
 }
 
 const ImageGallery: FC<Props> = ({
-  srcs,
+  items,
 }) => {
   const [imagePreviewUrl, setImagePreviewUrl] = useState('')
 
-  const imgNum = srcs.length
+  const imgNum = items.length
   const imgStyle = getWidthStyle(imgNum)
   return (
     <div className={cn(s[`img-${imgNum}`], 'flex flex-wrap')}>
       {/* TODO: support preview */}
-      {srcs.map((src, index) => (
+      {items.map((file, index) => (
         <img
           key={index}
           className={s.item}
           style={imgStyle}
-          src={src}
+          src={file.url}
           alt=''
-          onClick={() => setImagePreviewUrl(src)}
+          onClick={() => setImagePreviewUrl(file.url!)}
         />
       ))}
       {
@@ -75,7 +76,7 @@ export const ImageGalleryTest = () => {
     <div className='space-y-2'>
       {imgGallerySrcs.map((_, index) => (
         <div key={index} className='p-4 pb-2 rounded-lg bg-[#D1E9FF80]'>
-          <ImageGallery srcs={imgGallerySrcs.slice(0, index + 1)} />
+          <ImageGallery items={imgGallerySrcs.slice(0, index + 1)} />
         </div>
       ))}
     </div>

@@ -11,10 +11,10 @@ import { LoaderCircle } from 'lucide-react'
 type ImageListProps = {
   list: UploadedFile[]
   readonly?: boolean
-  onRemove?: (imageFileId: string) => void
-  onReUpload?: (imageFileId: string) => void
-  onImageLinkLoadSuccess?: (imageFileId: string) => void
-  onImageLinkLoadError?: (imageFileId: string) => void
+  onRemove?: (file: UploadedFile) => void
+  onReUpload?: (file: UploadedFile) => void
+  onImageLoad?: (file: UploadedFile) => void
+  onImageError?: (file: UploadedFile) => void
 }
 
 const ImageList: FC<ImageListProps> = ({
@@ -22,19 +22,19 @@ const ImageList: FC<ImageListProps> = ({
   readonly,
   onRemove,
   onReUpload,
-  onImageLinkLoadSuccess,
-  onImageLinkLoadError,
+  onImageLoad,
+  onImageError,
 }) => {
   const { t } = useTranslation()
   const [imagePreviewUrl, setImagePreviewUrl] = useState('')
 
-  const handleImageLinkLoadSuccess = (item: UploadedFile) => {
-    if (item.type === 'remote' && onImageLinkLoadSuccess && item.progress !== -1)
-      onImageLinkLoadSuccess(item.id!)
+  const handleImageLoad = (item: UploadedFile) => {
+    if (item.type === 'remote' && onImageLoad && item.progress !== -1)
+      onImageLoad(item)
   }
-  const handleImageLinkLoadError = (item: UploadedFile) => {
-    if (item.type === 'remote' && onImageLinkLoadError)
-      onImageLinkLoadError(item.id!)
+  const handleImageError = (item: UploadedFile) => {
+    if (item.type === 'remote' && onImageError)
+      onImageError(item)
   }
 
   return (
@@ -88,10 +88,10 @@ const ImageList: FC<ImageListProps> = ({
             <img
               className='w-16 h-16 rounded-md object-cover cursor-pointer border'
               alt=''
-              onLoad={() => handleImageLinkLoadSuccess(item)}
-              onError={() => handleImageLinkLoadError(item)}
+              onLoad={() => { console.log('ooooooo'); handleImageLoad(item) }}
+              onError={() => handleImageError(item)}
               src={item.url}
-              onClick={() => item.progress === 100 && setImagePreviewUrl((item.type === TransferMethod.remote_url ? item.url : item.base64Url) as string)}
+              onClick={() => item.progress === 100 && setImagePreviewUrl(item.url!)}
             />
             {
               !readonly && (
@@ -102,7 +102,7 @@ const ImageList: FC<ImageListProps> = ({
                     cursor-pointer
                     ${item.progress === -1 ? 'flex' : 'hidden group-hover:flex'}
                   `}
-                  onClick={() => onRemove && onRemove(item.id!)}>
+                  onClick={() => onRemove && onRemove(item)}>
                   <CircleX className='w-3 h-3 text-gray-500' />
                 </div>
               )

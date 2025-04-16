@@ -2,7 +2,8 @@ import { Message } from '@/models'
 import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit'
 import { deleteMessage, getMessages } from '@/service'
 import { toJson } from '@/lib/utils'
-import { toast } from '@/components/toast'
+import { toast } from '@/components'
+import { APP_INFO } from '@/config'
 export interface MessagesState {
   value: Message[]
   loading: boolean
@@ -79,6 +80,14 @@ export const { addMessage, updateMessage, clearMessages, clearError, greet } = m
 export const fetchMessages = createAsyncThunk(
   'messages/fetchMessages',
   async (conversationId: string, { rejectWithValue }) => {
+    const transform = (f: any[]) => f.map(f => ({
+      name: f.filename,
+      id: f.id,
+      type: f.type,
+      url: f.url.startsWith('http')
+        ? f.url
+        : `${APP_INFO.server}${f.url}`,
+    }))
     try {
       const response = await getMessages(conversationId)
       const { data } = response as { data: any[] }
@@ -91,10 +100,9 @@ export const fetchMessages = createAsyncThunk(
           conversationId: conversationId,
           content: item.query,
           type: 'question',
-          files: item.message_files
-            ?.filter((file: any) =>
-              file.belongs_to === 'assistant')
-            || [],
+          files: transform(
+            item.message_files
+              ?.filter((file: any) => file.belongs_to === 'user') || []),
         })
         result.push({
           id: item.id,
@@ -104,8 +112,11 @@ export const fetchMessages = createAsyncThunk(
           customContent,
           type: 'answer',
           feedback: item.feedback,
-          files: item.message_files?.filter(
-            (file: any) => file.belongs_to === 'assistant') || [],
+          files: transform(
+            item.message_files?.filter(
+              (file: any) => file.belongs_to === 'assistant'
+            ) || []
+          ),
         })
       })
       return result

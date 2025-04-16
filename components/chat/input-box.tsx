@@ -1,13 +1,12 @@
 'use client'
 import { cn } from '@/lib/utils'
-import { FC, useRef, useState } from 'react'
+import { FC, useState } from 'react'
 import { useTranslation } from "react-i18next"
-import { Input } from "../ui/input"
 import { TextareaAutosize } from "../ui/textarea-autosize"
 import { CircleStop, SendHorizonal } from 'lucide-react'
 import FileUploader from '@/components/upload/file-uploader'
 import ImageList from '@/components/upload/image-list'
-import { useImageFiles } from '../upload/hooks'
+import { useUploadedFiles } from '../upload/hooks'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '@/app/store'
 import { generationConversationName, sendChatMessage, SendChatMessageData } from '@/service'
@@ -32,10 +31,10 @@ const InputBox: FC<InputBoxProps> = () => {
     onUpload,
     onRemove,
     onReUpload,
-    onImageLinkLoadError,
-    onImageLinkLoadSuccess,
+    onImageLoad,
+    onImageError,
     onClear,
-  } = useImageFiles()
+  } = useUploadedFiles()
 
   const handleInputChange = (value: string) => {
     setUserInput(value)
@@ -45,8 +44,7 @@ const InputBox: FC<InputBoxProps> = () => {
     setIsTyping(false)
   }
 
-  const send = async (message: string, files?: Media[]) => {
-    console.log('send', message, files)
+  const send = async (message: string) => {
     if (session.responding) {
       return
     }
@@ -57,7 +55,7 @@ const InputBox: FC<InputBoxProps> = () => {
         phone: '13800138000',
         age: 20,
         gender: '男',
-      },
+      }
     }
 
     const t = Date.now()
@@ -97,7 +95,11 @@ const InputBox: FC<InputBoxProps> = () => {
 
     // loading animation
     dispatch(setResponding(true))
-    sendChatMessage(data, {
+    console.log('send-----------------data', data, files)
+    sendChatMessage({
+      ...data,
+      files
+    }, {
       getAbortController: (abortController) => {
         setAbortController(abortController)
       },
@@ -219,8 +221,8 @@ const InputBox: FC<InputBoxProps> = () => {
             list={files}
             onRemove={onRemove}
             onReUpload={onReUpload}
-            onImageLinkLoadSuccess={onImageLinkLoadSuccess}
-            onImageLinkLoadError={onImageLinkLoadError}
+            onImageLoad={onImageLoad}
+            onImageError={onImageError}
           />
         )}
         <TextareaAutosize

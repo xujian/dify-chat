@@ -9,6 +9,11 @@ export type SendChatMessageData = {
   inputs?: Record<string, any>
 }
 
+const typeMapping = {
+  remote: 'remote_url',
+  local: 'local_file',
+}
+
 export const sendChatMessage = async (
   data: SendChatMessageData,
   {
@@ -46,6 +51,19 @@ export const sendChatMessage = async (
       ? null
       : data.conversationId,
     response_mode: 'streaming',
+    files: data.files?.map(f =>
+      f.transferMethod === 'local'
+        ? {
+          type: f.type,
+          upload_file_id: f.uploadId,
+          transfer_method: 'local_file'
+        }
+        : {
+          type: f.type,
+          transfer_method: 'remote_url',
+          url: f.url
+        }
+    )
   }
   return ssePost('chat-messages', {
     body,

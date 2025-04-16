@@ -133,7 +133,6 @@ const FileUploader: FC<FileUploaderProps> = ({
   onUpload,
   disabled,
 }) => {
-  console.log('FileUploader, settings', settings)
   if (settings.transferMethod === 'local') {
     return (
       <LocalUpload
@@ -146,7 +145,7 @@ const FileUploader: FC<FileUploaderProps> = ({
 
   return (
     <UploaderButton
-      method="local"
+      method='local'
       onUpload={onUpload}
       disabled={disabled}
       limit={+settings.imageFileSizeLimit!}

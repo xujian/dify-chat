@@ -26,10 +26,10 @@ const FilePicker: FC<FilePickerProps> = ({
   const { t } = useTranslation()
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file)
+    const blob = e.target.files?.[0]
+    if (!blob)
       return
-    if (limit && file.size > limit * 1024 * 1024) {
+    if (limit && blob.size > limit * 1024 * 1024) {
       toast({ type: 'error', message: t('common.imageUploader.uploadFromComputerLimit', { size: limit }) })
       return
     }
@@ -37,33 +37,33 @@ const FilePicker: FC<FilePickerProps> = ({
     reader.addEventListener(
       'load',
       () => {
-        const imageFile: UploadedFile = {
+        const uploaded: UploadedFile = {
           id: `${Date.now()}`,
           uploadId: '',
-          file,
+          blob,
           url: reader.result as string,
           progress: 0,
           transferMethod: 'local',
           type: 'image',
         }
-        onUpload(imageFile)
+        onUpload(uploaded)
         const formData = new FormData()
-        formData.append('file', file)
+        formData.append('file', blob)
         upload({
           xhr: new XMLHttpRequest(),
           data: formData,
           onprogress: (progress: number) => {
-            onUpload({ ...imageFile, progress })
+            onUpload({ ...uploaded, progress })
           },
         }).then((res: { id: string }) => {
           onUpload({
-            ...imageFile,
-            file: imageFile.file!,
+            ...uploaded,
+            blob,
             progress: 100,
             uploadId: res.id,
           })
         }).catch(() => {
-          onUpload({ ...imageFile, progress: -1 })
+          onUpload({ ...uploaded, progress: -1 })
         })
       },
       false,
@@ -75,7 +75,7 @@ const FilePicker: FC<FilePickerProps> = ({
       },
       false,
     )
-    reader.readAsDataURL(file)
+    reader.readAsDataURL(blob)
   }
 
   return (

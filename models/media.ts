@@ -25,5 +25,5 @@ export type Media = {
 export type UploadedFile = Media & {
   progress: number
   deleted?: boolean
-  file?: File
+  blob?: File
 }
