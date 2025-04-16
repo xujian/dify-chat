@@ -214,7 +214,6 @@ const InputBox: FC<InputBoxProps> = () => {
 
   return (
     <div className="relative my-3 flex flex-col w-full">
-      <pre>{JSON.stringify(files, null, 2)}</pre>
       <div className="w-full flex flex-col justify-between border rounded-lg">
         {files.length > 0 && (
           <ImageList
