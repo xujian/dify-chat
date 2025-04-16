@@ -1,7 +1,8 @@
 import { Conversation } from '@/models'
 import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit'
 import { getConversations, removeConversation } from '@/service'
-import { toast } from '@/components/toast'
+import { toast } from '@/components'
+
 export interface ConversationsState {
   value: Conversation[]
   loading: boolean

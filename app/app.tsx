@@ -3,18 +3,14 @@
 import type { FC } from 'react'
 import React, { useEffect, useState } from 'react'
 import { useBoolean } from 'ahooks'
-import Header from '@/components/header'
-import { Messages } from '@/components/chat'
+import { Header, Messages, AppSidebar, Welcome, AppUnavailable } from '@/components'
+import { SidebarInset, SidebarProvider } from '@/components/ui'
 import { setLocaleOnClient } from '@/i18n/client'
 import useBreakpoints, { MediaType } from '@/hooks/use-breakpoints'
-import AppUnavailable from '@/components/app-unavailable'
 import { API_KEY, APP_ID, APP_INFO } from '@/config'
-import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
-import { AppSidebar } from '@/components/'
 import { useDispatch, useSelector } from 'react-redux'
 import type { RootState, AppDispatch } from './store/index'
 import { fetchServerConfig } from './store/server'
-import Welcome from '@/components/welcome'
 import { initSession } from './store/session'
 export type AppProps = {
   params: any
@@ -35,7 +31,6 @@ const App: FC<AppProps> = () => {
 
   useEffect(() => {
     dispatch(initSession())
-    console.log('init===serverConfig 1', serverConfig)
     if (!hasSetAppConfig) {
       setAppUnavailable(true)
       return

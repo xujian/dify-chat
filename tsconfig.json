@@ -24,9 +24,12 @@
       }
     ],
     "paths": {
+      "@/components": [
+        "./components/"
+      ],
       "@/*": [
         "./*"
-      ]
+      ],
     }
   },
   "include": [

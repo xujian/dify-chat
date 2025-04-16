@@ -6,6 +6,7 @@ import Welcome from './welcome'
 import CustomBlock from './custom-block'
 import { FormBlock, CardBlock } from './blocks'
 import ImageGallery, { ImageGalleryTest } from './image-gallery'
+
 export {
   AppSidebar,
   Header,
@@ -20,3 +21,6 @@ export {
 
 export { VersionSwitcher } from './version-switcher'
 export { AppSearch } from './app-search'
+export * from './toast'
+export * from './chat'
+export * from './app-unavailable'
