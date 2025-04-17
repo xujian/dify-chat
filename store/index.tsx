@@ -1,10 +1,10 @@
 'use client'
+import { useRef } from 'react'
+import { Provider } from 'react-redux'
 import { configureStore } from '@reduxjs/toolkit'
+import type { UnknownAction, ThunkDispatch } from '@reduxjs/toolkit'
 import conversationsReducer from './conversations'
 import messagesReducer from './messages'
-import type { UnknownAction, ThunkDispatch } from '@reduxjs/toolkit'
-import { Provider } from 'react-redux'
-import { useRef } from 'react'
 import sessionReducer from './session'
 
 export const store = configureStore({

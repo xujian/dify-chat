@@ -2,7 +2,7 @@
 import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
-import type { RootState, AppDispatch } from '@/app/store'
+import type { RootState, AppDispatch } from '@/store'
 
 import { AppSearch } from '@/components/app-search'
 import { VersionSwitcher } from '@/components/version-switcher'
@@ -22,11 +22,11 @@ import {
 } from '@/components/ui/sidebar'
 import { useEffect } from 'react'
 import { MessageSquare, PlusIcon, MoreHorizontalIcon } from 'lucide-react'
-import { addConversation, deleteConversation, fetchConversations } from '@/app/store/conversations'
+import { addConversation, deleteConversation, fetchConversations } from '@/store/conversations'
 import { Conversation } from '@/models'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui'
-import { setCurrentConversation, startChat } from '@/app/store/session'
-import { greet } from '@/app/store/messages'
+import { setCurrentConversation, startChat } from '@/store/session'
+import { greet } from '@/store/messages'
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 

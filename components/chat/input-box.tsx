@@ -8,13 +8,13 @@ import FileUploader from '@/components/upload/file-uploader'
 import ImageList from '@/components/upload/image-list'
 import { useUploadedFiles } from '../upload/hooks'
 import { useDispatch, useSelector } from 'react-redux'
-import { AppDispatch, RootState } from '@/app/store'
+import { AppDispatch, RootState } from '@/store'
 import { generationConversationName, sendChatMessage, SendChatMessageData } from '@/service'
-import { setResponding } from '@/app/store/session'
-import { addMessage, updateMessage } from '@/app/store/messages'
+import { setResponding } from '@/store/session'
+import { addMessage, updateMessage } from '@/store/messages'
 import { Annotation, Message, Media } from '@/models'
 import { WorkflowRunningStatus } from '@/models/workflow'
-import { updateConversation } from '@/app/store/conversations'
+import { updateConversation } from '@/store/conversations'
 interface InputBoxProps { }
 
 const InputBox: FC<InputBoxProps> = () => {

@@ -9,8 +9,8 @@ import { setLocaleOnClient } from '@/i18n/client'
 import useBreakpoints, { MediaType } from '@/hooks/use-breakpoints'
 import { API_KEY, APP_ID, APP_INFO } from '@/config'
 import { useDispatch, useSelector } from 'react-redux'
-import type { RootState, AppDispatch } from './store/index'
-import { initSession } from './store/session'
+import type { RootState, AppDispatch } from '../store/index'
+import { initSession } from '../store/session'
 import { useServer } from '@/context/server'
 export type AppProps = {
   params: any
