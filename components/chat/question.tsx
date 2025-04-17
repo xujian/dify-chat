@@ -31,7 +31,7 @@ const Question: FC<QuestionProps> = ({ id, content, files }) => {
         </div>
       </div>
       <div className={`${s.questionIcon} w-10 h-10 shrink-0 flex items-center justify-center`}>
-        <CircleUserRound className='w-8 h-8' />
+        <img src="/user.png" className='w-8 h-8' />
       </div>
     </div>
   )
