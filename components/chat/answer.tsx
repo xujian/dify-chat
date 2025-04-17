@@ -3,7 +3,7 @@ import type { FC } from 'react'
 import React from 'react'
 import { HandThumbDownIcon, HandThumbUpIcon } from '@heroicons/react/24/outline'
 import { useTranslation } from 'react-i18next'
-import Loading from './loading'
+import Loading from '../loading'
 import type { FeedbackFunc } from './type'
 import s from './style.module.css'
 import ImageGallery from '../image-gallery'
@@ -210,6 +210,7 @@ const Answer: FC<AnswerProps> = ({
           </div>
         </div>
       </div>
+      <Loading type='text' />
     </div>
   )
 }
