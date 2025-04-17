@@ -10,7 +10,7 @@ import { AppDispatch, RootState } from '@/store'
 import { clearMessages, fetchMessages } from '@/store/messages'
 import InputBox from './input-box'
 import { toast } from '@/components/toast'
-
+import Loading from '@/components/ui/loading'
 export type MessagesProps = {
 }
 
@@ -90,6 +90,7 @@ const Messages: FC<MessagesProps> = () => {
             />
           )
         })}
+        {loading && <Loading />}
       </div>
       <div className={cn(!feedbackDisabled && 'left-3.5! right-3.5!', 'absolute z-10 bottom-0 left-0 right-0')}>
         <InputBox />
