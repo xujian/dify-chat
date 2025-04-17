@@ -51,7 +51,8 @@ const Messages: FC<MessagesProps> = () => {
   }
 
   useEffect(() => {
-    if (session.currentConversation !== '-1') {
+    console.log('session.currentConversation', session.currentConversation)
+    if (session.currentConversation && session.currentConversation !== '-1') {
       dispatch(fetchMessages(session.currentConversation))
     } else {
       // just created conversation, clear messages

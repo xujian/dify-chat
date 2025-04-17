@@ -1,5 +1,5 @@
 'use client'
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { Action, createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 /**
  * store the current conversation id to LocalStorage
@@ -18,28 +18,30 @@ export interface SessionState {
   currentConversation: string,
   chatStarted: boolean,
   responding: boolean,
+  variables: Record<string, string>,
 }
 
 const initialState: SessionState = {
   currentConversation: '',
   chatStarted: false,
   responding: false,
+  variables: {},
 }
-
 // move getInitialState thunk
 export const initSession = createAsyncThunk(
   'session/getInitialState',
   async () => {
-    let conversationSavedLocalStorage = ''
+    let savedConversation = ''
     if (typeof window !== 'undefined') {
-      conversationSavedLocalStorage = globalThis.localStorage.getItem(localStorageKey) || ''
+      savedConversation = globalThis.localStorage.getItem(localStorageKey) || ''
     }
     return Promise.resolve({
-      currentConversation: conversationSavedLocalStorage,
+      currentConversation: savedConversation,
       // if conversationSavedLocalStorage has value then start chat
       // display chat interface immediately
-      chatStarted: conversationSavedLocalStorage !== ''
-        && conversationSavedLocalStorage !== '-1',
+      chatStarted: savedConversation !== ''
+        && savedConversation !== '-1',
+      variables: {},
     })
   }
 )
@@ -68,6 +70,12 @@ export const sessionSlice = createSlice({
     setResponding: (state, action) => {
       state.responding = action.payload
     },
+    setVariable: (state, action: PayloadAction<{ name: string, value: string }>) => {
+      state.variables = {
+        ...state.variables,
+        [action.payload.name]: action.payload.value,
+      }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(initSession.fulfilled, (state, action) => {
@@ -79,6 +87,6 @@ export const sessionSlice = createSlice({
 
 
 
-export const { setCurrentConversation, startChat, setResponding } = sessionSlice.actions
+export const { setCurrentConversation, startChat, setResponding, setVariable } = sessionSlice.actions
 
 export default sessionSlice.reducer

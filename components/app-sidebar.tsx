@@ -27,10 +27,10 @@ import { Conversation } from '@/models'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui'
 import { setCurrentConversation, startChat } from '@/store/session'
 import { greet } from '@/store/messages'
-
+import { useServer } from '@/context/server'
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
-  const serverConfig = useSelector((state: RootState) => state.server)
+  const server = useServer()
   const dispatch = useDispatch<AppDispatch>()
   const { value: conversations, loading, error, fufilled } = useSelector((state: RootState) => state.conversations)
   const session = useSelector((state: RootState) => state.session)
@@ -58,7 +58,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       inputs: {}
     }
     dispatch(addConversation(conversation))
-    dispatch(greet(serverConfig.openingStatement))
+    dispatch(greet(server.config.openingStatement))
     dispatch(setCurrentConversation('-1'))
     dispatch(startChat())
   }
