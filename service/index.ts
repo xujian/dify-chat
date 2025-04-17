@@ -9,10 +9,15 @@ export type SendChatMessageData = {
   inputs?: Record<string, any>
 }
 
-const typeMapping = {
+const transferMethodMapping = {
   remote: 'remote_url',
   local: 'local_file',
 }
+
+const reversedTransferMethodMapping = Object.entries(transferMethodMapping).reduce((acc, [key, value]) => {
+  acc[value] = key
+  return acc
+}, {} as Record<string, string>)
 
 export const sendChatMessage = async (
   data: SendChatMessageData,
@@ -126,9 +131,14 @@ export const fetchAppParams: () => Promise<ServerConfig> = async () => {
     'number': 'number'
   }
   return {
-    systemParameters: result.system_parameters,
     upload: {
-      enabled: result.file_upload.enable
+      enabled: result.file_upload.enabled,
+      limit: result.file_upload.number_limits,
+      suggests: result.suggested_questions,
+      allowedTypes: result.file_upload.allowed_file_types,
+      allowedTransferMethods: result.file_upload.allowed_file_upload_methods
+        .map((method: string) => reversedTransferMethodMapping[method]),
+      sizeLimit: result.file_upload.fileUploadConfig.file_size_limit,
     },
     openingStatement: result.opening_statement,
     suggests: result.suggested_questions,

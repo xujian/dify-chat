@@ -8,12 +8,13 @@ import { startChat } from '@/app/store/session'
 import { addConversation } from '@/app/store/conversations'
 import { greet } from '@/app/store/messages'
 import Inputs from './inputs'
+import { useServer } from '@/context/server'
 
 const Welcome: FC = () => {
 
-  const serverConfig = useSelector((state: RootState) => state.server),
-    session = useSelector((state: RootState) => state.session)
+  const session = useSelector((state: RootState) => state.session)
   const dispatch = useDispatch()
+  const { config } = useServer()
 
   const handleChat = () => {
     dispatch(addConversation({
@@ -22,14 +23,14 @@ const Welcome: FC = () => {
       introduction: '',
       inputs: {},
     }))
-    dispatch(greet(serverConfig.openingStatement))
+    dispatch(greet(config.openingStatement))
     dispatch(startChat())
   }
 
   return (
     <div className='welcome h-full flex flex-col items-center justify-center min-h-[200px]'>
       <div className='mx-auto'>
-        <Inputs fields={serverConfig.variables} />
+        <Inputs fields={config.variables} />
         <Button className='my-3'
           onClick={handleChat}>开始对话</Button>
       </div>

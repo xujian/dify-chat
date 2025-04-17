@@ -1,10 +1,6 @@
-import { Variable } from './app'
+import { Variable } from './form'
 
 export type FileUpload = {
-  enabled: boolean
-}
-
-export type SystemParameters = {
   enabled: boolean
 }
 
@@ -19,7 +15,6 @@ export type Suggest = {
 export interface ServerConfig {
   openingStatement: string
   upload: FileUpload
-  systemParameters: SystemParameters
   variables: Variable[]
   annotationReply?: AnnotationReply
   suggests?: Suggest[]

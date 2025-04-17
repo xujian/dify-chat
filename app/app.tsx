@@ -10,8 +10,8 @@ import useBreakpoints, { MediaType } from '@/hooks/use-breakpoints'
 import { API_KEY, APP_ID, APP_INFO } from '@/config'
 import { useDispatch, useSelector } from 'react-redux'
 import type { RootState, AppDispatch } from './store/index'
-import { fetchServerConfig } from './store/server'
 import { initSession } from './store/session'
+import { useServer } from '@/context/server'
 export type AppProps = {
   params: any
 }
@@ -19,7 +19,7 @@ export type AppProps = {
 const App: FC<AppProps> = () => {
   const dispatch = useDispatch<AppDispatch>()
   const session = useSelector((state: RootState) => state.session)
-  const serverConfig = useSelector((state: RootState) => state.server)
+  const server = useServer()
   const media = useBreakpoints()
   const isMobile = media === MediaType.mobile
   const hasSetAppConfig = APP_ID && API_KEY
@@ -31,14 +31,11 @@ const App: FC<AppProps> = () => {
 
   useEffect(() => {
     dispatch(initSession())
-    if (!hasSetAppConfig) {
+    if (server.error) {
       setAppUnavailable(true)
       return
     }
     try {
-      if (!inited) {
-        dispatch(fetchServerConfig())
-      }
       setLocaleOnClient(APP_INFO.defaultLanguage, true)
       setInited(true)
     }
