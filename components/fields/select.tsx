@@ -15,7 +15,7 @@ const select: FC<Field> = (props) => {
   return (
     <div className="grid w-full max-w-sm items-center gap-1.5">
       <Label>{props.label}</Label>
-      <Select>
+      <Select value={props.value} onValueChange={(value) => props.onChange?.(value)}>
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder={props.label} />
         </SelectTrigger>
@@ -30,7 +30,9 @@ const select: FC<Field> = (props) => {
                 key={typeof option === 'string'
                   ? option
                   : option.value}>
-                {option.label}
+                {typeof option === 'string'
+                  ? option
+                  : option.label}
               </SelectItem>
             ))}
           </SelectGroup>
