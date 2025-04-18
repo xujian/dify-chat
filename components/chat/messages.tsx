@@ -2,7 +2,6 @@
 import type { FC } from 'react'
 import React, { useEffect, useRef } from 'react'
 import cn from 'classnames'
-import { useTranslation } from 'react-i18next'
 import Answer from './answer'
 import Question from './question'
 import { useDispatch, useSelector } from 'react-redux'
@@ -20,15 +19,6 @@ const Messages: FC<MessagesProps> = () => {
   const session = useSelector((state: RootState) => state.session)
   const { value: messages, loading, error } = useSelector((state: RootState) => state.messages)
   const feedbackDisabled = false
-  const visionConfig = {
-    enabled: true,
-    number_limits: 2,
-    detail: 'low',
-    transfeMethods: ['local'],
-  }
-
-  const { t } = useTranslation()
-  const isUseInputMethod = useRef(false)
 
   const container = useRef<HTMLDivElement>(null)
 
@@ -51,7 +41,7 @@ const Messages: FC<MessagesProps> = () => {
   }
 
   useEffect(() => {
-    console.log('session.currentConversation', session.currentConversation)
+    console.log('oooooooooo---session.currentConversation', session.currentConversation)
     if (session.currentConversation && session.currentConversation !== '-1') {
       dispatch(fetchMessages(session.currentConversation))
     } else {
@@ -76,9 +66,9 @@ const Messages: FC<MessagesProps> = () => {
             return <Answer
               key={item.id}
               item={item}
-              feedbackDisabled={false} //{feedbackDisabled}
-              onFeedback={() => Promise.resolve()} //{onFeedback}
-              isResponding={session.responding} //{isResponding && isLast}
+              feedbackDisabled={false}
+              onFeedback={() => Promise.resolve()}
+              isResponding={session.responding}
             />
           }
           return (

@@ -31,6 +31,9 @@ export type Feedback = {
   content?: string | null
 }
 
+export type FeedbackHandler = (messageId: string, feedback: Feedback) => Promise<any>
+
+
 export type More = {
   time: string
   tokens: number

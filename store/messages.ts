@@ -4,6 +4,7 @@ import { deleteMessage, getMessages } from '@/service'
 import { toJson } from '@/lib/utils'
 import { toast } from '@/components'
 import { APP_INFO } from '@/config'
+
 export interface MessagesState {
   value: Message[]
   loading: boolean

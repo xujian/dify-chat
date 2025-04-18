@@ -1,6 +1,6 @@
 'use client'
 import { cn } from '@/lib/utils'
-import { FC, useState } from 'react'
+import { FC, useRef, useState } from 'react'
 import { useTranslation } from "react-i18next"
 import { TextareaAutosize } from "../ui/textarea-autosize"
 import { CircleStop, SendHorizonal } from 'lucide-react'
@@ -10,18 +10,22 @@ import { useUploadedFiles } from '../upload/hooks'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '@/store'
 import { generationConversationName, sendChatMessage, SendChatMessageData } from '@/service'
-import { setResponding } from '@/store/session'
+import { setCurrentConversation, setResponding } from '@/store/session'
 import { addMessage, updateMessage } from '@/store/messages'
 import { Annotation, Message, Media } from '@/models'
 import { WorkflowRunningStatus } from '@/models/workflow'
-import { updateConversation } from '@/store/conversations'
+import { patchConversation, updateConversation } from '@/store/conversations'
 interface InputBoxProps { }
 
 const InputBox: FC<InputBoxProps> = () => {
   const { t } = useTranslation()
   const session = useSelector((state: RootState) => state.session)
+  /**
+   * to store conversationId and wait to be updated
+   * when first message posted
+   */
+  const conversationRef = useRef<string>(session.currentConversation)
   const dispatch = useDispatch<AppDispatch>()
-  const [isTyping, setIsTyping] = useState<boolean>(false)
   const [isGenerating, setIsGenerating] = useState<boolean>(false)
   const [userInput, setUserInput] = useState<string>('')
   const [abortController, setAbortController] = useState<AbortController | null>(null)
@@ -41,7 +45,7 @@ const InputBox: FC<InputBoxProps> = () => {
   }
 
   const handleStopMessage = () => {
-    setIsTyping(false)
+    setIsGenerating(false)
   }
 
   const send = async (message: string) => {
@@ -57,6 +61,8 @@ const InputBox: FC<InputBoxProps> = () => {
     }
 
     const t = Date.now()
+
+    // placeholder question
     const questionId = `question-${t}`
     const question: Message = {
       id: questionId,
@@ -68,6 +74,7 @@ const InputBox: FC<InputBoxProps> = () => {
     }
     dispatch(addMessage(question))
 
+    // placeholder answer
     const answerId = `answer-${t}`
     const answer: Message = {
       id: answerId,
@@ -103,12 +110,19 @@ const InputBox: FC<InputBoxProps> = () => {
       },
       onData: (
         message: string,
-        isFirstMessage: boolean, {
+        isFirstMessage: boolean,
+        {
           conversationId: newConversationId,
           messageId,
           taskId
         }: any) => {
         console.log('onData', message, isFirstMessage, newConversationId, messageId, taskId)
+        if (isFirstMessage) {
+          console.log('onData-----------------newConversationId', isFirstMessage, newConversationId)
+          dispatch(patchConversation(newConversationId))
+          conversationRef.current = newConversationId
+          dispatch(setCurrentConversation(newConversationId))
+        }
         if (!isAgentMode) {
           answer.content += message
         }
@@ -130,10 +144,11 @@ const InputBox: FC<InputBoxProps> = () => {
           return
         dispatch(setResponding(false))
         // refresh conversation name
-        const conversation = await generationConversationName(session.currentConversation)
+        console.log('onCompleted---XXX---', conversationRef.current)
+        const generated = await generationConversationName(conversationRef.current)
         dispatch(updateConversation({
-          id: session.currentConversation,
-          name: conversation.name
+          id: conversationRef.current,
+          name: generated.name
         }))
       },
       onFile(file) {
@@ -199,7 +214,9 @@ const InputBox: FC<InputBoxProps> = () => {
       },
       onNodeFinished: ({ data }) => {
         console.log('onNodeFinished', data, answer)
-        const currentIndex = answer.workflowProcess!.tracing!.findIndex(item => item.node_id === data.node_id)
+        const currentIndex = answer.workflowProcess!.tracing!.findIndex(
+          item => item.nodeId === data.nodeId
+        )
         answer.workflowProcess!.tracing![currentIndex] = data as any
         if (data.node_type === 'code' && data.outputs.format === 'json') {
           answer.format = 'json'
@@ -240,8 +257,6 @@ const InputBox: FC<InputBoxProps> = () => {
           value={userInput}
           minRows={2}
           maxRows={4}
-          onCompositionStart={() => setIsTyping(true)}
-          onCompositionEnd={() => setIsTyping(false)}
         />
       </div>
       <div className="flex flex-row border border-t-0 rounded-b-lg mx-2 p-1">

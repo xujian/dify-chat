@@ -39,6 +39,12 @@ export const conversationsSlice = createSlice({
       // immutable state based off those changes
       state.value.unshift(action.payload)
     },
+    patchConversation: (state, action: PayloadAction<string>) => {
+      const patching = state.value.find(item => item.id === '-1')
+      if (patching) {
+        patching.id = action.payload
+      }
+    },
     updateConversation: (state, action: PayloadAction<Conversation>) => {
       const index = state.value.findIndex(item => item.id === action.payload.id)
       if (index !== -1) {
@@ -75,7 +81,13 @@ export const conversationsSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { addConversation, clearError, newConversation, updateConversation } = conversationsSlice.actions
+export const {
+  addConversation,
+  clearError,
+  newConversation,
+  updateConversation,
+  patchConversation
+} = conversationsSlice.actions
 
 export const fetchConversations = createAsyncThunk(
   'conversations/fetchConversations',
