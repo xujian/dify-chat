@@ -144,7 +144,6 @@ const Answer: FC<AnswerProps> = ({
           </div>
         </div>
       </div>
-      <Loading type='text' />
     </div>
   )
 }

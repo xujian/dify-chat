@@ -259,7 +259,7 @@ const InputBox: FC<InputBoxProps> = () => {
           maxRows={4}
         />
       </div>
-      <div className="flex flex-row border border-t-0 rounded-b-lg mx-2 p-1">
+      <div className="flex flex-row border border-t-0 bg-gray-50 rounded-b-lg mx-2 p-1">
         <FileUploader
           onUpload={onUpload}
           disabled={files.length >= 2}
