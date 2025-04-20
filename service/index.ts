@@ -138,7 +138,7 @@ export const fetchAppParams: () => Promise<ServerConfig> = async () => {
       allowedTypes: result.file_upload.allowed_file_types,
       allowedTransferMethods: result.file_upload.allowed_file_upload_methods
         .map((method: string) => reversedTransferMethodMapping[method]),
-      sizeLimit: result.file_upload.fileUploadConfig.file_size_limit,
+      sizeLimit: result.file_upload.fileUploadConfig?.file_size_limit || 20,
     },
     openingStatement: result.opening_statement,
     suggests: result.suggested_questions,
