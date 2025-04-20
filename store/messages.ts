@@ -22,6 +22,7 @@ export const messagesSlice = createSlice({
   initialState,
   reducers: {
     greet: (state, action: PayloadAction<string>) => {
+      state.value = []
       state.value.push({
         id: '-1',
         content: action.payload,

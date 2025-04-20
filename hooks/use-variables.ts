@@ -16,11 +16,11 @@ export const useVariables = () => {
   const server = useServer()
   const [variables, setVariables] = useState<{ name: string, value: string }[]>([])
   const session = useSelector((state: RootState) => state.session)
-  const [
+  const
     /**
      * whether all variables are fulfilled
      */
-    variablesFulfilled, setVariablesFulfilled] = useState(false)
+    [variablesFullfilled, setVariablesFullfilled] = useState(false)
 
   useEffect(() => {
     if (userId) {
@@ -31,9 +31,9 @@ export const useVariables = () => {
     const savedVariables = Object.entries(session.variables || {})
       .filter(([_, value]) => !!value)
       .map(([name, value]) => ({ name, value: value as string }))
-    setVariablesFulfilled(savedVariables.length === server.config.variables.length)
+    setVariablesFullfilled(savedVariables.length === server.config.variables.length)
     setVariables(savedVariables)
   }, [userId])
 
-  return { variables, variablesFulfilled }
+  return { variables, variablesFullfilled }
 }

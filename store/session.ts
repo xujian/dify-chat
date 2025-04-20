@@ -51,6 +51,7 @@ export const sessionSlice = createSlice({
   initialState,
   reducers: {
     setCurrentConversation: (state, action: PayloadAction<string>) => {
+      console.log('session.ts oooooooooo---setCurrentConversation', action.payload)
       state.currentConversation = action.payload
       globalThis.localStorage.setItem(localStorageKey, action.payload)
       // enters a conversation just created (id === '-1')
@@ -66,6 +67,9 @@ export const sessionSlice = createSlice({
        */
       globalThis.localStorage.setItem(localStorageKey, state.currentConversation)
       state.chatStarted = true
+    },
+    closeChat: (state) => {
+      state.chatStarted = false
     },
     setResponding: (state, action) => {
       state.responding = action.payload
@@ -87,6 +91,6 @@ export const sessionSlice = createSlice({
 
 
 
-export const { setCurrentConversation, startChat, setResponding, setVariable } = sessionSlice.actions
+export const { setCurrentConversation, startChat, closeChat, setResponding, setVariable } = sessionSlice.actions
 
 export default sessionSlice.reducer

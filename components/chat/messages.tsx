@@ -10,6 +10,7 @@ import { clearMessages, fetchMessages } from '@/store/messages'
 import InputBox from './input-box'
 import { toast } from '@/components/toast'
 import Loading from '@/components/loading'
+import { closeChat } from '@/store/session'
 export type MessagesProps = {
 }
 
@@ -17,6 +18,7 @@ const Messages: FC<MessagesProps> = () => {
 
   const dispatch = useDispatch<AppDispatch>()
   const session = useSelector((state: RootState) => state.session)
+  const conversations = useSelector((state: RootState) => state.conversations)
   const { value: messages, loading, error } = useSelector((state: RootState) => state.messages)
   const feedbackDisabled = false
 
@@ -28,27 +30,25 @@ const Messages: FC<MessagesProps> = () => {
     setQuery(value)
   }
 
-  const logError = (message: string) => {
-    toast({ type: 'error', message })
-  }
-
-  const valid = () => {
-    if (!query || query.trim() === '') {
-      logError('Message cannot be empty')
-      return false
-    }
-    return true
-  }
-
   useEffect(() => {
-    console.log('oooooooooo---session.currentConversation', session.currentConversation)
-    if (session.currentConversation && session.currentConversation !== '-1') {
-      dispatch(fetchMessages(session.currentConversation))
-    } else {
-      // just created conversation, clear messages
-      dispatch(clearMessages())
+    console.log('messages.tsx---session.currentConversation', session.currentConversation, conversations.value)
+    if (!session.currentConversation) {
+      return
     }
-  }, [session.currentConversation])
+    if (session.currentConversation === '-1') {
+      // dispatch(clearMessages())
+      return
+    }
+    if (!conversations.value.find((c) => c.id === session.currentConversation)) {
+      console.log('oooooooooo---conversation not found, clear messages')
+      // conversation not found, clear messages
+      // this means user come from a history URL that the conversation is deleted
+      // dispatch(clearMessages())
+      // dispatch(closeChat())
+      return
+    }
+    dispatch(fetchMessages(session.currentConversation))
+  }, [session.currentConversation, conversations])
 
   useEffect(() => {
     if (container.current) {

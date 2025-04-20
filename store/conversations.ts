@@ -21,7 +21,7 @@ export const conversationsSlice = createSlice({
   name: 'conversations',
   initialState,
   reducers: {
-    newConversation: (state) => {
+    createConversation: (state) => {
       // create a new conversation
       // and startChat
       const newConversation = {
@@ -84,7 +84,7 @@ export const conversationsSlice = createSlice({
 export const {
   addConversation,
   clearError,
-  newConversation,
+  createConversation,
   updateConversation,
   patchConversation
 } = conversationsSlice.actions
@@ -97,7 +97,7 @@ export const fetchConversations = createAsyncThunk(
       const { data, error } = response as { data: Conversation[]; error?: string }
 
       if (error) {
-        Toast.notify({ type: 'error', message: error })
+        toast({ type: 'error', message: error })
         return rejectWithValue(error)
       }
 

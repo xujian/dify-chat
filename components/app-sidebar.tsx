@@ -22,7 +22,7 @@ import {
 } from '@/components/ui/sidebar'
 import { useEffect } from 'react'
 import { MessageSquare, PlusIcon, MoreHorizontalIcon } from 'lucide-react'
-import { addConversation, deleteConversation, fetchConversations } from '@/store/conversations'
+import { createConversation, deleteConversation, fetchConversations } from '@/store/conversations'
 import { Conversation } from '@/models'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui'
 import { setCurrentConversation, startChat } from '@/store/session'
@@ -50,17 +50,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     console.log(conversationId)
   }
 
-  const createConversation = () => {
-    const conversation = {
-      id: '-1',
-      name: '新对话',
-      introduction: '',
-      inputs: {}
-    }
-    dispatch(addConversation(conversation))
-    dispatch(greet(server.config.openingStatement))
+  const handleCreateConversation = () => {
+    dispatch(createConversation())
     dispatch(setCurrentConversation('-1'))
     dispatch(startChat())
+    dispatch(greet(server.config.openingStatement))
   }
 
   // init
@@ -84,7 +78,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         {/* We create a SidebarGroup for each parent. */}
         <SidebarGroup>
           <SidebarGroupLabel>历史对话</SidebarGroupLabel>
-          <SidebarGroupAction title="新建对话" onClick={createConversation}>
+          <SidebarGroupAction title="新建对话" onClick={handleCreateConversation}>
             <PlusIcon />
           </SidebarGroupAction>
           <SidebarGroupContent>

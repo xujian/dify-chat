@@ -10,15 +10,19 @@ import useBreakpoints, { MediaType } from '@/hooks/use-breakpoints'
 import { API_KEY, APP_ID, APP_INFO } from '@/config'
 import { useDispatch, useSelector } from 'react-redux'
 import type { RootState, AppDispatch } from '../store/index'
-import { initSession } from '../store/session'
+import { initSession, setCurrentConversation } from '../store/session'
 import { useServer } from '@/context/server'
+import { useHash } from '@/hooks'
+
 export type AppProps = {
   params: any
 }
 
 const App: FC<AppProps> = () => {
+
   const dispatch = useDispatch<AppDispatch>()
   const session = useSelector((state: RootState) => state.session)
+  const [hash, setHash] = useHash()
   const server = useServer()
   const media = useBreakpoints()
   const isMobile = media === MediaType.mobile
@@ -30,6 +34,10 @@ const App: FC<AppProps> = () => {
   const [isShowSidebar, { setTrue: showSidebar, setFalse: hideSidebar }] = useBoolean(false)
 
   useEffect(() => {
+    if (hash) {
+      console.log('hash', hash)
+      dispatch(setCurrentConversation(hash))
+    }
     dispatch(initSession())
     if (server.error) {
       setAppUnavailable(true)
@@ -48,7 +56,7 @@ const App: FC<AppProps> = () => {
         setAppUnavailable(true)
       }
     }
-  }, [])
+  }, [hash])
 
   if (appUnavailable)
     return <AppUnavailable isUnknownReason={isUnknownReason} errMessage={!hasSetAppConfig
