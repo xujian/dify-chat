@@ -3,6 +3,7 @@
 .dot-flashing::after {
   position: relative;
   animation: dot-flashing 1s infinite linear alternate;
+  background-color: #667085;
 }
 
 .dot-flashing {

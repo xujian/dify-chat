@@ -4,11 +4,11 @@ import React from 'react'
 import s from './loading.module.css'
 
 export type LoadingProps = {
-  type: 'text' | 'avatar'
+  type?: 'text' | 'avatar'
 }
 
 const Loading: FC<LoadingProps> = ({
-  type,
+  type = 'text',
 }) => {
   return (
     <div className={`${s['dot-flashing']} ${s[type]}`}></div>
