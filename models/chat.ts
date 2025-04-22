@@ -120,3 +120,24 @@ export enum BlockEnum {
   VariableAssigner = 'variable-assigner',
   Tool = 'tool',
 }
+
+export type EndMessage = {
+  id: string
+  metadata: {
+    retrieverResources?: Citation[]
+    annotationReply: {
+      id: string
+      account: {
+        id: string
+        name: string
+      }
+    }
+  }
+}
+
+export type MessageReplace = {
+  id: string
+  task_id: string
+  answer: string
+  conversation_id: string
+}

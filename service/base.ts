@@ -1,5 +1,5 @@
 import { API_PREFIX } from '@/config'
-import type { AnnotationReply, MessageEnd, MessageReplace, ThoughtItem } from '@/components/chat/type'
+import type { AnnotationReply, EndMessage, MessageReplace, Thought } from '@/models'
 import { toast } from '@/components/toast'
 
 const TIME_OUT = 100000
@@ -22,63 +22,63 @@ const baseOptions = {
 }
 
 export type WorkflowStartedResponse = {
-  task_id: string
-  workflow_run_id: string
+  taskId: string
+  workflowRunId: string
   event: string
   data: {
     id: string
-    workflow_id: string
-    sequence_number: number
-    created_at: number
+    workflowId: string
+    sequenceNumber: number
+    createdAt: number
   }
 }
 
 export type WorkflowFinishedResponse = {
-  task_id: string
-  workflow_run_id: string
+  taskId: string
+  workflowRunId: string
   event: string
   data: {
     id: string
-    workflow_id: string
+    workflowId: string
     status: string
     outputs: any
     error: string
-    elapsed_time: number
-    total_tokens: number
-    total_steps: number
+    elapsedTime: number
+    totalTokens: number
+    totalSteps: number
     created_at: number
     finished_at: number
   }
 }
 
 export type NodeStartedResponse = {
-  task_id: string
-  workflow_run_id: string
+  taskId: string
+  workflowRunId: string
   event: string
   data: {
     id: string
-    node_id: string
-    node_type: string
+    nodeId: string
+    nodeType: string
     index: number
-    predecessor_node_id?: string
+    predecessorNodeId?: string
     inputs: any
-    created_at: number
+    createdAt: number
     extras?: any
   }
 }
 
 export type NodeFinishedResponse = {
-  task_id: string
-  workflow_run_id: string
+  taskId: string
+  workflowRunId: string
   event: string
   data: {
     id: string
-    node_id: string
-    node_type: string
+    nodeId: string
+    nodeType: string
     index: number
-    predecessor_node_id?: string
+    predecessorNodeId?: string
     inputs: any
-    process_data: any
+    processData: any
     outputs: any
     status: string
     error: string
@@ -92,7 +92,7 @@ export type NodeFinishedResponse = {
   }
 }
 
-export type IOnDataMoreInfo = {
+export type OnDataMoreInfo = {
   conversationId?: string
   taskId?: string
   messageId: string
@@ -100,36 +100,36 @@ export type IOnDataMoreInfo = {
   errorCode?: string
 }
 
-export type IOnData = (message: string, isFirstMessage: boolean, moreInfo: IOnDataMoreInfo) => void
-export type IOnThought = (though: ThoughtItem) => void
-export type IOnFile = (file: VisionFile) => void
-export type IOnMessageEnd = (messageEnd: MessageEnd) => void
-export type IOnMessageReplace = (messageReplace: MessageReplace) => void
-export type IOnAnnotationReply = (messageReplace: AnnotationReply) => void
-export type IOnCompleted = (hasError?: boolean) => void
-export type IOnError = (msg: string, code?: string) => void
-export type IOnWorkflowStarted = (workflowStarted: WorkflowStartedResponse) => void
-export type IOnWorkflowFinished = (workflowFinished: WorkflowFinishedResponse) => void
-export type IOnNodeStarted = (nodeStarted: NodeStartedResponse) => void
-export type IOnNodeFinished = (nodeFinished: NodeFinishedResponse) => void
+export type OnData = (message: string, isFirstMessage: boolean, moreInfo: OnDataMoreInfo) => void
+export type OnThought = (though: Thought) => void
+export type OnFile = (file: VisionFile) => void
+export type OnMessageEnd = (messageEnd: EndMessage) => void
+export type OnMessageReplace = (messageReplace: MessageReplace) => void
+export type OnAnnotationReply = (messageReplace: AnnotationReply) => void
+export type OnCompleted = (hasError?: boolean) => void
+export type OnError = (msg: string, code?: string) => void
+export type OnWorkflowStarted = (workflowStarted: WorkflowStartedResponse) => void
+export type OnWorkflowFinished = (workflowFinished: WorkflowFinishedResponse) => void
+export type OnNodeStarted = (nodeStarted: NodeStartedResponse) => void
+export type OnNodeFinished = (nodeFinished: NodeFinishedResponse) => void
 
-type IOtherOptions = {
+type OtherOptions = {
   isPublicAPI?: boolean
   bodyStringify?: boolean
   needAllResponseContent?: boolean
   deleteContentType?: boolean
-  onData?: IOnData // for stream
-  onThought?: IOnThought
-  onFile?: IOnFile
-  onMessageEnd?: IOnMessageEnd
-  onMessageReplace?: IOnMessageReplace
-  onError?: IOnError
-  onCompleted?: IOnCompleted // for stream
+  onData?: OnData // for stream
+  onThought?: OnThought
+  onFile?: OnFile
+  onMessageEnd?: OnMessageEnd
+  onMessageReplace?: OnMessageReplace
+  onError?: OnError
+  onCompleted?: OnCompleted // for stream
   getAbortController?: (abortController: AbortController) => void
-  onWorkflowStarted?: IOnWorkflowStarted
-  onWorkflowFinished?: IOnWorkflowFinished
-  onNodeStarted?: IOnNodeStarted
-  onNodeFinished?: IOnNodeFinished
+  onWorkflowStarted?: OnWorkflowStarted
+  onWorkflowFinished?: OnWorkflowFinished
+  onNodeStarted?: OnNodeStarted
+  onNodeFinished?: OnNodeFinished
 }
 
 function unicodeToChar(text: string) {
@@ -140,16 +140,16 @@ function unicodeToChar(text: string) {
 
 const handleStream = (
   response: Response,
-  onData: IOnData,
-  onCompleted?: IOnCompleted,
-  onThought?: IOnThought,
-  onMessageEnd?: IOnMessageEnd,
-  onMessageReplace?: IOnMessageReplace,
-  onFile?: IOnFile,
-  onWorkflowStarted?: IOnWorkflowStarted,
-  onWorkflowFinished?: IOnWorkflowFinished,
-  onNodeStarted?: IOnNodeStarted,
-  onNodeFinished?: IOnNodeFinished,
+  onData: OnData,
+  onCompleted?: OnCompleted,
+  onThought?: OnThought,
+  onMessageEnd?: OnMessageEnd,
+  onMessageReplace?: OnMessageReplace,
+  onFile?: OnFile,
+  onWorkflowStarted?: OnWorkflowStarted,
+  onWorkflowFinished?: OnWorkflowFinished,
+  onNodeStarted?: OnNodeStarted,
+  onNodeFinished?: OnNodeFinished,
 ) => {
   if (!response.ok)
     throw new Error('Network response was not ok')
@@ -203,13 +203,13 @@ const handleStream = (
               isFirstMessage = false
             }
             else if (bufferObj.event === 'agent_thought') {
-              onThought?.(bufferObj as ThoughtItem)
+              onThought?.(bufferObj as Thought)
             }
             else if (bufferObj.event === 'message_file') {
               onFile?.(bufferObj as File)
             }
             else if (bufferObj.event === 'message_end') {
-              onMessageEnd?.(bufferObj as MessageEnd)
+              onMessageEnd?.(bufferObj as EndMessage)
             }
             else if (bufferObj.event === 'message_replace') {
               onMessageReplace?.(bufferObj as MessageReplace)
@@ -247,7 +247,7 @@ const handleStream = (
   read()
 }
 
-const baseFetch = (url: string, fetchOptions: any, { needAllResponseContent }: IOtherOptions) => {
+const baseFetch = (url: string, fetchOptions: any, { needAllResponseContent }: OtherOptions) => {
   const options = Object.assign({}, baseOptions, fetchOptions)
 
   const urlPrefix = API_PREFIX
@@ -375,7 +375,7 @@ export const ssePost = (
     onNodeStarted,
     onNodeFinished,
     onError,
-  }: IOtherOptions,
+  }: OtherOptions,
 ) => {
   const options = Object.assign({}, baseOptions, {
     method: 'POST',
@@ -402,7 +402,7 @@ export const ssePost = (
         onError?.('Server Error')
         return
       }
-      return handleStream(res, (str: string, isFirstMessage: boolean, moreInfo: IOnDataMoreInfo) => {
+      return handleStream(res, (str: string, isFirstMessage: boolean, moreInfo: OnDataMoreInfo) => {
         if (moreInfo.errorMessage) {
           toast({ type: 'error', message: moreInfo.errorMessage })
           return
@@ -417,22 +417,22 @@ export const ssePost = (
     })
 }
 
-export const request = (url: string, options = {}, otherOptions?: IOtherOptions) => {
+export const request = (url: string, options = {}, otherOptions?: OtherOptions) => {
   return baseFetch(url, options, otherOptions || {})
 }
 
-export const get = (url: string, options = {}, otherOptions?: IOtherOptions) => {
+export const get = (url: string, options = {}, otherOptions?: OtherOptions) => {
   return request(url, Object.assign({}, options, { method: 'GET' }), otherOptions)
 }
 
-export const post = (url: string, options = {}, otherOptions?: IOtherOptions) => {
+export const post = (url: string, options = {}, otherOptions?: OtherOptions) => {
   return request(url, Object.assign({}, options, { method: 'POST' }), otherOptions)
 }
 
-export const put = (url: string, options = {}, otherOptions?: IOtherOptions) => {
+export const put = (url: string, options = {}, otherOptions?: OtherOptions) => {
   return request(url, Object.assign({}, options, { method: 'PUT' }), otherOptions)
 }
 
-export const remove = (url: string, options = {}, otherOptions?: IOtherOptions) => {
+export const remove = (url: string, options = {}, otherOptions?: OtherOptions) => {
   return request(url, Object.assign({}, options, { method: 'DELETE' }), otherOptions)
 }
