@@ -9,19 +9,19 @@ import { atelierHeathLight } from 'react-syntax-highlighter/dist/esm/styles/hljs
 
 export function Markdown(props: { content: string }) {
   return (
-    <div className="markdown-body">
+    <div className="markdown-body text-white">
       <ReactMarkdown
         remarkPlugins={[RemarkMath, RemarkGfm, RemarkBreaks]}
         rehypePlugins={[
           RehypeKatex,
         ]}
         components={{
-          code({ node, inline, className, children, ...props }) {
+          code({ node, className, children, ...props }) {
             const match = /language-(\w+)/.exec(className || '')
-            return (!inline && match)
+            return match
               ? (
                 <SyntaxHighlighter
-                  {...props}
+                  className={className}
                   children={String(children).replace(/\n$/, '')}
                   style={atelierHeathLight}
                   language={match[1]}
