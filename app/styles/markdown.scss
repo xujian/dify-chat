@@ -169,15 +169,7 @@
 }
 
 .markdown-body hr {
-  box-sizing: content-box;
-  overflow: hidden;
-  background: transparent;
-  border-bottom: 1px solid var(--color-border-muted);
-  height: 0.25em;
-  padding: 0;
-  margin: 24px 0;
-  background-color: var(--color-border-default);
-  border: 0;
+  display: none;
 }
 
 .markdown-body input {
@@ -228,17 +220,6 @@
 .markdown-body ::placeholder {
   color: var(--color-fg-subtle);
   opacity: 1;
-}
-
-.markdown-body hr::before {
-  display: table;
-  content: "";
-}
-
-.markdown-body hr::after {
-  display: table;
-  clear: both;
-  content: "";
 }
 
 .markdown-body table {
