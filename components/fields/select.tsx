@@ -16,7 +16,7 @@ const select: FC<Field> = (props) => {
     <div className="grid w-full max-w-sm items-center gap-1.5">
       <Label>{props.label}</Label>
       <Select value={props.value} onValueChange={(value) => props.onChange?.(value)}>
-        <SelectTrigger className="w-[180px]">
+        <SelectTrigger className="w-full">
           <SelectValue placeholder={props.label} />
         </SelectTrigger>
         <SelectContent>

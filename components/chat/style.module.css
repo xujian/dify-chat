@@ -35,14 +35,6 @@
   left: 0;
 }
 
-.answerWrap .itemOperation {
-  display: none;
-}
-
-.answerWrap:hover .itemOperation {
-  display: flex;
-}
-
 .question::before {
   right: 0;
 }

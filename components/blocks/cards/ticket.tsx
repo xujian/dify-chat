@@ -21,7 +21,7 @@ const Ticket: React.FC<CustomBlockProps> = ({ data }) => {
                 </span>
               </div>
             ))}
-            <Button variant="outline" className="w-full">跟踪</Button>
+            <Button variant="outline" className="w-full bg-primary text-primary-foreground">跟踪</Button>
           </>
         </div>
       </CardContent>

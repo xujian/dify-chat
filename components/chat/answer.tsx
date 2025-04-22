@@ -96,7 +96,7 @@ const Answer: FC<AnswerProps> = ({
   }
 
   return (
-    <div key={id} className='answer flex items-start py-1'>
+    <div key={id} className='answer flex items-start py-1 motion-pulse'>
       <div className={`${s.answerIcon} ml-2 w-10 h-10 shrink-0`}>
         {isResponding
           ? (
@@ -111,37 +111,35 @@ const Answer: FC<AnswerProps> = ({
           )
         }
       </div>
-      <div className={`${s.answerWrap}`}>
-        <div className={`${s.answer} relative text-sm text-gray-900`}>
-          <div className={`ml-2 py-3 px-4 bg-gray-100 rounded-tr-2xl rounded-b-2xl ${workflowProcess && 'min-w-[480px]'}`}>
-            {workflowProcess && (
-              <WorkflowProcess data={workflowProcess} hideInfo />
-            )}
-            {
-              isResponding && (
-                isAgentMode
-                  ? (!content && thoughts?.filter(
-                    item => !!item.content || !!item.tool).length === 0
-                  ) || !isResponding
-                  : !content
+      <div className={`${s.answer} relative text-sm text-gray-900`}>
+        <div className={`ml-2 py-3 px-3 bg-gray-100 rounded-tr-2xl rounded-b-2xl ${workflowProcess && 'min-w-[480px]'}`}>
+          {workflowProcess && (
+            <WorkflowProcess data={workflowProcess} hideInfo />
+          )}
+          {
+            isResponding && (
+              isAgentMode
+                ? (!content && thoughts?.filter(
+                  item => !!item.content || !!item.tool).length === 0
+                ) || !isResponding
+                : !content
+            )
+              ? (
+                <div className='flex items-center justify-center w-6 h-5'>
+                  <Loading type='text' />
+                </div>
               )
-                ? (
-                  <div className='flex items-center justify-center w-6 h-5'>
-                    <Loading type='text' />
-                  </div>
+              : (isAgentMode
+                ? Thoughts()
+                : (
+                  item.format === 'json'
+                    ? <CustomBlock data={item.customContent} />
+                    : <Markdown content={content} />
                 )
-                : (isAgentMode
-                  ? Thoughts()
-                  : (
-                    item.format === 'json'
-                      ? <CustomBlock data={item.customContent} />
-                      : <Markdown content={content} />
-                  )
-                )}
-          </div>
-          <div className='absolute top-[-14px] right-[-14px] flex flex-row justify-end gap-1'>
-            {!feedbackDisabled && renderFeedback(feedback?.rating)}
-          </div>
+              )}
+        </div>
+        <div className='absolute top-[-14px] right-[-14px] flex flex-row justify-end gap-1'>
+          {!feedbackDisabled && renderFeedback(feedback?.rating)}
         </div>
       </div>
     </div>
