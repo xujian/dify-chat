@@ -12,7 +12,7 @@ import { AppDispatch, RootState } from '@/store'
 import { generationConversationName, sendChatMessage, SendChatMessageData } from '@/service'
 import { setCurrentConversation, setResponding } from '@/store/session'
 import { addMessage, updateMessage } from '@/store/messages'
-import { Annotation, Message, Media } from '@/models'
+import { Annotation, Message, Media, Thought, EndMessage, MessageReplace } from '@/models'
 import { WorkflowRunningStatus } from '@/models/workflow'
 import { patchConversation, updateConversation } from '@/store/conversations'
 interface InputBoxProps { }
@@ -116,7 +116,7 @@ const InputBox: FC<InputBoxProps> = () => {
           messageId,
           taskId
         }: any) => {
-        console.log('onData', message, isFirstMessage, newConversationId, messageId, taskId)
+        console.log('onData<><><><><><><><><><><><><><><><><><><><><><><>', { message, isFirstMessage, newConversationId, messageId, taskId })
         if (isFirstMessage) {
           console.log('onData-----------------newConversationId', isFirstMessage, newConversationId)
           dispatch(patchConversation(newConversationId))
@@ -151,27 +151,28 @@ const InputBox: FC<InputBoxProps> = () => {
           name: generated.name
         }))
       },
-      onFile(file) {
+      onFile(file: Media) {
         const lastThought = answer.thoughts?.[answer.thoughts?.length - 1]
         if (lastThought)
           lastThought.files = [...(lastThought as any).message_files, { ...file }]
       },
-      onThought(thought) {
+      onThought(thought: Thought) {
+        console.log('onThought///////////////////////////////////////////////////////////////', thought)
         isAgentMode = true
         const response = answer as any
-        if (thought.message_id && answer.id === `answer-${t}`) {
-          response.id = thought.message_id
+        if (thought.messageId && answer.id === `answer-${t}`) {
+          response.id = thought.messageId
         }
         // returnedMessage.id = thought.message_id;
-        if (response.agent_thoughts.length === 0) {
-          response.agent_thoughts.push(thought)
+        if (response.agentThoughts.length === 0) {
+          response.agentThoughts.push(thought)
         }
         else {
-          const lastThought = response.agent_thoughts[response.agent_thoughts.length - 1]
+          const lastThought = response.agentThoughts[response.agentThoughts.length - 1]
           // thought changed but still the same thought, so update.
           if (lastThought.id === thought.id) {
-            thought.thought = lastThought.thought
-            thought.message_files = lastThought.message_files
+            thought.content = lastThought.thought
+            thought.files = lastThought.message_files
             answer.thoughts![response.agent_thoughts.length - 1] = thought
           }
           else {
@@ -179,24 +180,24 @@ const InputBox: FC<InputBoxProps> = () => {
           }
         }
       },
-      onMessageEnd: (messageEnd) => {
+      onMessageEnd: (messageEnd: EndMessage) => {
         console.log('onMessageEnd', messageEnd)
-        if (messageEnd.metadata?.annotation_reply) {
+        if (messageEnd.metadata?.annotationReply) {
           answer.id = messageEnd.id
           answer.annotation = ({
-            id: messageEnd.metadata.annotation_reply.id,
-            authorName: messageEnd.metadata.annotation_reply.account.name,
+            id: messageEnd.metadata.annotationReply.id,
+            authorName: messageEnd.metadata.annotationReply.account.name,
           } as Annotation)
           return
         }
       },
-      onMessageReplace: (messageReplace) => {
+      onMessageReplace: (messageReplace: MessageReplace) => {
         console.log('onMessageReplace', messageReplace)
       },
       onError() {
         dispatch(setResponding(false))
       },
-      onWorkflowStarted: ({ workflow_run_id, task_id }) => {
+      onWorkflowStarted: ({ workflow_run_id, task_id }: { workflow_run_id: string, task_id: string }) => {
         console.log('onWorkflowStarted', workflow_run_id, task_id)
         // taskIdRef.current = task_id
         answer.workflowRunId = workflow_run_id
@@ -245,7 +246,7 @@ const InputBox: FC<InputBoxProps> = () => {
               'ring-offset-background',
               'placeholder:text-muted-foreground',
               'focus-visible:ring-ring',
-              'text-md',
+              'text-sm',
               'w-full',
               'rounded-lg',
               'focus-visible:outline-hidden',

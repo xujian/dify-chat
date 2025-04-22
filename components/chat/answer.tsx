@@ -111,7 +111,7 @@ const Answer: FC<AnswerProps> = ({
           )
         }
       </div>
-      <div className={`${s.answer} relative text-sm text-gray-900`}>
+      <div className={`${s.answer} relative text-sm`}>
         <div className={`ml-2 py-3 px-3 bg-gray-100 rounded-tr-2xl rounded-b-2xl ${workflowProcess && 'min-w-[480px]'}`}>
           {workflowProcess && (
             <WorkflowProcess data={workflowProcess} hideInfo />
