@@ -8,9 +8,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '@/store'
 import { clearMessages, fetchMessages } from '@/store/messages'
 import InputBox from './input-box'
-import { toast } from '@/components/toast'
 import Loading from '@/components/loading'
-import { closeChat } from '@/store/session'
 export type MessagesProps = {
 }
 
@@ -31,6 +29,7 @@ const Messages: FC<MessagesProps> = () => {
   }
 
   useEffect(() => {
+    dispatch(clearMessages())
     console.log('messages.tsx---session.currentConversation', session.currentConversation, conversations.value)
     if (!session.currentConversation) {
       return
@@ -59,32 +58,34 @@ const Messages: FC<MessagesProps> = () => {
 
   return (
     <div className='chat h-full relative inset-0'>
-      <div className="h-full pt-2 pb-24 overflow-y-auto" ref={container}>
-        {messages.map((item) => {
-          if (item.type === 'answer') {
-            const isLast = item.id === messages[messages.length - 1].id
-            return <Answer
-              key={item.id}
-              item={item}
-              feedbackDisabled={false}
-              onFeedback={() => Promise.resolve()}
-              isResponding={session.responding}
-            />
+      <div className="h-full flex flex-col items-center overflow-y-auto" ref={container}>
+        <div className='p-4 pb-60 max-w-4xl w-full'>
+          {messages.map((item) => {
+            if (item.type === 'answer') {
+              const isLast = item.id === messages[messages.length - 1].id
+              return <Answer
+                key={item.id}
+                item={item}
+                feedbackDisabled={false}
+                onFeedback={() => Promise.resolve()}
+                isResponding={session.responding}
+              />
+            }
+            return (
+              <Question
+                key={item.id}
+                id={item.id}
+                content={item.content}
+                files={item.files || []}
+              />
+            )
+          })}
+          {loading &&
+            <div className="flex justify-center items-center h-full">
+              <Loading />
+            </div>
           }
-          return (
-            <Question
-              key={item.id}
-              id={item.id}
-              content={item.content}
-              files={item.files || []}
-            />
-          )
-        })}
-        {loading &&
-          <div className="flex justify-center items-center h-full">
-            <Loading type="avatar" />
-          </div>
-        }
+        </div>
       </div>
       <div className={cn(!feedbackDisabled && 'left-3.5! right-3.5!', 'absolute z-10 bottom-0 left-0 right-0')}>
         <InputBox />
