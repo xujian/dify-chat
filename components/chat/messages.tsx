@@ -1,6 +1,6 @@
 'use client'
 import type { FC } from 'react'
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import cn from 'classnames'
 import Answer from './answer'
 import Question from './question'
@@ -16,7 +16,7 @@ const Messages: FC<MessagesProps> = () => {
 
   const dispatch = useDispatch<AppDispatch>()
   const session = useSelector((state: RootState) => state.session)
-  const conversations = useSelector((state: RootState) => state.conversations)
+  const { value: conversations, fufilled: conversationsFufilled } = useSelector((state: RootState) => state.conversations)
   const { value: messages, loading, error } = useSelector((state: RootState) => state.messages)
   const feedbackDisabled = false
 
@@ -28,17 +28,14 @@ const Messages: FC<MessagesProps> = () => {
     setQuery(value)
   }
 
-  useEffect(() => {
-    dispatch(clearMessages())
-    console.log('messages.tsx---session.currentConversation', session.currentConversation, conversations.value)
+  const loadMessages = () => {
     if (!session.currentConversation) {
       return
     }
     if (session.currentConversation === '-1') {
-      // dispatch(clearMessages())
       return
     }
-    if (!conversations.value.find((c) => c.id === session.currentConversation)) {
+    if (!conversations.find((c) => c.id === session.currentConversation)) {
       console.log('oooooooooo---conversation not found, clear messages')
       // conversation not found, clear messages
       // this means user come from a history URL that the conversation is deleted
@@ -47,7 +44,23 @@ const Messages: FC<MessagesProps> = () => {
       return
     }
     dispatch(fetchMessages(session.currentConversation))
-  }, [session.currentConversation, conversations])
+  }
+
+  useEffect(() => {
+    dispatch(clearMessages())
+    loadMessages()
+    // wait until conversations is loades
+    // chances that the conversation ID is not found
+    // the conversation is got from history URL
+    // and the conversation is deleted
+  }, [
+    session.currentConversation,
+    conversationsFufilled
+  ])
+
+  useEffect(() => {
+    loadMessages()
+  }, [])
 
   useEffect(() => {
     if (container.current) {
