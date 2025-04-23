@@ -159,3 +159,7 @@
 input {
   @apply border-border bg-white;
 }
+
+.icon {
+  filter: invert(1);
+}

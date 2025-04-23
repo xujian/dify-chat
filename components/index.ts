@@ -6,6 +6,7 @@ import Welcome from './welcome'
 import CustomBlock from './custom-block'
 import { FormBlock, CardBlock } from './blocks'
 import ImageGallery, { ImageGalleryTest } from './image-gallery'
+import { Icon } from './icon'
 
 export {
   AppSidebar,
@@ -17,6 +18,7 @@ export {
   CardBlock,
   ImageGallery,
   ImageGalleryTest,
+  Icon,
 }
 
 export { VersionSwitcher } from './version-switcher'
