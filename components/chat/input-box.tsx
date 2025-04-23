@@ -197,10 +197,10 @@ const InputBox: FC<InputBoxProps> = () => {
       onError() {
         dispatch(setResponding(false))
       },
-      onWorkflowStarted: ({ workflow_run_id, task_id }: { workflow_run_id: string, task_id: string }) => {
-        console.log('onWorkflowStarted', workflow_run_id, task_id)
+      onWorkflowStarted: ({ runId, taskId }) => {
+        console.log('onWorkflowStarted', runId, taskId)
         // taskIdRef.current = task_id
-        answer.workflowRunId = workflow_run_id
+        answer.workflowRunId = runId
         answer.workflowProcess = {
           status: WorkflowRunningStatus.Running,
           tracing: [],
@@ -208,18 +208,35 @@ const InputBox: FC<InputBoxProps> = () => {
       },
       onWorkflowFinished: ({ data }) => {
         console.log('onWorkflowFinished', data)
-        answer.workflowProcess!.status = data.status as WorkflowRunningStatus
+        // Create a new object instead of modifying the existing one directly
+        answer.workflowProcess = {
+          ...answer.workflowProcess!,
+          status: data.status as WorkflowRunningStatus
+        }
       },
       onNodeStarted: ({ data }) => {
-        answer.workflowProcess!.tracing!.push(data as any)
+        try {
+          answer.workflowProcess!.tracing!.push(data as any)
+        }
+        catch (e) {
+          console.log('onNodeStarted------error-x-x-x-x-x-x-x-x-x-x-x-x-xx-x-x-x-', e)
+        }
       },
       onNodeFinished: ({ data }) => {
         console.log('onNodeFinished', data, answer)
         const currentIndex = answer.workflowProcess!.tracing!.findIndex(
           item => item.nodeId === data.nodeId
         )
-        answer.workflowProcess!.tracing![currentIndex] = data as any
-        if (data.node_type === 'code' && data.outputs.format === 'json') {
+        if (currentIndex !== -1) {
+          console.log('=====================onNodeFinished------currentIndex', currentIndex, answer)
+          try {
+            answer.workflowProcess!.tracing![currentIndex] = data as any
+          }
+          catch (e) {
+            console.log('onNodeFinished------error', e)
+          }
+        }
+        if (data.nodeType === 'code' && data.outputs.format === 'json') {
           answer.format = 'json'
           answer.customContent = data.outputs.result
         }
