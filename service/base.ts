@@ -1,5 +1,5 @@
 import { API_PREFIX } from '@/config'
-import type { AnnotationReply, EndMessage, MessageReplace, Thought } from '@/models'
+import type { AnnotationReply, EndMessage, Media, MessageReplace, Thought, WorkflowRunningStatus } from '@/models'
 import { toast } from '@/components/toast'
 
 const TIME_OUT = 100000
@@ -21,76 +21,64 @@ const baseOptions = {
   redirect: 'follow',
 }
 
-export type WorkflowStartedResponse = {
+export type WorkflowResponse<T> = {
   taskId: string
-  workflowRunId: string
+  runId: string
+  messageId: string
   event: string
-  data: {
-    id: string
-    workflowId: string
-    sequenceNumber: number
-    createdAt: number
-  }
+  createdAt: number
+  data: T
 }
 
-export type WorkflowFinishedResponse = {
-  taskId: string
-  workflowRunId: string
-  event: string
-  data: {
-    id: string
-    workflowId: string
-    status: string
-    outputs: any
-    error: string
-    elapsedTime: number
+export type NodeState = {
+  nodeId: string
+  nodeType: string
+}
+
+export type WorkflowStartedResponse = WorkflowResponse<{
+  id: string
+  workflowId: string
+  sequenceNumber: number
+}>
+
+export type WorkflowFinishedResponse = WorkflowResponse<{
+  id: string
+  workflowId: string
+  status: WorkflowRunningStatus
+  outputs: any
+  error: string
+  elapsedTime: number
+  totalTokens: number
+  totalSteps: number
+  createdAt: number
+}>
+
+export type NodeStartedResponse = WorkflowResponse<NodeState & {
+  id: string
+  index: number
+  predecessorNodeId?: string
+  inputs: any
+  createdAt: number
+  extras?: any
+}>
+
+export type NodeFinishedResponse = WorkflowResponse<NodeState & {
+  id: string
+  index: number
+  predecessorNodeId?: string
+  inputs: any
+  processData: any
+  outputs: any
+  status: string
+  error: string
+  elapsed_time: number
+  execution_metadata: {
     totalTokens: number
-    totalSteps: number
-    created_at: number
-    finished_at: number
+    totalPrice: number
+    currency: string
   }
-}
-
-export type NodeStartedResponse = {
-  taskId: string
-  workflowRunId: string
-  event: string
-  data: {
-    id: string
-    nodeId: string
-    nodeType: string
-    index: number
-    predecessorNodeId?: string
-    inputs: any
-    createdAt: number
-    extras?: any
-  }
-}
-
-export type NodeFinishedResponse = {
-  taskId: string
-  workflowRunId: string
-  event: string
-  data: {
-    id: string
-    nodeId: string
-    nodeType: string
-    index: number
-    predecessorNodeId?: string
-    inputs: any
-    processData: any
-    outputs: any
-    status: string
-    error: string
-    elapsed_time: number
-    execution_metadata: {
-      total_tokens: number
-      total_price: number
-      currency: string
-    }
-    created_at: number
-  }
-}
+  createdAt: number
+}>
 
 export type OnDataMoreInfo = {
   conversationId?: string
@@ -102,7 +90,7 @@ export type OnDataMoreInfo = {
 
 export type OnData = (message: string, isFirstMessage: boolean, moreInfo: OnDataMoreInfo) => void
 export type OnThought = (though: Thought) => void
-export type OnFile = (file: VisionFile) => void
+export type OnFile = (file: Media) => void
 export type OnMessageEnd = (messageEnd: EndMessage) => void
 export type OnMessageReplace = (messageReplace: MessageReplace) => void
 export type OnAnnotationReply = (messageReplace: AnnotationReply) => void
@@ -133,9 +121,21 @@ type OtherOptions = {
 }
 
 function unicodeToChar(text: string) {
-  return text.replace(/\\u[0-9a-f]{4}/g, (_match, p1) => {
-    return String.fromCharCode(parseInt(p1, 16))
+  return text.replace(/\\u([0-9a-f]{4})/gi, (_, hex) => {
+    return String.fromCharCode(parseInt(hex, 16))
   })
+}
+
+function safeJsonParse(text: string, fallback: any = null) {
+  if (!text || typeof text !== 'string') return text;
+
+  try {
+    const unicodeFixed = unicodeToChar(text);
+    return JSON.parse(unicodeFixed);
+  } catch (err) {
+    console.error('Error parsing JSON:', err);
+    return fallback !== null ? fallback : text;
+  }
 }
 
 const handleStream = (
@@ -157,7 +157,7 @@ const handleStream = (
   const reader = response.body?.getReader()
   const decoder = new TextDecoder('utf-8')
   let buffer = ''
-  let bufferObj: Record<string, any>
+  let chunk: Record<string, any>
   let isFirstMessage = true
   function read() {
     let hasError = false
@@ -171,66 +171,144 @@ const handleStream = (
       try {
         lines.forEach((message) => {
           if (message.startsWith('data: ')) { // check if it starts with data:
+            const m = message.substring(6)
             try {
-              bufferObj = JSON.parse(message.substring(6)) as Record<string, any>// remove data: and parse as json
+              // Pre-process the message to handle potential Unicode escape issues
+              const u = unicodeToChar(m)
+              console.log('(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)u', u)
+              chunk = JSON.parse(u) as Record<string, any>
+              console.log('(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)bufferObj', chunk)
             }
             catch (e) {
+              console.error('(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)error1', m, e)
               // mute handle message cut off
               onData('', isFirstMessage, {
-                conversationId: bufferObj?.conversation_id,
-                messageId: bufferObj?.message_id,
+                conversationId: chunk?.conversation_id,
+                messageId: chunk?.message_id,
               })
               return
             }
-            if (bufferObj.status === 400 || !bufferObj.event) {
+            if (chunk.status === 400 || !chunk.event) {
               onData('', false, {
                 conversationId: undefined,
                 messageId: '',
-                errorMessage: bufferObj?.message,
-                errorCode: bufferObj?.code,
+                errorMessage: chunk?.message,
+                errorCode: chunk?.code,
               })
               hasError = true
               onCompleted?.(true)
               return
             }
-            if (bufferObj.event === 'message' || bufferObj.event === 'agent_message') {
+            if (chunk.event === 'message' || chunk.event === 'agent_message') {
+              console.log('(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)(0) ===message===bufferObj.answer', chunk.answer)
               // can not use format here. Because message is splited.
-              onData(unicodeToChar(bufferObj.answer), isFirstMessage, {
-                conversationId: bufferObj.conversation_id,
-                taskId: bufferObj.task_id,
-                messageId: bufferObj.id,
+              onData(unicodeToChar(chunk.answer), isFirstMessage, {
+                conversationId: chunk.conversation_id,
+                taskId: chunk.task_id,
+                messageId: chunk.id,
               })
               isFirstMessage = false
             }
-            else if (bufferObj.event === 'agent_thought') {
-              onThought?.(bufferObj as Thought)
+            else if (chunk.event === 'agent_thought') {
+              onThought?.(chunk as Thought)
             }
-            else if (bufferObj.event === 'message_file') {
-              onFile?.(bufferObj as File)
+            else if (chunk.event === 'message_file') {
+              onFile?.(chunk as File)
             }
-            else if (bufferObj.event === 'message_end') {
-              onMessageEnd?.(bufferObj as EndMessage)
+            else if (chunk.event === 'message_end') {
+              onMessageEnd?.(chunk as EndMessage)
             }
-            else if (bufferObj.event === 'message_replace') {
-              onMessageReplace?.(bufferObj as MessageReplace)
+            else if (chunk.event === 'message_replace') {
+              onMessageReplace?.(chunk as MessageReplace)
             }
-            else if (bufferObj.event === 'workflow_started') {
-              onWorkflowStarted?.(bufferObj as WorkflowStartedResponse)
+            else if (chunk.event === 'workflow_started') {
+              console.log('(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)workflow_started---chunk.data', chunk)
+              onWorkflowStarted?.({
+                taskId: chunk.task_id,
+                runId: chunk.workflow_run_id,
+                messageId: chunk.message_id,
+                event: chunk.event,
+                createdAt: chunk.created_at,
+                data: {
+                  id: chunk.data.id,
+                  workflowId: chunk.data.workflow_id,
+                  sequenceNumber: chunk.data.sequence_number
+                }
+              } as WorkflowStartedResponse)
             }
-            else if (bufferObj.event === 'workflow_finished') {
-              onWorkflowFinished?.(bufferObj as WorkflowFinishedResponse)
+            else if (chunk.event === 'workflow_finished') {
+              onWorkflowFinished?.({
+                taskId: chunk.task_id,
+                runId: chunk.workflow_run_id,
+                messageId: chunk.message_id,
+                event: chunk.event,
+                createdAt: chunk.created_at,
+                data: {
+                  id: chunk.data.id,
+                  workflowId: chunk.data.workflow_id,
+                  status: chunk.data.status,
+                  outputs: chunk.data.outputs,
+                  error: chunk.data.error,
+                  elapsedTime: chunk.data.elapsed_time,
+                  totalTokens: chunk.data.total_tokens,
+                  totalSteps: chunk.data.total_steps,
+                  createdAt: chunk.data.created_at
+                }
+              } as WorkflowFinishedResponse)
             }
-            else if (bufferObj.event === 'node_started') {
-              onNodeStarted?.(bufferObj as NodeStartedResponse)
+            else if (chunk.event === 'node_started') {
+              onNodeStarted?.({
+                taskId: chunk.task_id,
+                runId: chunk.workflow_run_id,
+                messageId: chunk.message_id,
+                event: chunk.event,
+                createdAt: chunk.created_at,
+                data: {
+                  id: chunk.data.id,
+                  nodeId: chunk.data.node_id,
+                  nodeType: chunk.data.node_type,
+                  index: chunk.data.index,
+                  predecessorNodeId: chunk.data.predecessor_node_id,
+                  inputs: chunk.data.inputs,
+                  createdAt: chunk.data.created_at,
+                  extras: chunk.data.extras
+                }
+              } as NodeStartedResponse)
             }
-            else if (bufferObj.event === 'node_finished') {
-              onNodeFinished?.(bufferObj as NodeFinishedResponse)
+            else if (chunk.event === 'node_finished') {
+              onNodeFinished?.({
+                taskId: chunk.task_id,
+                runId: chunk.workflow_run_id,
+                messageId: chunk.message_id,
+                createdAt: chunk.created_at,
+                event: chunk.event,
+                data: {
+                  id: chunk.data.id,
+                  nodeId: chunk.data.node_id,
+                  nodeType: chunk.data.node_type,
+                  index: chunk.data.index,
+                  predecessorNodeId: chunk.data.predecessor_node_id,
+                  inputs: chunk.data.inputs,
+                  processData: safeJsonParse(chunk.data.process_data, chunk.data.process_data),
+                  outputs: chunk.data.outputs,
+                  status: chunk.data.status,
+                  error: chunk.data.error,
+                  elapsed_time: chunk.data.elapsed_time,
+                  execution_metadata: {
+                    totalTokens: chunk.data.execution_metadata?.total_tokens,
+                    totalPrice: chunk.data.execution_metadata?.total_price,
+                    currency: chunk.data.execution_metadata?.currency
+                  },
+                  createdAt: chunk.data.created_at
+                },
+              } as NodeFinishedResponse)
             }
           }
         })
         buffer = lines[lines.length - 1]
       }
       catch (e) {
+        console.error('(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)error2', e)
         onData('', false, {
           conversationId: undefined,
           messageId: '',
@@ -321,6 +399,7 @@ const baseFetch = (url: string, fetchOptions: any, { needAllResponseContent }: O
           resolve(needAllResponseContent ? resClone : data)
         })
         .catch((err) => {
+          console.error('(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)error3', err)
           toast({ type: 'error', message: err })
           reject(err)
         })
@@ -412,6 +491,7 @@ export const ssePost = (
         onCompleted?.()
       }, onThought, onMessageEnd, onMessageReplace, onFile, onWorkflowStarted, onWorkflowFinished, onNodeStarted, onNodeFinished)
     }).catch((e) => {
+      console.error('(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)error4', e)
       toast({ type: 'error', message: e })
       onError?.(e)
     })

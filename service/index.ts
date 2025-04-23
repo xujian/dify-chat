@@ -1,4 +1,16 @@
-import type { IOnCompleted, IOnData, IOnError, IOnFile, IOnMessageEnd, IOnMessageReplace, IOnNodeFinished, IOnNodeStarted, IOnThought, IOnWorkflowFinished, IOnWorkflowStarted } from './base'
+import type {
+  OnCompleted,
+  OnData,
+  OnError,
+  OnFile,
+  OnMessageEnd,
+  OnMessageReplace,
+  OnNodeFinished,
+  OnNodeStarted,
+  OnThought,
+  OnWorkflowFinished,
+  OnWorkflowStarted
+} from './base'
 import { get, post, ssePost, remove } from './base'
 import type { Media, Feedback, ServerConfig } from '@/models'
 
@@ -35,18 +47,18 @@ export const sendChatMessage = async (
     onNodeFinished,
     onWorkflowFinished,
   }: {
-    onData: IOnData
-    onCompleted: IOnCompleted
-    onFile: IOnFile
-    onThought: IOnThought
-    onMessageEnd: IOnMessageEnd
-    onMessageReplace: IOnMessageReplace
-    onError: IOnError
+    onData: OnData
+    onCompleted: OnCompleted
+    onFile: OnFile
+    onThought: OnThought
+    onMessageEnd: OnMessageEnd
+    onMessageReplace: OnMessageReplace
+    onError: OnError
     getAbortController?: (abortController: AbortController) => void
-    onWorkflowStarted: IOnWorkflowStarted
-    onNodeStarted: IOnNodeStarted
-    onNodeFinished: IOnNodeFinished
-    onWorkflowFinished: IOnWorkflowFinished
+    onWorkflowStarted: OnWorkflowStarted
+    onNodeStarted: OnNodeStarted
+    onNodeFinished: OnNodeFinished
+    onWorkflowFinished: OnWorkflowFinished
   },
 ) => {
   const body = {
