@@ -29,7 +29,7 @@ export function Markdown(props: { content: string }) {
     }
     // get the match of <think> and remains
     setContent(c.replace(thinkRegex, ''))
-    console.log('thoughts0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-=', thoughts, '---;', content)
+    // console.log('thoughts0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-=', thoughts, '---;', content)
   }, [props.content])
 
   return (
