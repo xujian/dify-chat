@@ -82,8 +82,8 @@ const WorkflowProcessItem = ({
         !collapse && (
           <div className='mt-1.5'>
             {
-              data.tracing.map(node => (
-                <div key={node.id} className='mb-0.5 last-of-type:mb-0'>
+              data.tracing.map((node, index) => (
+                <div key={`node-${index}`} className='mb-0.5 last-of-type:mb-0'>
                   <NodePanel
                     nodeInfo={node}
                     hideInfo={hideInfo}
