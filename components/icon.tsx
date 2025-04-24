@@ -26,8 +26,7 @@ export const Icon = ({ name, fill = "#000", color = "#fff" }: IconProps) => {
   return (
     <div className="icon flex items-center justify-center w-5 h-5 rounded-md"
       style={{
-        backgroundColor: color,
-        fill: fill,
+        backgroundColor: fill,
       }}
     >
       <img
