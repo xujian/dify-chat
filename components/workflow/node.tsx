@@ -2,16 +2,15 @@
 import type { FC } from 'react'
 import { useEffect, useState } from 'react'
 import cn from 'classnames'
-import BlockIcon from './block-icon'
 import { AlertCircle, AlertTriangle, CheckCircle, LoaderCircle } from 'lucide-react'
-import type { NodeTracing } from '@/models'
+import type { WorkflowNode } from '@/models'
+import { Icon } from '../icon'
 
 type Props = {
-  nodeInfo: NodeTracing
-  hideInfo?: boolean
+  data: WorkflowNode
 }
 
-const NodePanel: FC<Props> = ({ nodeInfo, hideInfo = false }) => {
+const NodeView: FC<Props> = ({ data }) => {
   const [collapseState, setCollapseState] = useState<boolean>(true)
 
   const getTime = (time: number) => {
@@ -32,47 +31,56 @@ const NodePanel: FC<Props> = ({ nodeInfo, hideInfo = false }) => {
   }
 
   useEffect(() => {
-    setCollapseState(!nodeInfo.expand)
-  }, [nodeInfo.expand])
+    setCollapseState(!data.expand)
+  }, [data.expand])
+
+  const iconColorMap: Record<string, string> = {
+    'start': '#2970FF',
+    'llm': '#6172F3',
+    'code': '#2E90FA',
+    'end': '#F79009',
+    'if-else': '#06AED4',
+    'http-request': '#875BF7',
+    'answer': '#F79009',
+    'knowledge-retrieval': '#16B364',
+    'question-classifier': '#16B364',
+    'template-transform': '#2E90FA',
+    'variable-assigner': '#2E90FA',
+  }
 
   return (
-    <div className={cn('px-4 py-1', hideInfo && 'p-0!')}>
-      <div className={cn('group transition-all bg-white border border-gray-100 rounded-2xl shadow-2xs hover:shadow-md', hideInfo && 'rounded-lg!')}>
-        <div
-          className={cn(
-            'flex items-center pl-[6px] pr-3 cursor-pointer',
-            hideInfo ? 'py-2' : 'py-3',
-            !collapseState && (hideInfo ? 'pb-1!' : 'pb-2!'),
-          )}
-          onClick={() => setCollapseState(!collapseState)}
-        >
-          <BlockIcon size={hideInfo ? 'xs' : 'sm'} className={cn('shrink-0 mr-2', hideInfo && 'mr-1!')} type={nodeInfo.node_type} toolIcon={nodeInfo.extras?.icon || nodeInfo.extras} />
-          <div className={cn(
-            'grow text-gray-700 text-[13px] leading-[16px] font-semibold truncate',
-            hideInfo && 'text-xs!',
-          )} title={nodeInfo.title}>{nodeInfo.title}</div>
-          {nodeInfo.status !== 'running' && !hideInfo && (
-            <div className='shrink-0 text-gray-500 text-xs leading-[18px]'>{`${getTime(nodeInfo.elapsed_time || 0)} · ${getTokenCount(nodeInfo.execution_metadata?.total_tokens || 0)} tokens`}</div>
-          )}
-          {nodeInfo.status === 'succeeded' && (
-            <CheckCircle className='shrink-0 ml-2 w-3.5 h-3.5 text-[#12B76A]' />
-          )}
-          {nodeInfo.status === 'failed' && (
-            <AlertCircle className='shrink-0 ml-2 w-3.5 h-3.5 text-[#F04438]' />
-          )}
-          {nodeInfo.status === 'stopped' && (
-            <AlertTriangle className='shrink-0 ml-2 w-3.5 h-3.5 text-[#F79009]' />
-          )}
-          {nodeInfo.status === 'running' && (
-            <div className='shrink-0 flex items-center text-primary-600 text-[13px] leading-[16px] font-medium'>
-              <LoaderCircle className='mr-1 w-3.5 h-3.5 animate-spin' />
-              <span>Running</span>
-            </div>
-          )}
+    <div className={cn(
+      'group transition-all bg-white border border-gray-100',
+      'rounded-md hover:shadow-md',
+      'flex items-center p-1 justify-between cursor-pointer gap-2',
+    )}
+      onClick={() => setCollapseState(!collapseState)}>
+      <Icon name={data.type} fill={iconColorMap[data.type] || ''} />
+      <div className={cn(
+        'grow text-gray-700 text-[12px] font-semibold truncate',
+      )} title={data.title}>{data.title}</div>
+      {data.status !== 'running' && (
+        <div className='shrink-0 text-gray-500 text-xs leading-[18px]'>
+          {`${getTime(data.time || 0)} · ${getTokenCount(data.metadata?.totalTokens || 0)} tokens`}
         </div>
-      </div>
+      )}
+      {data.status === 'succeeded' && (
+        <CheckCircle className='shrink-0 ml-2 w-3.5 h-3.5 text-[#12B76A]' />
+      )}
+      {data.status === 'failed' && (
+        <AlertCircle className='shrink-0 ml-2 w-3.5 h-3.5 text-[#F04438]' />
+      )}
+      {data.status === 'stopped' && (
+        <AlertTriangle className='shrink-0 ml-2 w-3.5 h-3.5 text-[#F79009]' />
+      )}
+      {data.status === 'running' && (
+        <div className='shrink-0 flex items-center text-primary-600 text-[13px] leading-[16px] font-medium'>
+          <LoaderCircle className='mr-1 w-3.5 h-3.5 animate-spin' />
+          <span>Running</span>
+        </div>
+      )}
     </div>
   )
 }
 
-export default NodePanel
+export default NodeView
