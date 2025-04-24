@@ -98,7 +98,6 @@ export type Message = {
   thoughts?: Thought[]
   files?: Media[]
   workflow?: Workflow
-  workflowRunId?: string
 }
 
 export enum CodeLanguage {

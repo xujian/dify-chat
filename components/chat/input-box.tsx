@@ -86,7 +86,6 @@ const InputBox: FC<InputBoxProps> = () => {
       conversationId: session.currentConversation,
       createdAt: t,
       files: files,
-      workflowRunId: '',
       workflow: {
         id: '',
         status: WorkflowStatus.Running,
@@ -217,7 +216,10 @@ const InputBox: FC<InputBoxProps> = () => {
       },
       onNodeStarted: (data: WorkflowNode) => {
         try {
-          answer.workflow!.nodes!.push(data)
+          answer.workflow!.nodes = [
+            ...answer.workflow!.nodes!,
+            data
+          ]
         }
         catch (e) {
           console.log('onNodeStarted------error-x-x-x-x-x-x-x-x-x-x-x-x-xx-x-x-x-', e)
