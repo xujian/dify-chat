@@ -96,7 +96,7 @@ const Answer: FC<AnswerProps> = ({
   }
 
   return (
-    <div key={id} className='answer flex items-start py-1 motion-pulse'>
+    <div key={id} className='answer w-full max-w-[600px] flex items-start py-1 motion-pulse'>
       <div className={`${s.answerIcon} ml-2 w-10 h-10 shrink-0`}>
         {isResponding
           ? (

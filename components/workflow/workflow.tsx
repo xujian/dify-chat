@@ -31,7 +31,7 @@ const WorkflowView = ({
   return (
     <div
       className={cn(
-        'mb-2 rounded-xl border-1 border-black/[0.08]',
+        'workflow w-full mb-2 rounded-xl border-1 border-black/[0.08]',
         collapse
           ? 'py-[7px]'
           : hidden
