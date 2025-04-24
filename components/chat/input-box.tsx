@@ -12,8 +12,8 @@ import { AppDispatch, RootState } from '@/store'
 import { generationConversationName, sendChatMessage, SendChatMessageData } from '@/service'
 import { setCurrentConversation, setResponding } from '@/store/session'
 import { addMessage, updateMessage } from '@/store/messages'
-import { Annotation, Message, Media, Thought, EndMessage, MessageReplace } from '@/models'
-import { WorkflowRunningStatus } from '@/models/workflow'
+import { Annotation, Message, Media, Thought, EndMessage, MessageReplace, WorkflowNode, Workflow } from '@/models'
+import { WorkflowStatus } from '@/models'
 import { patchConversation, updateConversation } from '@/store/conversations'
 interface InputBoxProps { }
 
@@ -26,8 +26,7 @@ const InputBox: FC<InputBoxProps> = () => {
    */
   const conversationRef = useRef<string>(session.currentConversation)
   const dispatch = useDispatch<AppDispatch>()
-  const [isGenerating, setIsGenerating] = useState<boolean>(false)
-  const [userInput, setUserInput] = useState<string>('')
+  const [query, setQuery] = useState<string>('')
   const [abortController, setAbortController] = useState<AbortController | null>(null)
 
   const {
@@ -41,17 +40,21 @@ const InputBox: FC<InputBoxProps> = () => {
   } = useUploadedFiles()
 
   const handleInputChange = (value: string) => {
-    setUserInput(value)
+    setQuery(value)
   }
 
   const handleStopMessage = () => {
-    setIsGenerating(false)
+    setResponding(false)
+    if (abortController) {
+      abortController.abort()
+    }
   }
 
   const send = async (message: string) => {
     if (session.responding) {
       return
     }
+    setQuery('')
     const data: SendChatMessageData = {
       query: message,
       conversationId: session.currentConversation,
@@ -84,9 +87,10 @@ const InputBox: FC<InputBoxProps> = () => {
       createdAt: t,
       files: files,
       workflowRunId: '',
-      workflowProcess: {
-        status: WorkflowRunningStatus.Running,
-        tracing: [],
+      workflow: {
+        id: '',
+        status: WorkflowStatus.Running,
+        nodes: [],
       }
     }
 
@@ -116,7 +120,6 @@ const InputBox: FC<InputBoxProps> = () => {
           messageId,
           taskId
         }: any) => {
-        console.log('onData<><><><><><><><><><><><><><><><><><><><><><><>', { message, isFirstMessage, newConversationId, messageId, taskId })
         if (isFirstMessage) {
           console.log('onData-----------------newConversationId', isFirstMessage, newConversationId)
           dispatch(patchConversation(newConversationId))
@@ -180,13 +183,13 @@ const InputBox: FC<InputBoxProps> = () => {
           }
         }
       },
-      onMessageEnd: (messageEnd: EndMessage) => {
-        console.log('onMessageEnd', messageEnd)
-        if (messageEnd.metadata?.annotationReply) {
-          answer.id = messageEnd.id
+      onMessageEnd: (end: EndMessage) => {
+        console.log('onMessageEnd', end)
+        if (end.metadata?.annotation) {
+          answer.id = end.id
           answer.annotation = ({
-            id: messageEnd.metadata.annotationReply.id,
-            authorName: messageEnd.metadata.annotationReply.account.name,
+            id: end.metadata.annotation.id,
+            authorName: end.metadata.annotation.account.name,
           } as Annotation)
           return
         }
@@ -197,50 +200,54 @@ const InputBox: FC<InputBoxProps> = () => {
       onError() {
         dispatch(setResponding(false))
       },
-      onWorkflowStarted: ({ runId, taskId }) => {
-        console.log('onWorkflowStarted', runId, taskId)
-        // taskIdRef.current = task_id
-        answer.workflowRunId = runId
-        answer.workflowProcess = {
-          status: WorkflowRunningStatus.Running,
-          tracing: [],
+      onWorkflowStarted: (data: Workflow) => {
+        answer.workflow = {
+          id: data.id,
+          status: WorkflowStatus.Running,
+          nodes: [],
         }
       },
-      onWorkflowFinished: ({ data }) => {
+      onWorkflowFinished: (data: Workflow) => {
         console.log('onWorkflowFinished', data)
         // Create a new object instead of modifying the existing one directly
-        answer.workflowProcess = {
-          ...answer.workflowProcess!,
-          status: data.status as WorkflowRunningStatus
+        answer.workflow = {
+          ...answer.workflow!,
+          status: data.status as WorkflowStatus
         }
       },
-      onNodeStarted: ({ data }) => {
+      onNodeStarted: (data: WorkflowNode) => {
         try {
-          answer.workflowProcess!.tracing!.push(data as any)
+          answer.workflow!.nodes!.push(data)
         }
         catch (e) {
           console.log('onNodeStarted------error-x-x-x-x-x-x-x-x-x-x-x-x-xx-x-x-x-', e)
         }
       },
-      onNodeFinished: ({ data }) => {
-        console.log('onNodeFinished', data, answer)
-        const currentIndex = answer.workflowProcess!.tracing!.findIndex(
-          item => item.nodeId === data.nodeId
+      onNodeFinished: (node: WorkflowNode) => {
+        console.log('onNodeFinished', node, answer)
+        const currentIndex = answer.workflow!.nodes!.findIndex(
+          item => item.id === node.id
         )
         if (currentIndex !== -1) {
-          console.log('=====================onNodeFinished------currentIndex', currentIndex, answer)
-          try {
-            answer.workflowProcess!.tracing![currentIndex] = data as any
-          }
-          catch (e) {
-            console.log('onNodeFinished------error', e)
+          const n = answer.workflow?.nodes?.[currentIndex]
+          if (n) {
+            n.status = node.status
+            n.error = node.error
+            n.time = node.time
+            n.output = node.output
+            try {
+              answer.workflow!.nodes![currentIndex] = n
+            }
+            catch (e) {
+              console.log('onNodeFinished------error', e)
+            }
           }
         }
-        if (data.nodeType === 'code' && data.outputs.format === 'json') {
+        if (node.type === 'code' && node.output.format === 'json') {
           answer.format = 'json'
-          answer.customContent = data.outputs.result
+          answer.customContent = node.output.result
         }
-        console.log('onNodeFinished------', data, answer)
+        console.log('onNodeFinished------', node, answer)
       },
     })
   }
@@ -272,7 +279,7 @@ const InputBox: FC<InputBoxProps> = () => {
             ]
           )}
           onValueChange={handleInputChange}
-          value={userInput}
+          value={query}
           minRows={2}
           maxRows={4}
         />
@@ -284,7 +291,7 @@ const InputBox: FC<InputBoxProps> = () => {
         />
         <div className="flex flex-row grow justify-end"></div>
         <div className="flex items-center justify-center cursor-pointer hover:bg-gray-50 w-8 h-8">
-          {isGenerating
+          {session.responding
             ? (
               <CircleStop
                 className="animate-pulse rounded bg-transparent w-4 h-4"
@@ -296,12 +303,12 @@ const InputBox: FC<InputBoxProps> = () => {
               <SendHorizonal
                 className={cn(
                   'w-4 h-4',
-                  !userInput && 'cursor-not-allowed',
+                  !query && 'cursor-not-allowed',
                   'text-gray-500'
                 )}
                 onClick={() => {
-                  if (!userInput) return
-                  send(userInput)
+                  if (!query) return
+                  send(query)
                 }}
                 size={30}
               />

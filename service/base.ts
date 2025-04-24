@@ -1,5 +1,9 @@
 import { API_PREFIX } from '@/config'
-import type { AnnotationReply, EndMessage, Media, MessageReplace, Thought, WorkflowRunningStatus } from '@/models'
+import {
+  type AnnotationReply, type EndMessage, type Media, type MessageReplace, type Thought,
+  type Workflow, type WorkflowStatus, type WorkflowNode,
+  NodeStatus
+} from '@/models'
 import { toast } from '@/components/toast'
 
 const TIME_OUT = 100000
@@ -21,65 +25,6 @@ const baseOptions = {
   redirect: 'follow',
 }
 
-export type WorkflowResponse<T> = {
-  taskId: string
-  runId: string
-  messageId: string
-  event: string
-  createdAt: number
-  data: T
-}
-
-export type NodeState = {
-  nodeId: string
-  nodeType: string
-}
-
-export type WorkflowStartedResponse = WorkflowResponse<{
-  id: string
-  workflowId: string
-  sequenceNumber: number
-}>
-
-export type WorkflowFinishedResponse = WorkflowResponse<{
-  id: string
-  workflowId: string
-  status: WorkflowRunningStatus
-  outputs: any
-  error: string
-  elapsedTime: number
-  totalTokens: number
-  totalSteps: number
-  createdAt: number
-}>
-
-export type NodeStartedResponse = WorkflowResponse<NodeState & {
-  id: string
-  index: number
-  predecessorNodeId?: string
-  inputs: any
-  createdAt: number
-  extras?: any
-}>
-
-export type NodeFinishedResponse = WorkflowResponse<NodeState & {
-  id: string
-  index: number
-  predecessorNodeId?: string
-  inputs: any
-  processData: any
-  outputs: any
-  status: string
-  error: string
-  elapsed_time: number
-  execution_metadata: {
-    totalTokens: number
-    totalPrice: number
-    currency: string
-  }
-  createdAt: number
-}>
-
 export type OnDataMoreInfo = {
   conversationId?: string
   taskId?: string
@@ -96,10 +41,10 @@ export type OnMessageReplace = (messageReplace: MessageReplace) => void
 export type OnAnnotationReply = (messageReplace: AnnotationReply) => void
 export type OnCompleted = (hasError?: boolean) => void
 export type OnError = (msg: string, code?: string) => void
-export type OnWorkflowStarted = (workflowStarted: WorkflowStartedResponse) => void
-export type OnWorkflowFinished = (workflowFinished: WorkflowFinishedResponse) => void
-export type OnNodeStarted = (nodeStarted: NodeStartedResponse) => void
-export type OnNodeFinished = (nodeFinished: NodeFinishedResponse) => void
+export type OnWorkflowStarted = (workflow: Workflow) => void
+export type OnWorkflowFinished = (workflow: Workflow) => void
+export type OnNodeStarted = (node: WorkflowNode) => void
+export type OnNodeFinished = (node: WorkflowNode) => void
 
 type OtherOptions = {
   isPublicAPI?: boolean
@@ -186,7 +131,7 @@ const handleStream = (
                 conversationId: chunk?.conversation_id,
                 messageId: chunk?.message_id,
               })
-              return
+              return false
             }
             if (chunk.status === 400 || !chunk.event) {
               onData('', false, {
@@ -197,7 +142,7 @@ const handleStream = (
               })
               hasError = true
               onCompleted?.(true)
-              return
+              return false
             }
             if (chunk.event === 'message' || chunk.event === 'agent_message') {
               console.log('(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)(0) ===message===bufferObj.answer', chunk.answer)
@@ -216,7 +161,17 @@ const handleStream = (
               onFile?.(chunk as File)
             }
             else if (chunk.event === 'message_end') {
-              onMessageEnd?.(chunk as EndMessage)
+              onMessageEnd?.({
+                id: chunk.id,
+                metadata: {
+                  citations: chunk.metadata.retriever_resources?.map((resource: any) => ({
+                    id: resource.id,
+                    title: resource.dataset_name,
+                    url: resource.url,
+                    content: resource.content,
+                  }))
+                }
+              })
             }
             else if (chunk.event === 'message_replace') {
               onMessageReplace?.(chunk as MessageReplace)
@@ -224,84 +179,50 @@ const handleStream = (
             else if (chunk.event === 'workflow_started') {
               console.log('(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)workflow_started---chunk.data', chunk)
               onWorkflowStarted?.({
-                taskId: chunk.task_id,
-                runId: chunk.workflow_run_id,
-                messageId: chunk.message_id,
-                event: chunk.event,
                 createdAt: chunk.created_at,
-                data: {
-                  id: chunk.data.id,
-                  workflowId: chunk.data.workflow_id,
-                  sequenceNumber: chunk.data.sequence_number
-                }
-              } as WorkflowStartedResponse)
+                id: chunk.data.node_id,
+              })
             }
             else if (chunk.event === 'workflow_finished') {
+              console.log('(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)workflow_finished---chunk.data', chunk)
               onWorkflowFinished?.({
-                taskId: chunk.task_id,
-                runId: chunk.workflow_run_id,
-                messageId: chunk.message_id,
-                event: chunk.event,
-                createdAt: chunk.created_at,
-                data: {
-                  id: chunk.data.id,
-                  workflowId: chunk.data.workflow_id,
-                  status: chunk.data.status,
-                  outputs: chunk.data.outputs,
-                  error: chunk.data.error,
-                  elapsedTime: chunk.data.elapsed_time,
+                id: chunk.data.workflow_id,
+                status: chunk.data.status,
+                error: chunk.data.error,
+                createdAt: chunk.data.created_at,
+                time: chunk.data.elapsed_time,
+                metadata: {
                   totalTokens: chunk.data.total_tokens,
                   totalSteps: chunk.data.total_steps,
-                  createdAt: chunk.data.created_at
-                }
-              } as WorkflowFinishedResponse)
+                },
+              })
             }
             else if (chunk.event === 'node_started') {
+              console.log('(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)node_started---chunk.data', chunk)
               onNodeStarted?.({
-                taskId: chunk.task_id,
-                runId: chunk.workflow_run_id,
-                messageId: chunk.message_id,
-                event: chunk.event,
-                createdAt: chunk.created_at,
-                data: {
-                  id: chunk.data.id,
-                  nodeId: chunk.data.node_id,
-                  nodeType: chunk.data.node_type,
-                  index: chunk.data.index,
-                  predecessorNodeId: chunk.data.predecessor_node_id,
-                  inputs: chunk.data.inputs,
-                  createdAt: chunk.data.created_at,
-                  extras: chunk.data.extras
-                }
-              } as NodeStartedResponse)
+                id: chunk.data.node_id,
+                type: chunk.data.node_type,
+                title: chunk.data.title,
+                createdAt: chunk.data.created_at,
+                status: NodeStatus.Running,
+              })
             }
             else if (chunk.event === 'node_finished') {
+              console.log('(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)node_finished---chunk.data', chunk)
               onNodeFinished?.({
-                taskId: chunk.task_id,
-                runId: chunk.workflow_run_id,
-                messageId: chunk.message_id,
-                createdAt: chunk.created_at,
-                event: chunk.event,
-                data: {
-                  id: chunk.data.id,
-                  nodeId: chunk.data.node_id,
-                  nodeType: chunk.data.node_type,
-                  index: chunk.data.index,
-                  predecessorNodeId: chunk.data.predecessor_node_id,
-                  inputs: chunk.data.inputs,
-                  processData: safeJsonParse(chunk.data.process_data, chunk.data.process_data),
-                  outputs: chunk.data.outputs,
-                  status: chunk.data.status,
-                  error: chunk.data.error,
-                  elapsed_time: chunk.data.elapsed_time,
-                  execution_metadata: {
-                    totalTokens: chunk.data.execution_metadata?.total_tokens,
-                    totalPrice: chunk.data.execution_metadata?.total_price,
-                    currency: chunk.data.execution_metadata?.currency
-                  },
-                  createdAt: chunk.data.created_at
-                },
-              } as NodeFinishedResponse)
+                id: chunk.data.id,
+                type: chunk.data.node_type,
+                title: chunk.data.node_title,
+                status: chunk.data.status,
+                error: chunk.data.error,
+                time: chunk.data.elapsed_time,
+                createdAt: chunk.data.created_at,
+                output: chunk.data.outputs,
+                metadata: {
+                  totalTokens: chunk.data.execution_metadata?.total_tokens,
+                  totalPrice: chunk.data.execution_metadata?.total_price,
+                }
+              })
             }
           }
         })

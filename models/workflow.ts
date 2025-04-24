@@ -1,42 +1,47 @@
-export enum WorkflowRunningStatus {
+export enum WorkflowStatus {
   Running = 'running',
   Completed = 'completed',
+  Succeeded = 'succeeded',
   Failed = 'failed',
+  Stopped = 'stopped',
 }
 
-export type NodeTracing = {
-  nodeId: string
-  nodeType: string
-  nodeLabel: string
-  nodeMessage: string
-  status: WorkflowRunningStatus
-  inputs: Record<string, any>
-  outputs: Record<string, any>
+export enum NodeStatus {
+  Running = 'running',
+  Completed = 'completed',
+  Succeeded = 'succeeded',
+  Failed = 'failed',
+  Stopped = 'stopped',
+}
+
+export type Metadata = {
+  totalTokens?: number,
+  totalPrice?: number,
+  currency?: string,
+  totalSteps?: number,
+}
+
+export type Workflow = {
+  id: string,
+  status?: WorkflowStatus
+  nodes?: WorkflowNode[]
+  error?: string,
+  time?: number,
+  metadata?: Metadata,
+  createdAt?: number,
+}
+
+export type WorkflowNode = {
   id: string
-  index: number
-  predecessorNodeId: string
+  type: string
   title: string
-  processData: any
+  status?: NodeStatus
   error?: string
-  elapsedTime: number
-  executionMetadata: {
-    totalTokens: number
-    totalPrice: number
-    currency: string
-  }
-  createdAt: number
-  createdBy: {
-    id: string
-    name: string
-    email: string
-  }
-  finishedAt: number
+  time?: number
+  metadata?: Metadata
+  createdAt?: number
+  finishedAt?: number
   extras?: any
   expand?: boolean // for UI
-}
-
-
-export type WorkflowProcess = {
-  status: WorkflowRunningStatus
-  tracing: NodeTracing[]
+  output?: any
 }

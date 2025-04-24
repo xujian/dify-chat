@@ -8,7 +8,7 @@ import s from './style.module.css'
 import ImageGallery from '../image-gallery'
 import Thought from './thought'
 import { TooltipProvider, TooltipTrigger } from '@/components/ui'
-import WorkflowProcess from '@/components/workflow/workflow-process'
+import WorkflowView from '@/components/workflow/workflow'
 import { Markdown } from '@/components/markdown'
 import type { Emoji } from '@/models/tools'
 import CustomBlock from '../custom-block'
@@ -37,7 +37,7 @@ const Answer: FC<AnswerProps> = ({
   isResponding,
   allToolIcons,
 }) => {
-  const { id, content, feedback, thoughts, workflowProcess } = item
+  const { id, content, feedback, thoughts, workflow } = item
   const isAgentMode = !!thoughts && thoughts.length > 0
 
   const { t } = useTranslation()
@@ -112,9 +112,9 @@ const Answer: FC<AnswerProps> = ({
         }
       </div>
       <div className={`${s.answer} relative text-sm`}>
-        <div className={`ml-2 py-3 px-3 bg-gray-100 rounded-tr-2xl rounded-b-2xl ${workflowProcess && 'min-w-[480px]'}`}>
-          {workflowProcess && (
-            <WorkflowProcess data={workflowProcess} hideInfo />
+        <div className={`ml-2 py-3 px-3 bg-gray-100 rounded-tr-2xl rounded-b-2xl`}>
+          {workflow && (
+            <WorkflowView data={workflow} />
           )}
           {
             isResponding && (

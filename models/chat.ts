@@ -1,5 +1,6 @@
-import { WorkflowProcess } from './workflow'
+
 import { Media } from './media'
+import { Workflow } from './workflow'
 
 export type Citation = {
   id: string
@@ -96,7 +97,7 @@ export type Message = {
   log?: { role: string; text: string }[]
   thoughts?: Thought[]
   files?: Media[]
-  workflowProcess?: WorkflowProcess
+  workflow?: Workflow
   workflowRunId?: string
 }
 
@@ -106,7 +107,7 @@ export enum CodeLanguage {
   json = 'json',
 }
 
-export enum BlockEnum {
+export enum NodeTypes {
   Start = 'start',
   End = 'end',
   Answer = 'answer',
@@ -124,8 +125,8 @@ export enum BlockEnum {
 export type EndMessage = {
   id: string
   metadata: {
-    retrieverResources?: Citation[]
-    annotationReply: {
+    citations?: Citation[]
+    annotation?: {
       id: string
       account: {
         id: string
