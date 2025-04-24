@@ -112,7 +112,7 @@ const handleStream = (
         return
       }
       buffer += decoder.decode(result.value, { stream: true })
-      const lines = buffer.split('\n')
+      const lines = buffer.split('\n\n')
       try {
         lines.forEach((message) => {
           if (message.startsWith('data: ')) { // check if it starts with data:
@@ -402,15 +402,27 @@ export const ssePost = (
         onError?.('Server Error')
         return
       }
-      return handleStream(res, (str: string, isFirstMessage: boolean, moreInfo: OnDataMoreInfo) => {
-        if (moreInfo.errorMessage) {
-          toast({ type: 'error', message: moreInfo.errorMessage })
-          return
-        }
-        onData?.(str, isFirstMessage, moreInfo)
-      }, () => {
-        onCompleted?.()
-      }, onThought, onMessageEnd, onMessageReplace, onFile, onWorkflowStarted, onWorkflowFinished, onNodeStarted, onNodeFinished)
+      return handleStream(
+        res,
+        (str: string, isFirstMessage: boolean, moreInfo: OnDataMoreInfo) => {
+          if (moreInfo.errorMessage) {
+            toast({ type: 'error', message: moreInfo.errorMessage })
+            return
+          }
+          onData?.(str, isFirstMessage, moreInfo)
+        },
+        () => {
+          onCompleted?.()
+        },
+        onThought,
+        onMessageEnd,
+        onMessageReplace,
+        onFile,
+        onWorkflowStarted,
+        onWorkflowFinished,
+        onNodeStarted,
+        onNodeFinished
+      )
     }).catch((e) => {
       console.error('(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)error4', e)
       toast({ type: 'error', message: e })

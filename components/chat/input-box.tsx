@@ -15,6 +15,8 @@ import { addMessage, updateMessage } from '@/store/messages'
 import { Annotation, Message, Media, Thought, EndMessage, MessageReplace, WorkflowNode, Workflow } from '@/models'
 import { WorkflowStatus } from '@/models'
 import { patchConversation, updateConversation } from '@/store/conversations'
+import { produce } from 'immer'
+
 interface InputBoxProps { }
 
 const InputBox: FC<InputBoxProps> = () => {
@@ -79,7 +81,7 @@ const InputBox: FC<InputBoxProps> = () => {
 
     // placeholder answer
     const answerId = `answer-${t}`
-    const answer: Message = {
+    const initialAnswer: Message = {
       id: answerId,
       content: '',
       type: 'answer',
@@ -92,8 +94,10 @@ const InputBox: FC<InputBoxProps> = () => {
         nodes: [],
       }
     }
+    dispatch(addMessage(initialAnswer))
 
-    dispatch(addMessage(answer))
+    // Keep a mutable working copy of answer that we'll use for updates
+    let answer = initialAnswer
 
     let isAgentMode = false
 
@@ -125,19 +129,25 @@ const InputBox: FC<InputBoxProps> = () => {
           conversationRef.current = newConversationId
           dispatch(setCurrentConversation(newConversationId))
         }
-        if (!isAgentMode) {
-          answer.content += message
-        }
-        else {
-          const lastThought = answer.thoughts?.[answer.thoughts?.length - 1]
-          if (lastThought)
-            lastThought.content = lastThought.content + message // need immer setAutoFreeze
-        }
-        if (messageId && answer.id === `answer-${t}`) {
-          answer.id = `answer-${messageId}`
-          question.id = `question-${messageId}`
-          commit(question)
-        }
+        // Use Immer's produce to create a new immutable state
+        answer = produce(answer, draft => {
+          if (!isAgentMode) {
+            draft.content += message
+          }
+          else {
+            const lastThought = draft.thoughts?.[draft.thoughts.length - 1]
+            if (lastThought) {
+              lastThought.content += message
+            }
+          }
+
+          if (messageId && draft.id === `answer-${t}`) {
+            draft.id = `answer-${messageId}`
+            // Also update question ID
+            question.id = `question-${messageId}`
+            commit(question)
+          }
+        })
         commit(answer)
       },
       async onCompleted(hasError?: boolean) {
@@ -154,43 +164,61 @@ const InputBox: FC<InputBoxProps> = () => {
         }))
       },
       onFile(file: Media) {
-        const lastThought = answer.thoughts?.[answer.thoughts?.length - 1]
-        if (lastThought)
-          lastThought.files = [...(lastThought as any).message_files, { ...file }]
+        answer = produce(answer, draft => {
+          const lastThought = draft.thoughts?.[draft.thoughts.length - 1]
+          if (lastThought) {
+            lastThought.files = [...(lastThought.files || []), { ...file }]
+          }
+        })
+        commit(answer)
       },
       onThought(thought: Thought) {
         console.log('onThought///////////////////////////////////////////////////////////////', thought)
         isAgentMode = true
-        const response = answer as any
-        if (thought.messageId && answer.id === `answer-${t}`) {
-          response.id = thought.messageId
-        }
-        // returnedMessage.id = thought.message_id;
-        if (response.agentThoughts.length === 0) {
-          response.agentThoughts.push(thought)
-        }
-        else {
-          const lastThought = response.agentThoughts[response.agentThoughts.length - 1]
-          // thought changed but still the same thought, so update.
-          if (lastThought.id === thought.id) {
-            thought.content = lastThought.thought
-            thought.files = lastThought.message_files
-            answer.thoughts![response.agent_thoughts.length - 1] = thought
+
+        answer = produce(answer, draft => {
+          if (thought.messageId && draft.id === `answer-${t}`) {
+            draft.id = thought.messageId
           }
-          else {
-            answer.thoughts!.push(thought)
+
+          // Initialize thoughts array if it doesn't exist
+          if (!draft.thoughts) {
+            draft.thoughts = []
           }
-        }
+
+          if (draft.thoughts.length === 0) {
+            draft.thoughts.push(thought)
+          } else {
+            const lastThoughtIndex = draft.thoughts.length - 1
+            const lastThought = draft.thoughts[lastThoughtIndex]
+
+            // Update existing thought or add new one
+            if (lastThought.id === thought.id) {
+              draft.thoughts[lastThoughtIndex] = {
+                ...thought,
+                content: lastThought.content,
+                files: lastThought.files
+              }
+            } else {
+              draft.thoughts.push(thought)
+            }
+          }
+        })
+        commit(answer)
       },
       onMessageEnd: (end: EndMessage) => {
         console.log('onMessageEnd', end)
         if (end.metadata?.annotation) {
-          answer.id = end.id
-          answer.annotation = ({
-            id: end.metadata.annotation.id,
-            authorName: end.metadata.annotation.account.name,
-          } as Annotation)
-          return
+          answer = produce(answer, draft => {
+            draft.id = end.id
+            if (end.metadata?.annotation) {
+              draft.annotation = {
+                id: end.metadata.annotation.id,
+                authorName: end.metadata.annotation.account.name,
+              } as Annotation
+            }
+          })
+          commit(answer)
         }
       },
       onMessageReplace: (messageReplace: MessageReplace) => {
@@ -200,54 +228,64 @@ const InputBox: FC<InputBoxProps> = () => {
         dispatch(setResponding(false))
       },
       onWorkflowStarted: (data: Workflow) => {
-        answer.workflow = {
-          id: data.id,
-          status: WorkflowStatus.Running,
-          nodes: [],
-        }
+        answer = produce(answer, draft => {
+          draft.workflow = {
+            id: data.id,
+            status: WorkflowStatus.Running,
+            nodes: [],
+          }
+        })
+        commit(answer)
       },
       onWorkflowFinished: (data: Workflow) => {
         console.log('onWorkflowFinished', data)
-        // Create a new object instead of modifying the existing one directly
-        answer.workflow = {
-          ...answer.workflow!,
-          status: data.status as WorkflowStatus
-        }
+        answer = produce(answer, draft => {
+          if (draft.workflow) {
+            draft.workflow.status = data.status as WorkflowStatus
+          }
+        })
+        commit(answer)
       },
       onNodeStarted: (data: WorkflowNode) => {
         try {
-          answer.workflow!.nodes = [
-            ...answer.workflow!.nodes!,
-            data
-          ]
+          answer = produce(answer, draft => {
+            if (draft.workflow && draft.workflow.nodes) {
+              draft.workflow.nodes.push(data)
+            }
+          })
+          commit(answer)
         }
         catch (e) {
-          console.log('onNodeStarted------error-x-x-x-x-x-x-x-x-x-x-x-x-xx-x-x-x-', e)
+          console.log('onNodeStarted------error-x-x-x-x-x-x-x-x-x-x-x-x-xx-x-x-', e)
         }
       },
       onNodeFinished: (node: WorkflowNode) => {
-        console.log('onNodeFinished', node, answer)
-        const currentIndex = answer.workflow!.nodes!.findIndex(
-          item => item.id === node.id
-        )
-        if (currentIndex !== -1) {
-          const n = answer.workflow?.nodes?.[currentIndex]
-          if (n) {
-            n.status = node.status
-            n.error = node.error
-            n.time = node.time
-            n.output = node.output
-            try {
-              answer.workflow!.nodes![currentIndex] = n
+        console.log('onNodeFinished', node)
+        try {
+          answer = produce(answer, draft => {
+            if (draft.workflow && draft.workflow.nodes) {
+              const currentIndex = draft.workflow.nodes.findIndex(
+                item => item.id === node.id
+              )
+              if (currentIndex !== -1) {
+                draft.workflow.nodes[currentIndex] = {
+                  ...draft.workflow.nodes[currentIndex],
+                  status: node.status,
+                  error: node.error,
+                  time: node.time,
+                  output: node.output
+                }
+              }
+              if (node.type === 'code' && node.output.format === 'json') {
+                draft.format = 'json'
+                draft.customContent = node.output.result
+              }
             }
-            catch (e) {
-              console.log('onNodeFinished------error', e)
-            }
-          }
+          })
+          commit(answer)
         }
-        if (node.type === 'code' && node.output.format === 'json') {
-          answer.format = 'json'
-          answer.customContent = node.output.result
+        catch (e) {
+          console.log('onNodeFinished------error', e)
         }
         console.log('onNodeFinished------', node, answer)
       },
