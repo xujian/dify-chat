@@ -8,11 +8,12 @@ export const APP_INFO: AppInfo = {
   copyright: '',
   privacyPolicy: '',
   defaultLanguage: 'zh-Hans',
-  server: `${process.env.NEXT_PUBLIC_API_URL}`.replace('/v1', '')
+  server: `${process.env.NEXT_PUBLIC_API_URL}`.replace('/v1', ''),
+  useHistory: false
 }
 
-export const isShowPrompt = false
-export const promptTemplate = 'I want you to act as a javascript console.'
+// export const isShowPrompt = false
+// export const promptTemplate = 'I want you to act as a javascript console.'
 
 export const API_PREFIX = '/api'
 
