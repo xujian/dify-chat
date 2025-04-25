@@ -7,6 +7,7 @@ export type AppInfo = {
   copyright?: string
   privacyPolicy?: string,
   server: string,
+  useHistory: boolean
 }
 
 export type TypeWithI18N<T = string> = {
