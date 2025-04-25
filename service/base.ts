@@ -120,17 +120,17 @@ const handleStream = (
             try {
               // Pre-process the message to handle potential Unicode escape issues
               const u = unicodeToChar(m)
-              console.log('(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)u', u)
+              // console.log('(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)u', u)
               chunk = JSON.parse(u) as Record<string, any>
-              console.log('(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)bufferObj', chunk)
+              // console.log('(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)bufferObj', chunk)
             }
             catch (e) {
               console.error('(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)error1', m, e)
               // mute handle message cut off
-              onData('', isFirstMessage, {
-                conversationId: chunk?.conversation_id,
-                messageId: chunk?.message_id,
-              })
+              // onData('', isFirstMessage, {
+              //   conversationId: chunk?.conversation_id,
+              //   messageId: chunk?.message_id,
+              // })
               return false
             }
             if (chunk.status === 400 || !chunk.event) {
@@ -145,7 +145,6 @@ const handleStream = (
               return false
             }
             if (chunk.event === 'message' || chunk.event === 'agent_message') {
-              console.log('(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)(0) ===message===bufferObj.answer', chunk.answer)
               // can not use format here. Because message is splited.
               onData(unicodeToChar(chunk.answer), isFirstMessage, {
                 conversationId: chunk.conversation_id,

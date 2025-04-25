@@ -31,6 +31,7 @@ export const messagesSlice = createSlice({
       })
     },
     addMessage: (state, action: PayloadAction<Message>) => {
+      console.log('🐱🐱🐱🐱🐱🐱🐱🐱🐱🐱🐱🐱🐱🐱🐱🐱🐱🐱🐱🐱🐱addMessage', action.payload)
       const message = action.payload
       state.value.push({
         ...message,
@@ -39,9 +40,7 @@ export const messagesSlice = createSlice({
     updateMessage: (state, action: PayloadAction<Message>) => {
       const message = action.payload
       const index = state.value.findIndex(
-        item => item.id === message.id ||
-          item.id === `answer-${message.createdAt}` ||
-          item.id === `question-${message.createdAt}`
+        item => item.id === message.id
       )
       if (index !== -1) {
         state.value[index] = {

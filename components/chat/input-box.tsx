@@ -66,11 +66,9 @@ const InputBox: FC<InputBoxProps> = () => {
     }
 
     const t = Date.now()
-
     // placeholder question
-    const questionId = `question-${t}`
-    const question: Message = {
-      id: questionId,
+    let question: Message = {
+      id: `question-${t}`,
       content: message,
       conversationId: session.currentConversation,
       createdAt: t,
@@ -80,9 +78,8 @@ const InputBox: FC<InputBoxProps> = () => {
     dispatch(addMessage(question))
 
     // placeholder answer
-    const answerId = `answer-${t}`
     const initialAnswer: Message = {
-      id: answerId,
+      id: `answer-${t}`,
       content: '',
       type: 'answer',
       conversationId: session.currentConversation,
@@ -94,13 +91,10 @@ const InputBox: FC<InputBoxProps> = () => {
         nodes: [],
       }
     }
-    dispatch(addMessage(initialAnswer))
 
     // Keep a mutable working copy of answer that we'll use for updates
-    let answer = initialAnswer
-
+    let answer = produce(initialAnswer, draft => { })
     let isAgentMode = false
-
     const commit = (message: Message) => {
       dispatch(updateMessage(message))
     }
@@ -128,8 +122,12 @@ const InputBox: FC<InputBoxProps> = () => {
           dispatch(patchConversation(newConversationId))
           conversationRef.current = newConversationId
           dispatch(setCurrentConversation(newConversationId))
+          answer = produce(answer, draft => {
+            draft.id = `answer-${messageId}`
+          })
+          console.log('🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈nData-----------------addMessage', answer)
+          dispatch(addMessage(answer))
         }
-        // Use Immer's produce to create a new immutable state
         answer = produce(answer, draft => {
           if (!isAgentMode) {
             draft.content += message
@@ -140,14 +138,8 @@ const InputBox: FC<InputBoxProps> = () => {
               lastThought.content += message
             }
           }
-
-          if (messageId && draft.id === `answer-${t}`) {
-            draft.id = `answer-${messageId}`
-            // Also update question ID
-            question.id = `question-${messageId}`
-            commit(question)
-          }
         })
+        // Use Immer's produce to create a new immutable state
         commit(answer)
       },
       async onCompleted(hasError?: boolean) {
@@ -175,23 +167,16 @@ const InputBox: FC<InputBoxProps> = () => {
       onThought(thought: Thought) {
         console.log('onThought///////////////////////////////////////////////////////////////', thought)
         isAgentMode = true
-
         answer = produce(answer, draft => {
-          if (thought.messageId && draft.id === `answer-${t}`) {
-            draft.id = thought.messageId
-          }
-
           // Initialize thoughts array if it doesn't exist
           if (!draft.thoughts) {
             draft.thoughts = []
           }
-
           if (draft.thoughts.length === 0) {
             draft.thoughts.push(thought)
           } else {
             const lastThoughtIndex = draft.thoughts.length - 1
             const lastThought = draft.thoughts[lastThoughtIndex]
-
             // Update existing thought or add new one
             if (lastThought.id === thought.id) {
               draft.thoughts[lastThoughtIndex] = {
@@ -210,7 +195,6 @@ const InputBox: FC<InputBoxProps> = () => {
         console.log('onMessageEnd', end)
         if (end.metadata?.annotation) {
           answer = produce(answer, draft => {
-            draft.id = end.id
             if (end.metadata?.annotation) {
               draft.annotation = {
                 id: end.metadata.annotation.id,
@@ -247,17 +231,12 @@ const InputBox: FC<InputBoxProps> = () => {
         commit(answer)
       },
       onNodeStarted: (data: WorkflowNode) => {
-        try {
-          answer = produce(answer, draft => {
-            if (draft.workflow && draft.workflow.nodes) {
-              draft.workflow.nodes.push(data)
-            }
-          })
-          commit(answer)
-        }
-        catch (e) {
-          console.log('onNodeStarted------error-x-x-x-x-x-x-x-x-x-x-x-x-xx-x-x-', e)
-        }
+        answer = produce(answer, draft => {
+          if (draft.workflow && draft.workflow.nodes) {
+            draft.workflow.nodes.push(data)
+          }
+        })
+        commit(answer)
       },
       onNodeFinished: (node: WorkflowNode) => {
         console.log('onNodeFinished', node)
