@@ -2,7 +2,7 @@ import { Toaster } from 'sonner'
 import { getLocaleOnServer } from '@/i18n/server'
 
 import './styles/globals.css'
-import './styles/chat.scss'
+import './styles/chat.css'
 import './styles/markdown.scss'
 
 const LocaleLayout = async ({
