@@ -1,0 +1,5 @@
+@import 'tailwindcss';
+
+.answer .thought {
+  @apply text-gray-500 text-xs mb-1;
+}
