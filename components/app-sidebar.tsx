@@ -28,6 +28,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { setCurrentConversation, startChat } from '@/store/session'
 import { greet } from '@/store/messages'
 import { useServer } from '@/context/server'
+import { APP_INFO } from '@/config'
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   const server = useServer()
@@ -59,8 +60,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   // init
   useEffect(() => {
-    if (!fufilled) {
-      dispatch(fetchConversations())
+    if (APP_INFO.useHistory) {
+      if (!fufilled) {
+        dispatch(fetchConversations())
+      }
+    }
+    else {
+
     }
   }, [])
 
