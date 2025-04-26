@@ -100,7 +100,7 @@ const Messages: FC<MessagesProps> = () => {
                 item={item}
                 feedbackDisabled={false}
                 onFeedback={() => Promise.resolve()}
-                isResponding={session.responding}
+                isResponding={isLast && session.responding}
               />
             }
             return (
@@ -118,7 +118,6 @@ const Messages: FC<MessagesProps> = () => {
             </div>
           }
         </div>
-        {JSON.stringify(messages.map(item => item.id))}
       </div>
       <div className={cn(!feedbackDisabled && 'left-3.5! right-3.5!', 'absolute z-10 bottom-0 left-0 right-0')}>
         <InputBox />

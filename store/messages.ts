@@ -25,7 +25,7 @@ export const messagesSlice = createSlice({
       console.log('🐱🐱🐱🐱🐱🐱🐱🐱🐱🐱🐱🐱🐱🐱🐱🐱🐱🐱🐱🐱🐱greet', action.payload)
       state.value = []
       state.value.push({
-        id: '-1',
+        id: 'answer--1',
         content: action.payload,
         type: 'answer',
         conversationId: '-1',
@@ -41,12 +41,12 @@ export const messagesSlice = createSlice({
     updateMessage: (state, action: PayloadAction<Message>) => {
       const message = action.payload
       console.log('🐱🐱🐱🐱🐱🐱🐱🐱🐱🐱🐱🐱🐱updateMessage', message, state.value)
-      const found = state.value.find(
-        item => item.createdAt === message.createdAt
+      const foundIndex = state.value.findIndex(
+        item => item.id === message.id
+          || item.id === `answer-${message.createdAt}`
       )
-      if (found) {
-        found.id = message.id
-        found.content = message.content
+      if (foundIndex !== -1) {
+        state.value.splice(foundIndex, 1, message)
       }
     },
     clearMessages: (state) => {
