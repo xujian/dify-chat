@@ -69,7 +69,6 @@
     "motion": "^12.9.2",
     "negotiator": "^1.0.0",
     "next": "^15.2.5",
-    "pm2": "^6.0.5",
     "rc-textarea": "^1.9.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
@@ -110,6 +109,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "lint-staged": "^15.5.0",
     "pm2": "^6.0.5",
+    "pm2": "^6.0.5",
     "postcss": "^8.5.3",
     "postcss-import": "^16.1.0",
     "postcss-nesting": "^13.0.1",
@@ -123,13 +123,17 @@
       "eslint --fix"
     ]
   },
-  "packageManager": "pnpm@10.8.1+sha512.c50088ba998c67b8ca8c99df8a5e02fd2ae2e2b29aaf238feaa9e124248d3f48f9fb6db2424949ff901cffbb5e0f0cc1ad6aedb602cd29450751d11c35023677"
+  "engines": {
+    "node": ">=18.0.0"
+  }
+},
+"packageManager": "pnpm@10.8.1+sha512.c50088ba998c67b8ca8c99df8a5e02fd2ae2e2b29aaf238feaa9e124248d3f48f9fb6db2424949ff901cffbb5e0f0cc1ad6aedb602cd29450751d11c35023677"
 },
 "engines": {
-  "node": ">=18.0.0"
+"node": ">=18.0.0"
 }
   "engines": {
-  "node": ">=18.0.0"
+"node": ">=18.0.0"
 }
 },
 "packageManager": "pnpm@10.8.1+sha512.c50088ba998c67b8ca8c99df8a5e02fd2ae2e2b29aaf238feaa9e124248d3f48f9fb6db2424949ff901cffbb5e0f0cc1ad6aedb602cd29450751d11c35023677"
