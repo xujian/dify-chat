@@ -21,12 +21,14 @@ const Welcome: FC = () => {
 
   const handleStartChat = () => {
     dispatch(createConversation())
-    dispatch(greet(config.openingStatement))
     dispatch(startChat())
+    dispatch(greet(config.openingStatement))
   }
 
   useEffect(() => {
+    console.log('variablesFullfilled', variablesFullfilled, session.currentConversation, session.chatStarted)
     if (variablesFullfilled) {
+      console.log('variablesFullfilled-STARTCHAT')
       handleStartChat()
     }
   }, [variablesFullfilled])
@@ -38,7 +40,6 @@ const Welcome: FC = () => {
         <Button className='my-3'
           onClick={handleStartChat}>开始对话</Button>
       </div>
-      <pre>{JSON.stringify(session, null, 2)}</pre>
     </div>
   )
 }
