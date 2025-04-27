@@ -56,16 +56,17 @@ export const sessionSlice = createSlice({
       globalThis.localStorage.setItem(localStorageKey, action.payload)
       // enters a conversation just created (id === '-1')
       // display welcome and input
-      if (action.payload === '-1') {
+      if (action.payload === '') {
         state.chatStarted = false
       }
     },
     startChat: (state) => {
+      console.log('session.ts oooooooooo---startChat', state.currentConversation)
       /**
        * 1. local storage 写入 conversation
        * 2. create a new conversation
        */
-      globalThis.localStorage.setItem(localStorageKey, state.currentConversation)
+      globalThis.localStorage.setItem(localStorageKey, state.currentConversation = '-1')
       state.chatStarted = true
     },
     closeChat: (state) => {

@@ -22,6 +22,8 @@ export const conversationsSlice = createSlice({
   initialState,
   reducers: {
     createConversation: (state) => {
+      if (state.value.find(c => c.id === '-1'))
+        return
       // create a new conversation
       // and startChat
       const newConversation = {

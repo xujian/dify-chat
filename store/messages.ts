@@ -22,6 +22,7 @@ export const messagesSlice = createSlice({
   initialState,
   reducers: {
     greet: (state, action: PayloadAction<string>) => {
+      console.log('🐱🐱🐱🐱🐱🐱🐱🐱🐱🐱🐱🐱🐱🐱🐱🐱🐱🐱🐱🐱🐱greet', action.payload)
       state.value = []
       state.value.push({
         id: '-1',
@@ -49,6 +50,7 @@ export const messagesSlice = createSlice({
       }
     },
     clearMessages: (state) => {
+      console.log('🐱clearMessages', state)
       state.value = []
     },
     clearError: (state) => {
@@ -122,7 +124,7 @@ export const fetchMessages = createAsyncThunk(
       })
       return result
     } catch (error: any) {
-      return rejectWithValue(error.message || 'Failed to fetch messages')
+      return []
     }
   }
 )
