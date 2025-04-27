@@ -3,7 +3,7 @@
 import type { FC } from 'react'
 import React, { useEffect, useState } from 'react'
 import { useBoolean } from 'ahooks'
-import { Header, Messages, AppSidebar, Welcome, AppUnavailable } from '@/components'
+import { Header, Messages, AppSidebar, Welcome, AppUnavailable, Loading } from '@/components'
 import { SidebarInset, SidebarProvider } from '@/components/ui'
 import { setLocaleOnClient } from '@/i18n/client'
 import useBreakpoints, { MediaType } from '@/hooks/use-breakpoints'
@@ -67,7 +67,7 @@ const App: FC<AppProps> = () => {
     return <div>APP_ID/APP_INFO not set</div>
 
   return (
-    <SidebarProvider>
+    <SidebarProvider open={APP_INFO.useHistory}>
       <AppSidebar />
       <SidebarInset>
         <div className='home flex flex-col h-screen'>
@@ -78,9 +78,15 @@ const App: FC<AppProps> = () => {
           />
           <div className='grow flex flex-col overflow-hidden'>
             {
-              session.chatStarted
-                ? (<Messages />)
-                : (<Welcome />)
+              server.fetched
+                ? session.chatStarted
+                  ? (<Messages />)
+                  : (<Welcome />)
+                : (
+                  <div className='flex justify-center items-center h-full'>
+                    <Loading />
+                  </div>
+                )
             }
           </div>
         </div>
