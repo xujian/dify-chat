@@ -3,6 +3,7 @@ import type { FC } from 'react'
 import React from 'react'
 import { HandThumbDownIcon, HandThumbUpIcon } from '@heroicons/react/24/outline'
 import { useTranslation } from 'react-i18next'
+import * as motion from 'motion/react-client'
 import Loading from '../loading'
 import s from './style.module.css'
 import ImageGallery from '../image-gallery'
@@ -98,11 +99,21 @@ const Answer: FC<AnswerProps> = ({
   return (
     <div key={id} data-id={id} className='answer w-full max-w-[600px] flex items-start py-1 motion-pulse'>
       <div className={`${s.answerIcon} ml-2 w-10 h-10 shrink-0`}>
-        {isResponding
+        {!isResponding
           ? (
-            <div className={s.typeingIcon}>
-              <Loading type='avatar' />
-            </div>
+            <motion.div
+              className="flex items-center justify-center w-8 h-8 rounded-full border-2 border-gray-300"
+              animate={{
+                borderColor: ["rgba(0,0,0,0.1)", "rgba(0,0,0,0.7)", "rgba(0,0,0,0.1)"],
+              }}
+              transition={{
+                duration: 1,
+                ease: "easeInOut",
+                repeat: Infinity,
+                repeatDelay: 1,
+              }}>
+              <img src="/logo.png" alt="logo" width={24} height={24} className="opacity-70" />
+            </motion.div>
           )
           : (
             <div className={s.answerIcon}>
