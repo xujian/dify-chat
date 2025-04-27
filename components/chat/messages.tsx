@@ -9,6 +9,7 @@ import { AppDispatch, RootState } from '@/store'
 import { clearMessages, fetchMessages } from '@/store/messages'
 import InputBox from './input-box'
 import Loading from '@/components/loading'
+import { setCurrentConversation } from '@/store/session'
 export type MessagesProps = {
 }
 
@@ -16,6 +17,7 @@ const Messages: FC<MessagesProps> = () => {
 
   const dispatch = useDispatch<AppDispatch>()
   const session = useSelector((state: RootState) => state.session)
+  const [conversation, setConversation] = useState<string>(session.currentConversation)
   const { value: conversations, fufilled: conversationsFufilled } = useSelector((state: RootState) => state.conversations)
   const { value: messages, loading, error } = useSelector((state: RootState) => state.messages)
   const feedbackDisabled = false
@@ -29,31 +31,48 @@ const Messages: FC<MessagesProps> = () => {
   }
 
   const loadMessages = () => {
-    if (!session.currentConversation) {
+    if (!conversation)
+      return
+    if (conversation === '-1')
+      return
+    if (!conversations.find((c) => c.id === conversation)) {
+      // no matched conversation
+      // seems the conversation is deleted
+      // 对话已删除 conversationID 失效
+      setConversation('-1')
+      dispatch(setCurrentConversation('-1'))
       return
     }
-    if (session.currentConversation === '-1') {
-      return
-    }
-    if (!conversations.find((c) => c.id === session.currentConversation)) {
-      console.log('oooooooooo---conversation not found, clear messages')
-      // conversation not found, clear messages
-      // this means user come from a history URL that the conversation is deleted
-      // dispatch(clearMessages())
-      // dispatch(closeChat())
-      return
-    }
-    dispatch(fetchMessages(session.currentConversation))
+    dispatch(clearMessages())
+    dispatch(fetchMessages(conversation))
   }
 
   useEffect(() => {
-    dispatch(clearMessages())
+    if (!session.currentConversation)
+      return
+    if (session.currentConversation === '-1')
+      return
+    if (conversation === '-1') {
+      // just got the first answer
+      // 刚刚获取到第一个回答
+      // 设置当前对话
+      // 无需 load messages
+      setConversation(session.currentConversation)
+      return
+    }
+    if (!conversations.find((c) => c.id === session.currentConversation)) {
+      setConversation('-1')
+      dispatch(setCurrentConversation('-1'))
+      return
+    }
+    setConversation(session.currentConversation)
     loadMessages()
     // wait until conversations is loades
     // chances that the conversation ID is not found
     // the conversation is got from history URL
     // and the conversation is deleted
   }, [
+    // When switch conversion at the sidebar
     session.currentConversation,
     conversationsFufilled
   ])

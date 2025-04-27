@@ -1,13 +1,8 @@
 'use client'
 import type { FC } from 'react'
 import React from 'react'
-import {
-  Bars3Icon,
-  PencilSquareIcon,
-} from '@heroicons/react/24/solid'
-import AppIcon from '@/components/app-icon'
 import { SidebarTrigger } from './ui/sidebar'
-
+import { APP_INFO } from '@/config'
 export type IHeaderProps = {
   title: string
   isMobile?: boolean
@@ -22,7 +17,7 @@ const Header: FC<IHeaderProps> = ({
 }) => {
   return (
     <div className="header shrink-0 flex items-center justify-between h-12 px-3 bg-gray-100">
-      <SidebarTrigger />
+      {APP_INFO.useHistory && <SidebarTrigger />}
     </div>
   )
 }
