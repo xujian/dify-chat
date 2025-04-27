@@ -94,6 +94,8 @@ const InputBox: FC<InputBoxProps> = () => {
 
     // Keep a mutable working copy of answer that we'll use for updates
     let answer = produce(initialAnswer, draft => { })
+    console.log('🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈addMessage', answer)
+    dispatch(addMessage(answer))
     let isAgentMode = false
     const commit = (message: Message) => {
       dispatch(updateMessage(message))
@@ -125,8 +127,8 @@ const InputBox: FC<InputBoxProps> = () => {
           answer = produce(answer, draft => {
             draft.id = `answer-${messageId}`
           })
-          console.log('🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈nData-----------------addMessage', answer)
-          dispatch(addMessage(answer))
+          console.log('🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈nData-----------------updateMessage', answer)
+          commit(answer)
         }
         answer = produce(answer, draft => {
           if (!isAgentMode) {
@@ -271,6 +273,13 @@ const InputBox: FC<InputBoxProps> = () => {
     })
   }
 
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault()
+      send(query)
+    }
+  }
+
   return (
     <div className="relative my-3 flex flex-col w-full">
       <div className="w-full flex flex-col justify-between border rounded-lg">
@@ -298,6 +307,7 @@ const InputBox: FC<InputBoxProps> = () => {
             ]
           )}
           onValueChange={handleInputChange}
+          onKeyDown={handleKeyDown}
           value={query}
           minRows={2}
           maxRows={4}
