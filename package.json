@@ -3,40 +3,12 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack -p 80",
+    "dev": "next dev --turbopack -p 3099",
     "build": "next build",
     "build:dev": "cross-env NODE_ENV=dev next build",
     "build:sit": "cross-env NODE_ENV=sit next build",
     "build:uat": "cross-env NODE_ENV=uat next build",
     "build:prod": "cross-env NODE_ENV=prod next build",
-    "start": "next start",
-    "start": "next start -p 3099",
-    "server": "npm run build && pm2 start npm --name 'dify-chat' -- start",
-    "server:dev": "npm run build:dev && pm2 start npm --name 'dify-chat' -- start",
-    "server:sit": "npm run build:sit && pm2 start npm --name 'dify-chat' -- start",
-    "server:uat": "npm run build:uat && pm2 start npm --name 'dify-chat' -- start",
-    "server:prod": "npm run build:prod && pm2 start npm --name 'dify-chat' -- start",
-    "build:dev": "cross-env NODE_ENV=dev next build",
-    "build:sit": "cross-env NODE_ENV=sit next build",
-    "build:uat": "cross-env NODE_ENV=uat next build",
-    "build:prod": "cross-env NODE_ENV=prod next build",
-    "start": "next start",
-    "start": "next start -p 3099",
-    "server": "npm run build && pm2 start npm --name 'dify-chat' -- start",
-    "server:dev": "npm run build:dev && pm2 start npm --name 'dify-chat' -- start",
-    "server:sit": "npm run build:sit && pm2 start npm --name 'dify-chat' -- start",
-    "server:uat": "npm run build:uat && pm2 start npm --name 'dify-chat' -- start",
-    "server:prod": "npm run build:prod && pm2 start npm --name 'dify-chat' -- start",
-    "build:dev": "cross-env NODE_ENV=dev next build",
-    "build:sit": "cross-env NODE_ENV=sit next build",
-    "build:uat": "cross-env NODE_ENV=uat next build",
-    "build:prod": "cross-env NODE_ENV=prod next build",
-    "start": "next start -p 80",
-    "server": "npm run build && pm2 start npm --name 'dify-chat' -- start",
-    "server:dev": "npm run build:dev && pm2 start npm --name 'dify-chat' -- start",
-    "server:sit": "npm run build:sit && pm2 start npm --name 'dify-chat' -- start",
-    "server:uat": "npm run build:uat && pm2 start npm --name 'dify-chat' -- start",
-    "server:prod": "npm run build:prod && pm2 start npm --name 'dify-chat' -- start",
     "lint": "next lint",
     "fix": "next lint --fix",
     "eslint-fix": "eslint . --fix",
@@ -121,10 +93,8 @@
     "@types/js-cookie": "^3.0.6",
     "@types/negotiator": "^0.6.3",
     "cross-env": "^7.0.3",
-    "cross-env": "^7.0.3",
     "eslint-plugin-react-hooks": "^5.2.0",
     "lint-staged": "^15.5.0",
-    "pm2": "^6.0.5",
     "pm2": "^6.0.5",
     "postcss": "^8.5.3",
     "postcss-import": "^16.1.0",
@@ -141,16 +111,6 @@
   },
   "engines": {
     "node": ">=18.0.0"
-  }
-},
-"packageManager": "pnpm@10.8.1+sha512.c50088ba998c67b8ca8c99df8a5e02fd2ae2e2b29aaf238feaa9e124248d3f48f9fb6db2424949ff901cffbb5e0f0cc1ad6aedb602cd29450751d11c35023677"
-},
-"engines": {
-"node": ">=18.0.0"
-}
-  "engines": {
-"node": ">=18.0.0"
-}
-},
-"packageManager": "pnpm@10.8.1+sha512.c50088ba998c67b8ca8c99df8a5e02fd2ae2e2b29aaf238feaa9e124248d3f48f9fb6db2424949ff901cffbb5e0f0cc1ad6aedb602cd29450751d11c35023677"
+  },
+  "packageManager": "pnpm@10.8.1+sha512.c50088ba998c67b8ca8c99df8a5e02fd2ae2e2b29aaf238feaa9e124248d3f48f9fb6db2424949ff901cffbb5e0f0cc1ad6aedb602cd29450751d11c35023677"
 }
