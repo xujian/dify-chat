@@ -20,9 +20,6 @@ const WorkflowView = ({
   hidden = false,
 }: WorkflowViewProps) => {
   const [collapse, setCollapse] = useState(!expand)
-  const running = data.status === WorkflowStatus.Running
-  const succeeded = data.status === WorkflowStatus.Completed
-  const failed = data.status === WorkflowStatus.Failed || data.status === WorkflowStatus.Stopped
 
   useEffect(() => {
     setCollapse(!expand)
@@ -49,17 +46,17 @@ const WorkflowView = ({
         )}
         onClick={() => setCollapse(!collapse)}>
         {
-          running && (
+          data.status === WorkflowStatus.Running && (
             <LoaderCircle className='shrink-0 mr-1 w-3 h-3 text-[#667085] animate-spin' />
           )
         }
         {
-          succeeded && (
+          data.status === WorkflowStatus.Completed && (
             <CheckCircle className='shrink-0 mr-1 w-3 h-3 text-[#12B76A]' />
           )
         }
         {
-          failed && (
+          data.status === WorkflowStatus.Failed || data.status === WorkflowStatus.Stopped && (
             <AlertCircle className='shrink-0 mr-1 w-3 h-3 text-[#F04438]' />
           )
         }
