@@ -16,6 +16,13 @@ const nextConfig = {
     // https://nextjs.org/docs/api-reference/next.config.js/ignoring-typescript-errors
     ignoreBuildErrors: true,
   },
+  // 添加静态资源配置
+  output: 'standalone',
+  distDir: '.next',
+  generateBuildId: async () => {
+    return 'build-' + Date.now()
+  },
+  poweredByHeader: false,
 }
 
 module.exports = nextConfig
