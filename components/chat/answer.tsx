@@ -99,18 +99,23 @@ const Answer: FC<AnswerProps> = ({
   return (
     <div key={id} data-id={id} className='answer w-full max-w-[600px] flex items-start py-1 motion-pulse'>
       <div className={`${s.answerIcon} ml-2 w-10 h-10 shrink-0`}>
-        {!isResponding
+        {isResponding
           ? (
             <motion.div
-              className="flex items-center justify-center w-8 h-8 rounded-full border-2 border-gray-300"
+              className="flex items-center justify-center w-8 h-8 rounded-full border-gray-300"
               animate={{
-                borderColor: ["rgba(0,0,0,0.1)", "rgba(0,0,0,0.7)", "rgba(0,0,0,0.1)"],
+                boxShadow: [
+                  '0 0 0 0 rgba(0,0,0,0.5)',
+                  '0 0 0 6px rgba(0,0,0,0)',
+                  '0 0 0 0 rgba(0,0,0,0.5)'
+                ],
               }}
               transition={{
-                duration: 1,
-                ease: "easeInOut",
+                duration: 2,
+                ease: ['easeInOut'],
                 repeat: Infinity,
-                repeatDelay: 1,
+                repeatDelay: 0,
+                repeatType: 'mirror'
               }}>
               <img src="/logo.png" alt="logo" width={24} height={24} className="opacity-70" />
             </motion.div>
