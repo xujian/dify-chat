@@ -114,7 +114,7 @@ const handleStream = (
         return
       }
       buffer += decoder.decode(result.value, { stream: true })
-      const lines = buffer.split('\n\n')
+      const lines = buffer.split(/\n\n/)
       try {
         lines.forEach((message) => {
           if (message.startsWith('data: ')) { // check if it starts with data:
