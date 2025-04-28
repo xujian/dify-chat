@@ -21,6 +21,8 @@ const baseOptions = {
   credentials: 'include', // always send cookies、HTTP Basic authentication.
   headers: new Headers({
     'Content-Type': ContentType.json,
+    'Cache-Control': 'no-cache',
+    'Pragma': 'no-cache',
   }),
   redirect: 'follow',
 }
