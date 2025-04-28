@@ -209,7 +209,7 @@ const handleStream = (
             else if (chunk.event === 'node_finished') {
               console.log('(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)node_finished---chunk.data', chunk)
               onNodeFinished?.({
-                id: chunk.data.id,
+                id: chunk.data.node_id,
                 type: chunk.data.node_type,
                 title: chunk.data.node_title,
                 status: chunk.data.status,
