@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils'
 import { FC, useRef, useState } from 'react'
 import { useTranslation } from "react-i18next"
 import { TextareaAutosize } from "../ui/textarea-autosize"
-import { Camera, CircleStop, SendHorizonal, Capture } from 'lucide-react'
+import { Camera, CircleStop, SendHorizonal } from 'lucide-react'
 import FileUploader from '@/components/upload/file-uploader'
 import ImageList from '@/components/upload/image-list'
 import { useUploadedFiles } from '../upload/hooks'
@@ -55,13 +55,19 @@ const InputBox: FC<InputBoxProps> = () => {
   }
 
   const handleCapture = () => {
-    capture().then((image: File) => {
-      onUpload({
-        type: 'image',
-        name: image.name,
-        size: image.size,
-        url: image.src,
-      })
+    capture().then((image: Media | null) => {
+      console.log('handleCapture', image)
+      if (image) {
+        onUpload({
+          id: `${Date.now()}`,
+          type: 'image',
+          name: image.name || 'capture.png',
+          size: image.size,
+          url: image.url,
+          progress: 100,
+          transferMethod: 'local',
+        })
+      }
     })
   }
 

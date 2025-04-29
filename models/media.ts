@@ -17,6 +17,8 @@ export type TransferMethod = 'all' | 'local' | 'remote'
 export type Media = {
   id?: string
   type: string
+  name?: string
+  size?: number
   transferMethod?: TransferMethod
   url?: string
   uploadId?: string
