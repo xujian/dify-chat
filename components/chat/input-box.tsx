@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils'
 import { FC, useRef, useState } from 'react'
 import { useTranslation } from "react-i18next"
 import { TextareaAutosize } from "../ui/textarea-autosize"
-import { CircleStop, SendHorizonal } from 'lucide-react'
+import { Camera, CircleStop, SendHorizonal, Capture } from 'lucide-react'
 import FileUploader from '@/components/upload/file-uploader'
 import ImageList from '@/components/upload/image-list'
 import { useUploadedFiles } from '../upload/hooks'
@@ -16,6 +16,8 @@ import { Annotation, Message, Media, Thought, EndMessage, MessageReplace, Workfl
 import { WorkflowStatus } from '@/models'
 import { patchConversation, updateConversation } from '@/store/conversations'
 import { produce } from 'immer'
+import { Button } from '../ui/button'
+import { useCapture } from '@/hooks/use-capture'
 
 interface InputBoxProps { }
 
@@ -30,7 +32,7 @@ const InputBox: FC<InputBoxProps> = () => {
   const dispatch = useDispatch<AppDispatch>()
   const [query, setQuery] = useState<string>('')
   const [abortController, setAbortController] = useState<AbortController | null>(null)
-
+  const { capture } = useCapture()
   const {
     files,
     onUpload,
@@ -50,6 +52,17 @@ const InputBox: FC<InputBoxProps> = () => {
     if (abortController) {
       abortController.abort()
     }
+  }
+
+  const handleCapture = () => {
+    capture().then((image: File) => {
+      onUpload({
+        type: 'image',
+        name: image.name,
+        size: image.size,
+        url: image.src,
+      })
+    })
   }
 
   const send = async (message: string) => {
@@ -318,6 +331,10 @@ const InputBox: FC<InputBoxProps> = () => {
           onUpload={onUpload}
           disabled={files.length >= 2}
         />
+        <Button size='icon' variant='ghost'
+          onClick={handleCapture}>
+          <Camera className='w-4 h-4' />
+        </Button>
         <div className="flex flex-row grow justify-end"></div>
         <div className="flex items-center justify-center cursor-pointer hover:bg-gray-50 w-8 h-8">
           {session.responding
