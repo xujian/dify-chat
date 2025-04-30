@@ -33,17 +33,17 @@ export const useCapture = () => {
       return Promise.resolve(null)
     }
 
-    parent.postMessage({ type: 'capture' })
+    parent.postMessage({ type: 'capture' }, '*')
     return new Promise<Media | null>((resolve, reject) => {
       const callback = (message: MessageEvent<CapturePostMessage>) => {
         console.log('on captured image', message)
         if (message.data.type === 'captured') {
-          window.removeEventListener('message', callback)
+          window.removeEventListener('message', callback, false)
           resolve(message.data.image as Media)
         } else {
         }
       }
-      window.addEventListener('message', callback)
+      window.addEventListener('message', callback, false)
     })
   }
   return { capture }
