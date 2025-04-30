@@ -18,6 +18,7 @@ import { patchConversation, updateConversation } from '@/store/conversations'
 import { produce } from 'immer'
 import { Button } from '../ui/button'
 import { useCapture } from '@/hooks/use-capture'
+import { APP_INFO } from '@/config'
 
 interface InputBoxProps { }
 
@@ -233,6 +234,9 @@ const InputBox: FC<InputBoxProps> = () => {
         dispatch(setResponding(false))
       },
       onWorkflowStarted: (data: Workflow) => {
+        if (!APP_INFO.useWorkflow) {
+          return
+        }
         answer = produce(answer, draft => {
           draft.workflow = {
             id: data.id,
@@ -243,6 +247,9 @@ const InputBox: FC<InputBoxProps> = () => {
         commit(answer)
       },
       onWorkflowFinished: (data: Workflow) => {
+        if (!APP_INFO.useWorkflow) {
+          return
+        }
         console.log('onWorkflowFinished', data)
         answer = produce(answer, draft => {
           if (draft.workflow) {
@@ -252,6 +259,9 @@ const InputBox: FC<InputBoxProps> = () => {
         commit(answer)
       },
       onNodeStarted: (data: WorkflowNode) => {
+        if (!APP_INFO.useWorkflow) {
+          return
+        }
         answer = produce(answer, draft => {
           if (draft.workflow && draft.workflow.nodes) {
             draft.workflow.nodes.push(data)
@@ -260,6 +270,9 @@ const InputBox: FC<InputBoxProps> = () => {
         commit(answer)
       },
       onNodeFinished: (node: WorkflowNode) => {
+        if (!APP_INFO.useWorkflow) {
+          return
+        }
         console.log('onNodeFinished', node)
         try {
           answer = produce(answer, draft => {
