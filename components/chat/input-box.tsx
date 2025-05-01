@@ -1,6 +1,6 @@
 'use client'
 import { cn } from '@/lib/utils'
-import { FC, useRef, useState } from 'react'
+import { FC, useRef, useState, KeyboardEvent as ReactKeyboardEvent } from 'react'
 import { useTranslation } from "react-i18next"
 import { TextareaAutosize } from "../ui/textarea-autosize"
 import { Camera, CircleStop, SendHorizonal } from 'lucide-react'
@@ -305,7 +305,7 @@ const InputBox: FC<InputBoxProps> = () => {
     })
   }
 
-  const handleKeyDown = (event: KeyboardEvent) => {
+  const handleKeyDown = (event: ReactKeyboardEvent<Element>) => {
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault()
       send(query)
