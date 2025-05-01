@@ -40,7 +40,6 @@ const FilePicker: FC<FilePickerProps> = ({
         const uploaded: UploadedFile = {
           id: `${Date.now()}`,
           uploadId: '',
-          blob,
           url: reader.result as string,
           progress: 0,
           transferMethod: 'local',
@@ -58,7 +57,6 @@ const FilePicker: FC<FilePickerProps> = ({
         }).then((res: { id: string }) => {
           onUpload({
             ...uploaded,
-            blob,
             progress: 100,
             uploadId: res.id,
           })
