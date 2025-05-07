@@ -41,7 +41,7 @@ const InputBox: FC<InputBoxProps> = () => {
     onReUpload,
     onImageLoad,
     onImageError,
-    onClear,
+    onClear: clearUploadedFiles,
   } = useUploadedFiles()
 
   const handleInputChange = (value: string) => {
@@ -77,6 +77,7 @@ const InputBox: FC<InputBoxProps> = () => {
       return
     }
     setQuery('')
+    clearUploadedFiles()
     const data: SendChatMessageData = {
       query: message,
       conversationId: session.currentConversation,
@@ -95,6 +96,7 @@ const InputBox: FC<InputBoxProps> = () => {
       type: 'question',
       files: files,
     }
+    console.log('💬💬💬💬💬💬💬💬💬💬💬💬💬💬💬💬💬💬💬💬💬💬addMessage', question)
     dispatch(addMessage(question))
 
     // placeholder answer
