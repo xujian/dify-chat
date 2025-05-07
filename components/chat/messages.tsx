@@ -35,19 +35,12 @@ const Messages: FC<MessagesProps> = () => {
       return
     if (conversation === '-1')
       return
-    if (!conversations.find((c) => c.id === conversation)) {
-      // no matched conversation
-      // seems the conversation is deleted
-      // 对话已删除 conversationID 失效
-      setConversation('-1')
-      dispatch(setCurrentConversation('-1'))
-      return
-    }
     dispatch(clearMessages())
     dispatch(fetchMessages(conversation))
   }
 
   useEffect(() => {
+    console.log('session.currentConversation', session.currentConversation, conversations)
     if (!session.currentConversation)
       return
     if (session.currentConversation === '-1')
@@ -60,10 +53,12 @@ const Messages: FC<MessagesProps> = () => {
       setConversation(session.currentConversation)
       return
     }
-    if (!conversations.find((c) => c.id === session.currentConversation)) {
-      setConversation('-1')
-      dispatch(setCurrentConversation('-1'))
-      return
+    if (conversations.length > 0) {
+      if (!conversations.find((c) => c.id === session.currentConversation)) {
+        setConversation('-1')
+        dispatch(setCurrentConversation('-1'))
+        return
+      }
     }
     setConversation(session.currentConversation)
     loadMessages()

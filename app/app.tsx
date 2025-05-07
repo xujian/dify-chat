@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import type { RootState, AppDispatch } from '../store/index'
 import { initSession, setCurrentConversation } from '../store/session'
 import { useServer } from '@/context/server'
-import { useHash } from '@/hooks'
+import { useHash, useVariables } from '@/hooks'
 
 export type AppProps = {
   params: any
@@ -30,6 +30,7 @@ const App: FC<AppProps> = () => {
 
   const [appUnavailable, setAppUnavailable] = useState<boolean>(false)
   const [isUnknownReason, setIsUnknownReason] = useState<boolean>(false)
+  const { variables } = useVariables()
   const [inited, setInited] = useState<boolean>(false)
   const [isShowSidebar, { setTrue: showSidebar, setFalse: hideSidebar }] = useBoolean(false)
 

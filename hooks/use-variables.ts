@@ -1,7 +1,7 @@
 // get user_id from url and set to session
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { setVariable } from '@/store/session'
+import { setVariable, setVariablesFullfilled } from '@/store/session'
 import { useSearchParams } from 'next/navigation'
 import { RootState } from '@/store'
 import { useServer } from '@/context/server'
@@ -18,11 +18,6 @@ export const useVariables = () => {
   const [variables, setVariables] = useState<{ name: string, value: string }[]>(
     Object.entries(session.variables || {}).map(([k, v]) => ({ name: k, value: v as string }))
   )
-  const
-    /**
-     * whether all variables are fulfilled
-     */
-    [variablesFullfilled, setVariablesFullfilled] = useState(false)
 
   useEffect(() => {
     console.log('===userId', userId, session.variables)
@@ -51,5 +46,5 @@ export const useVariables = () => {
     setVariables(savedVariables)
   }, [session.variables])
 
-  return { variables, variablesFullfilled }
+  return { variables }
 }

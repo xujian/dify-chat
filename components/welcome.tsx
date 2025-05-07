@@ -14,7 +14,6 @@ import { useVariables } from '@/hooks'
 const Welcome: FC = () => {
 
   const session = useSelector((state: RootState) => state.session)
-  const { variables, variablesFullfilled } = useVariables()
 
   const dispatch = useDispatch()
   const { config } = useServer()
@@ -26,12 +25,10 @@ const Welcome: FC = () => {
   }
 
   useEffect(() => {
-    console.log('variablesFullfilled', variablesFullfilled, session.currentConversation, session.chatStarted)
-    if (variablesFullfilled) {
-      console.log('variablesFullfilled-STARTCHAT')
+    if (session.variablesFullfilled) {
       handleStartChat()
     }
-  }, [variablesFullfilled])
+  }, [session.variablesFullfilled])
 
   return (
     <div className='welcome h-full flex flex-col items-center justify-center min-h-[200px]'>

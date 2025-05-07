@@ -19,6 +19,7 @@ export interface SessionState {
   chatStarted: boolean,
   responding: boolean,
   variables: Record<string, string>,
+  variablesFullfilled: boolean,
 }
 
 const initialState: SessionState = {
@@ -26,6 +27,7 @@ const initialState: SessionState = {
   chatStarted: false,
   responding: false,
   variables: {},
+  variablesFullfilled: false,
 }
 // move getInitialState thunk
 export const initSession = createAsyncThunk(
@@ -81,6 +83,9 @@ export const sessionSlice = createSlice({
         [action.payload.name]: action.payload.value,
       }
     },
+    setVariablesFullfilled: (state, action: PayloadAction<boolean>) => {
+      state.variablesFullfilled = action.payload
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(initSession.fulfilled, (state, action) => {
@@ -92,6 +97,13 @@ export const sessionSlice = createSlice({
 
 
 
-export const { setCurrentConversation, startChat, closeChat, setResponding, setVariable } = sessionSlice.actions
+export const {
+  setCurrentConversation,
+  startChat,
+  closeChat,
+  setResponding,
+  setVariable,
+  setVariablesFullfilled
+} = sessionSlice.actions
 
 export default sessionSlice.reducer
