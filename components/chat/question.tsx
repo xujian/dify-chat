@@ -21,7 +21,7 @@ const Question: FC<QuestionProps> = ({ id, content, files }) => {
       <div>
         <div className={`${s.question} relative text-s`}>
           <div
-            className={'mr-2 py-3 px-4 bg-primary text-primary-foreground rounded-tl-2xl rounded-b-2xl'}>
+            className={'mr-2 py-3 px-3 bg-primary text-primary-foreground rounded-tl-2xl rounded-b-2xl'}>
             {files && files.length > 0 && (
               <ImageGallery items={files} />
             )}
