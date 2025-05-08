@@ -36,7 +36,7 @@ const Messages: FC<MessagesProps> = () => {
     if (conversation === '-1')
       return
     dispatch(clearMessages())
-    dispatch(fetchMessages(conversation))
+    dispatch(fetchMessages(session.currentConversation))
   }
 
   useEffect(() => {
