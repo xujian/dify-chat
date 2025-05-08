@@ -60,8 +60,11 @@ const Messages: FC<MessagesProps> = () => {
         return
       }
     }
-    setConversation(session.currentConversation)
-    loadMessages()
+    if (conversation !== session.currentConversation) {
+      console.log('conversation !== session.currentConversation', conversation, session.currentConversation)
+      setConversation(session.currentConversation)
+      loadMessages()
+    }
     // wait until conversations is loades
     // chances that the conversation ID is not found
     // the conversation is got from history URL
