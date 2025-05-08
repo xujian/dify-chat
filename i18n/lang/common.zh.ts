@@ -24,8 +24,8 @@ const translation = {
     uploadFromComputerUploadError: '图片上传失败，请重新上传',
     uploadFromComputerLimit: '上传图片不能超过 {{size}} MB',
     pasteImageLink: '粘贴图片链接',
-    pasteImageLinkInputPlaceholder: '将图像链接粘贴到此处',
-    pasteImageLinkInvalid: '图片链接无效',
+    pasteImageLinkInputPlaceholder: '将文件链接粘贴到此处',
+    pasteImageLinkInvalid: '链接无效',
     imageUpload: '图片上传',
   },
 }

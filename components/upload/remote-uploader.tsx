@@ -36,15 +36,15 @@ const RemoteUploader: FC<RemoteUploaderProps> = ({
   }
 
   return (
-    <div className='flex items-center h-8 relative'>
+    <div className='flex items-center h-7 relative'>
       <Input
-        className='px-1 border w-full h-full focus:outline-none'
+        className='px-1 border w-full h-7 text-xs rounded-md'
         value={url}
         onChange={e => setUrl(e.target.value)}
         placeholder={t('common.imageUploader.pasteImageLinkInputPlaceholder') || ''}
       />
       <Button
-        className='absolute right-0 h-8 text-xs font-medium'
+        className='absolute right-0 h-7 text-xs'
         disabled={!url}
         onClick={handleClick}
       >

@@ -8,57 +8,21 @@ import {
 } from '@/components/ui/popover'
 import FilePicker from './file-picker'
 import RemoteUploader from './remote-uploader'
-import { ImageUp, CloudUpload } from 'lucide-react'
-import { Resolution, TransferMethod } from '@/models'
-import type { UploadedFile, MediaSettings } from '@/models'
+import { ImageUp } from 'lucide-react'
+import type { UploadedFile } from '@/models'
+import { Button } from '../ui'
 
-type UploadOnlyFromLocalProps = {
+type FileUploaderProps = {
   onUpload: (file: UploadedFile) => void
   disabled?: boolean
   limit?: number
+  accept?: string[]
 }
-const LocalUpload: FC<UploadOnlyFromLocalProps> = ({
+const FileUploader: FC<FileUploaderProps> = ({
   onUpload,
   disabled,
   limit,
-}) => {
-  return (
-    <FilePicker
-      onUpload={onUpload}
-      disabled={disabled}
-      limit={limit}>
-      {
-        hovering => (
-          <div className={[
-            'relative',
-            'flex',
-            'items-center',
-            'justify-center',
-            'w-8',
-            'h-8',
-            'rounded-lg',
-            'cursor-pointer',
-            hovering ? 'bg-gray-100' : ''
-          ].filter(Boolean).join(' ')}>
-            <ImageUp className='w-4 h-4 text-gray-500' />
-          </div>
-        )
-      }
-    </FilePicker>
-  )
-}
-
-type UploaderButtonProps = {
-  method: MediaSettings['transferMethod']
-  onUpload: (file: UploadedFile) => void
-  disabled?: boolean
-  limit?: number
-}
-const UploaderButton: FC<UploaderButtonProps> = ({
-  method,
-  onUpload,
-  disabled,
-  limit,
+  accept,
 }) => {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
@@ -68,88 +32,22 @@ const UploaderButton: FC<UploaderButtonProps> = ({
     onUpload(file)
   }
 
-  const handleToggle = () => {
-    if (disabled)
-      return
-    setOpen(v => !v)
-  }
-
   return (
-    <Popover
-      open={open}
-      onOpenChange={setOpen}>
-      <PopoverTrigger onClick={handleToggle}>
-        <div className={`
-          relative flex items-center justify-center w-8 h-8 hover:bg-gray-100 rounded-md
-          ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'}
-        `}>
-          <ImageUp className='w-4 h-4 text-gray-500' />
-        </div>
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button size="icon" variant="ghost" title='上传文件'>
+          <ImageUp className='w-4 h-4' />
+        </Button>
       </PopoverTrigger>
-      <PopoverContent className='z-50'>
+      <PopoverContent className='rounded-lg gap-4 flex flex-col'>
         <RemoteUploader onUpload={handleUpload} />
-        <div className='bg-white mt-2'>
-          {
-            method === 'local' && (
-              <FilePicker
-                onUpload={handleUpload}
-                limit={limit}>
-                {
-                  hovering => (
-                    <div className={`
-                        flex items-center justify-center h-8 text-[13px] font-medium text-[#155EEF] rounded-lg cursor-pointer
-                        ${hovering && 'bg-primary-50'}
-                      `}>
-                      <CloudUpload className='mr-1 w-4 h-4' />
-                      {t('common.imageUploader.uploadFromComputer')}
-                    </div>
-                  )
-                }
-              </FilePicker>
-            )
-          }
-        </div>
+        <FilePicker
+          onUpload={handleUpload}
+          limit={limit}
+          accept={accept}>
+        </FilePicker>
       </PopoverContent>
     </Popover>
-  )
-}
-
-type FileUploaderProps = {
-  settings?: MediaSettings
-  onUpload: (file: UploadedFile) => void
-  disabled?: boolean
-}
-
-const defaultSettings: MediaSettings = {
-  enabled: true,
-  limits: 10,
-  detail: Resolution.high,
-  transferMethod: 'all',
-  imageFileSizeLimit: 10
-}
-
-const FileUploader: FC<FileUploaderProps> = ({
-  settings = defaultSettings,
-  onUpload,
-  disabled,
-}) => {
-  if (settings.transferMethod === 'local') {
-    return (
-      <LocalUpload
-        onUpload={onUpload}
-        disabled={disabled}
-        limit={+settings.imageFileSizeLimit!}
-      />
-    )
-  }
-
-  return (
-    <UploaderButton
-      method='local'
-      onUpload={onUpload}
-      disabled={disabled}
-      limit={+settings.imageFileSizeLimit!}
-    />
   )
 }
 

@@ -19,10 +19,15 @@ import { produce } from 'immer'
 import { Button } from '../ui/button'
 import { useCapture } from '@/hooks/use-capture'
 import { APP_INFO } from '@/config'
+import { useServer } from '@/context/server'
+import { Tooltip, TooltipContent } from '../ui/tooltip'
+import { TooltipProvider } from '../ui/tooltip'
+import { TooltipTrigger } from '../ui/tooltip'
 
 interface InputBoxProps { }
 
 const InputBox: FC<InputBoxProps> = () => {
+  const { config } = useServer()
   const { t } = useTranslation()
   const session = useSelector((state: RootState) => state.session)
   /**
@@ -349,10 +354,12 @@ const InputBox: FC<InputBoxProps> = () => {
       </div>
       <div className="flex flex-row border border-t-0 bg-gray-50 rounded-b-lg mx-2 p-1">
         <FileUploader
+          accept={config.upload.accept}
           onUpload={onUpload}
           disabled={files.length >= 2}
         />
         <Button size='icon' variant='ghost'
+          title='截图'
           onClick={handleCapture}>
           <Camera className='w-4 h-4' />
         </Button>

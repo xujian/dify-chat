@@ -3,16 +3,24 @@
 import type { ChangeEvent, FC, JSX } from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { uploadFile } from './utils'
 import type { UploadedFile } from '@/models'
 import { toast } from '@/components/toast'
 import { upload } from '@/service/base'
+import { CloudUpload } from 'lucide-react'
+
+const extensionMapping: Record<string, string> = {
+  'image': '.png, .jpg, .jpeg, .webp, .gif',
+  'document': '.pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx',
+  'video': '.mp4, .avi, .mov, .wmv, .flv, .mpeg, .mpg, .m4v, .webm, .mkv',
+  'audio': '.mp3, .wav, .m4a, .ogg, .wma, .aac, .flac, .m4b, .m4p, .m4b, .m4p',
+}
 
 type FilePickerProps = {
   children: (hovering: boolean) => JSX.Element
   onUpload: (file: UploadedFile) => void
   limit?: number
   disabled?: boolean
+  accept?: string[]
 }
 
 const FilePicker: FC<FilePickerProps> = ({
@@ -20,6 +28,7 @@ const FilePicker: FC<FilePickerProps> = ({
   onUpload,
   limit,
   disabled,
+  accept,
 }) => {
   const [hovering, setHovering] = useState(false)
   // const { notify } = Toast
@@ -78,11 +87,15 @@ const FilePicker: FC<FilePickerProps> = ({
 
   return (
     <div
-      className='relative'
+      className={[
+        'relative border-dashed border-2 text-xs',
+        'flex flex-col items-center justify-center',
+        'border-gray-200 rounded-md min-h-20',
+        'cursor-pointer',
+      ].join(' ')}
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}
     >
-      {children(hovering)}
       <input
         className={`
           absolute block inset-0 opacity-0 text-[0] w-full
@@ -90,10 +103,16 @@ const FilePicker: FC<FilePickerProps> = ({
         `}
         onClick={e => (e.target as HTMLInputElement).value = ''}
         type='file'
-        accept='.png, .jpg, .jpeg, .webp, .gif'
+        accept={
+          accept
+            ? accept?.map(type => extensionMapping[type]).join(',')
+            : ''
+        }
         onChange={handleChange}
         disabled={disabled}
       />
+      <CloudUpload className='w-4 h-4' />
+      <h6>{t('common.imageUploader.uploadFromComputer')}</h6>
     </div>
   )
 }
