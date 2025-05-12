@@ -93,8 +93,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <SidebarMenuItem key={c.id} onClick={() => handleConversationIdChange(c)}>
                   <SidebarMenuButton asChild
                     isActive={c.id === session.currentConversation}>
-                    <a href={`#${c.id}`}>
-                      <MessageSquare /> {c.name}
+                    <a href={`#${c.id}`} title={c.name} className='h-8 py-2'>
+                      <MessageSquare />
+                      <span className='truncate'>{c.name}</span>
                     </a>
                   </SidebarMenuButton>
                   <DropdownMenu>
@@ -103,7 +104,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                         <MoreHorizontalIcon />
                       </SidebarMenuAction>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent side="right" align="start">
+                    <DropdownMenuContent side="right" align="start" className='text-xs'>
                       <DropdownMenuItem onClick={() => handleRenameConversation(c.id)}>
                         <span>改名</span>
                       </DropdownMenuItem>
