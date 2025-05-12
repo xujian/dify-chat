@@ -88,35 +88,41 @@ const Messages: FC<MessagesProps> = () => {
 
   return (
     <div className='chat h-full relative inset-0'>
-      <div className="h-full flex flex-col items-center overflow-y-auto" ref={container}>
-        <div className='p-4 pb-60 max-w-4xl w-full'>
-          {messages.map((item) => {
-            if (item.type === 'answer') {
-              const isLast = item.id === messages[messages.length - 1].id
-              return <Answer
-                key={item.id}
-                item={item}
-                feedbackDisabled={false}
-                onFeedback={() => Promise.resolve()}
-                isResponding={isLast && session.responding}
-              />
-            }
-            return (
-              <Question
-                key={item.id}
-                id={item.id}
-                content={item.content}
-                files={item.files || []}
-              />
-            )
-          })}
-          {loading &&
-            <div className="flex justify-center items-center h-full">
-              <Loading />
+      {
+        loading && (
+          <div className="flex justify-center items-center h-full">
+            <Loading />
+          </div>
+        )
+      }
+      {
+        !loading && (
+          <div className="h-full flex flex-col items-center overflow-y-auto" ref={container}>
+            <div className='p-4 pb-60 max-w-4xl w-full'>
+              {messages.map((item) => {
+                if (item.type === 'answer') {
+                  const isLast = item.id === messages[messages.length - 1].id
+                  return <Answer
+                    key={item.id}
+                    item={item}
+                    feedbackDisabled={false}
+                    onFeedback={() => Promise.resolve()}
+                    isResponding={isLast && session.responding}
+                  />
+                }
+                return (
+                  <Question
+                    key={item.id}
+                    id={item.id}
+                    content={item.content}
+                    files={item.files || []}
+                  />
+                )
+              })}
             </div>
-          }
-        </div>
-      </div>
+          </div>
+        )
+      }
       <div className={cn(!feedbackDisabled && 'left-3.5! right-3.5!', 'absolute z-10 bottom-0 left-0 right-0')}>
         <InputBox />
       </div>
