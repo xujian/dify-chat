@@ -20,9 +20,6 @@ import { Button } from '../ui/button'
 import { useCapture } from '@/hooks/use-capture'
 import { APP_INFO } from '@/config'
 import { useServer } from '@/context/server'
-import { Tooltip, TooltipContent } from '../ui/tooltip'
-import { TooltipProvider } from '../ui/tooltip'
-import { TooltipTrigger } from '../ui/tooltip'
 
 interface InputBoxProps { }
 
@@ -156,6 +153,7 @@ const InputBox: FC<InputBoxProps> = () => {
           })
           console.log('🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈🎈nData-----------------updateMessage', answer)
           commit(answer)
+          location.hash = `#${newConversationId}`
         }
         answer = produce(answer, draft => {
           if (!isAgentMode) {

@@ -56,6 +56,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     dispatch(setCurrentConversation('-1'))
     dispatch(startChat())
     dispatch(greet(server.config.openingStatement))
+    location.hash = `#-1`
   }
 
   // init
