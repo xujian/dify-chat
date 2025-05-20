@@ -5,6 +5,9 @@ import { setVariable, setVariablesFullfilled } from '@/store/session'
 import { useSearchParams } from 'next/navigation'
 import { RootState } from '@/store'
 import { useServer } from '@/context/server'
+import { Variable } from '@/models'
+
+
 /**
  * get user_id from url and set to session
  * @returns 
@@ -12,39 +15,34 @@ import { useServer } from '@/context/server'
 export const useVariables = () => {
   const dispatch = useDispatch()
   const searchParams = useSearchParams()
-  const userId = searchParams.get('user_id')
   const server = useServer()
   const session = useSelector((state: RootState) => state.session)
-  const [variables, setVariables] = useState<{ name: string, value: string }[]>(
-    Object.entries(session.variables || {}).map(([k, v]) => ({ name: k, value: v as string }))
+  const [variables, setVariables] = useState<Variable[]>(
+    [...server.config.variables]
   )
 
   useEffect(() => {
-    console.log('===userId', userId, session.variables)
-    let mergedVariables: { name: string, value: string }[] = []
-    if (userId) {
-      const v = { name: 'user_id', value: userId }
-      mergedVariables = [...variables, v]
-      setVariables(mergedVariables)
-      if (!Object.keys(session.variables).includes('user_id')) {
-        dispatch(setVariable(v))
+    searchParams.forEach((value, name) => {
+      const variable = variables.find(v => v.name === name)
+      if (variable) {
+        variable.value = value
+        variable.origin = 'url'
+        const index = variables.findIndex(v => v.name === name)
+        if (index !== -1) {
+          setVariables(variables.splice(index, 1, variable))
+        }
       }
-    }
-    const savedVariables = mergedVariables
-      .filter((v) => !!v.value)
-
-    console.log('===savedVariables', savedVariables, server.config.variables, session.variables)
+      dispatch(setVariable({ name, value }))
+    })
     // When: variables are saved, or not required
     //   变量不需要设置
     // 可以开始对话了
     setVariablesFullfilled(
-      savedVariables.length >= server.config.variables
-        .filter(v =>
-          savedVariables.map(v => v.name).includes(v.name)
-          || v.required === false
-        ).length)
-    setVariables(savedVariables)
-  }, [session.variables])
+      variables.filter(v =>
+        v.required && !!v.value
+      ).length === 0
+    )
+  }, [])
 
   return { variables }
 }

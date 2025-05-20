@@ -8,7 +8,9 @@ export type AppInfo = {
   privacyPolicy?: string,
   server: string,
   useHistory: boolean,
-  useWorkflow: boolean
+  useWorkflow: boolean,
+  useWelcome: boolean,
+  useSearch: boolean
 }
 
 export type TypeWithI18N<T = string> = {

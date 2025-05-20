@@ -319,7 +319,7 @@ const InputBox: FC<InputBoxProps> = () => {
 
   return (
     <div className="relative my-3 flex flex-col w-full">
-      <div className="w-full flex flex-col justify-between border rounded-lg">
+      <div className="w-full flex flex-col justify-between border rounded-lg focus-within:outline-none focus-within:ring-1 focus-within:ring-ring z-10">
         {files.length > 0 && (
           <ImageList
             list={files}

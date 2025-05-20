@@ -1,3 +1,26 @@
+
+/**
+ * 参数来源
+ */
+export type VariableOrigin =
+  /**
+   * Given value from url query string
+   */
+  'url' |
+  /**
+   * 
+   */
+  'session'
+
+export type Variable = {
+  name: string
+  value: string
+  required?: boolean
+  length?: number
+  type: string,
+  origin?: 'url' | 'session'
+}
+
 export type TextTypeFormItem = {
   label: string
   variable: string

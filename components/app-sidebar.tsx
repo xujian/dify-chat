@@ -79,7 +79,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           versions={versions}
           defaultVersion={versions[0]}
         />
-        <AppSearch />
+        {APP_INFO.useSearch && <AppSearch />}
       </SidebarHeader>
       <SidebarContent>
         {/* We create a SidebarGroup for each parent. */}

@@ -9,7 +9,6 @@ import { createConversation } from '@/store/conversations'
 import { greet } from '@/store/messages'
 import Inputs from './inputs'
 import { useServer } from '@/context/server'
-import { useVariables } from '@/hooks'
 
 const Welcome: FC = () => {
 
@@ -33,7 +32,7 @@ const Welcome: FC = () => {
   return (
     <div className='welcome h-full flex flex-col items-center justify-center min-h-[200px]'>
       <div className='mx-auto'>
-        <Inputs fields={config.variables} />
+        <Inputs />
         <Button className='my-3'
           onClick={handleStartChat}>开始对话</Button>
       </div>
