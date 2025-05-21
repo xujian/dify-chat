@@ -10,7 +10,8 @@ export type AppInfo = {
   useHistory: boolean,
   useWorkflow: boolean,
   useWelcome: boolean,
-  useSearch: boolean
+  useSearch: boolean,
+  useSuggestions: boolean
 }
 
 export type TypeWithI18N<T = string> = {

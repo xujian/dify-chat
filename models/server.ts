@@ -1,4 +1,4 @@
-import { Variable } from './form'
+import { Variable } from '@/models'
 
 export type FileUpload = {
   enabled: boolean
@@ -12,7 +12,7 @@ export type AnnotationReply = {
   enabled: boolean
 }
 
-export type Suggest = {
+export type Suggestion = {
   text: string
 }
 
@@ -21,5 +21,5 @@ export interface ServerConfig {
   upload: FileUpload
   variables: Variable[]
   annotationReply?: AnnotationReply
-  suggests?: Suggest[]
+  suggestions?: Suggestion[]
 }

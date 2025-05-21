@@ -9,8 +9,11 @@ export const APP_INFO: AppInfo = {
   privacyPolicy: '',
   defaultLanguage: 'zh-Hans',
   server: `${process.env.NEXT_PUBLIC_API_URL}`.replace('/v1', ''),
-  useHistory: false,
-  useWorkflow: false,
+  useHistory: true,
+  useWorkflow: true,
+  useWelcome: false,
+  useSearch: false,
+  useSuggestions: true,
 }
 
 // export const isShowPrompt = false

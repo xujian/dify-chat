@@ -20,6 +20,7 @@ import { Button } from '../ui/button'
 import { useCapture } from '@/hooks/use-capture'
 import { APP_INFO } from '@/config'
 import { useServer } from '@/context/server'
+import Suggestions from '../suggestions'
 
 interface InputBoxProps { }
 
@@ -317,8 +318,14 @@ const InputBox: FC<InputBoxProps> = () => {
     }
   }
 
+  const handleSuggestionPick = (suggestion: string) => {
+    setQuery(suggestion)
+    send(suggestion)
+  }
+
   return (
     <div className="relative my-3 flex flex-col w-full">
+      {APP_INFO.useSuggestions && <Suggestions onPick={handleSuggestionPick} />}
       <div className="w-full flex flex-col justify-between border rounded-lg focus-within:outline-none focus-within:ring-1 focus-within:ring-ring z-10">
         {files.length > 0 && (
           <ImageList
