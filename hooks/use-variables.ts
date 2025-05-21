@@ -29,7 +29,8 @@ export const useVariables = () => {
         variable.origin = 'url'
         const index = variables.findIndex(v => v.name === name)
         if (index !== -1) {
-          setVariables(variables.splice(index, 1, variable))
+          variables.splice(index, 1, variable)
+          setVariables(variables)
         }
       }
       dispatch(setVariable({ name, value }))
@@ -37,12 +38,11 @@ export const useVariables = () => {
     // When: variables are saved, or not required
     //   变量不需要设置
     // 可以开始对话了
-    setVariablesFullfilled(
-      variables.filter(v =>
-        v.required && !!v.value
-      ).length === 0
-    )
-  }, [])
+    dispatch(setVariablesFullfilled(
+      variables.filter(v => v.required)
+        .every(v => !!v.value)
+    ))
+  }, [searchParams])
 
   return { variables }
 }

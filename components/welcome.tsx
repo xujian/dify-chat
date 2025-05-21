@@ -9,6 +9,7 @@ import { createConversation } from '@/store/conversations'
 import { greet } from '@/store/messages'
 import Inputs from './inputs'
 import { useServer } from '@/context/server'
+import { APP_INFO } from '@/config'
 
 const Welcome: FC = () => {
 
@@ -24,6 +25,7 @@ const Welcome: FC = () => {
   }
 
   useEffect(() => {
+    if (APP_INFO.useWelcome) return
     if (session.variablesFullfilled) {
       handleStartChat()
     }
