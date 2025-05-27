@@ -10,7 +10,7 @@ import { LoaderCircle } from 'lucide-react'
 
 type ImageListProps = {
   list: UploadedFile[]
-  readonly?: boolean
+  deletable?: boolean
   onRemove?: (file: UploadedFile) => void
   onReUpload?: (file: UploadedFile) => void
   onImageLoad?: (file: UploadedFile) => void
@@ -19,7 +19,7 @@ type ImageListProps = {
 
 const ImageList: FC<ImageListProps> = ({
   list,
-  readonly,
+  deletable,
   onRemove,
   onReUpload,
   onImageLoad,
@@ -38,7 +38,7 @@ const ImageList: FC<ImageListProps> = ({
   }
 
   return (
-    <div className='flex flex-row flex-wrap p-1'>
+    <div className='flex flex-row flex-wrap p-2 -mb-2'>
       {
         list.map((item, index) => (
           <div
@@ -66,10 +66,10 @@ const ImageList: FC<ImageListProps> = ({
             }
             {
               item.type === 'remote' && item.progress !== 100 && (
-                <div className={`
-                  absolute inset-0 flex items-center justify-center rounded-lg z-1 border
-                  ${item.progress === -1 ? 'bg-[#FEF0C7] border-[#DC6803]' : 'bg-black/[0.16] border-transparent'}
-                `}>
+                <div className={[
+                  'absolute inset-0 flex items-center justify-center rounded-lg z-1 border',
+                  item.progress === -1 ? 'bg-[#FEF0C7] border-[#DC6803]' : 'bg-black/[0.16] border-transparent'
+                ].join(' ')}>
                   {
                     item.progress > -1 && (
                       <LoaderCircle className='animate-spin w-5 h-5 text-white' />
@@ -77,9 +77,7 @@ const ImageList: FC<ImageListProps> = ({
                   }
                   {
                     item.progress === -1 && (
-
                       <AlertTriangle className='w-4 h-4 text-[#DC6803]' />
-
                     )
                   }
                 </div>
@@ -94,16 +92,16 @@ const ImageList: FC<ImageListProps> = ({
               onClick={() => item.progress === 100 && setImagePreviewUrl(item.url!)}
             />
             {
-              !readonly && (
+              deletable !== false && (
                 <div
-                  className={`
-                    absolute z-10 -top-[9px] -right-[9px] items-center justify-center w-[18px] h-[18px] 
-                    bg-white hover:bg-gray-50 border-[0.5px] border-black/[0.02] rounded-2xl shadow-lg
-                    cursor-pointer
-                    ${item.progress === -1 ? 'flex' : 'hidden group-hover:flex'}
-                  `}
+                  className={[
+                    'absolute z-10 top-0 right-0 flex items-center justify-center w-6 h-6',
+                    'hover:bg-gray-50 rounded-2xl',
+                    'cursor-pointer',
+                    item.progress === -1 ? 'flex' : 'group-hover:flex'
+                  ].join(' ')}
                   onClick={() => onRemove && onRemove(item)}>
-                  <CircleX className='w-3 h-3 text-gray-500' />
+                  <CircleX className='w-4 h-4 bg-white text-gray-500 rounded-2xl' />
                 </div>
               )
             }
