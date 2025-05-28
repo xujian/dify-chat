@@ -2,11 +2,11 @@ import type { FC } from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Input } from '@/components/ui'
-import type { UploadedFile } from '@/models'
+import type { Upload } from '@/models'
 import { toast } from '@/components'
 
 type RemoteUploaderProps = {
-  onUpload: (imageFile: UploadedFile) => void
+  onUpload: (imageFile: Upload) => void
 }
 const regex = /^(https?):\/\//
 
@@ -25,7 +25,7 @@ const RemoteUploader: FC<RemoteUploaderProps> = ({
       })
       return
     }
-    const uploaded: UploadedFile = {
+    const uploaded: Upload = {
       type: 'image',
       id: `${Date.now()}`,
       progress: 0,

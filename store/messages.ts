@@ -1,4 +1,4 @@
-import { Message } from '@/models'
+import { getCategoryFromType, Message, regulateFileType } from '@/models'
 import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit'
 import { deleteMessage, getMessages } from '@/service'
 import { toJson } from '@/lib/utils'
@@ -86,7 +86,9 @@ export const fetchMessages = createAsyncThunk(
     const transform = (f: any[]) => f.map(f => ({
       name: f.filename,
       id: f.id,
-      type: f.type,
+      type: regulateFileType(f.filename),
+      size: f.size,
+      category: getCategoryFromType(f.type),
       url: f.url.startsWith('http')
         ? f.url
         : `${APP_INFO.server}${f.url}`,

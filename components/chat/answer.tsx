@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next'
 import * as motion from 'motion/react-client'
 import Loading from '../loading'
 import s from './style.module.css'
-import ImageGallery from '../image-gallery'
 import Thought from './thought'
 import { TooltipProvider, TooltipTrigger } from '@/components/ui'
 import WorkflowView from '@/components/workflow/workflow'
@@ -16,6 +15,7 @@ import CustomBlock from '../custom-block'
 import { FeedbackHandler, Message, MessageRating } from '@/models'
 import { TooltipContent, TooltipPortal } from '@radix-ui/react-tooltip'
 import { APP_INFO } from '@/config'
+import ImageList from '../upload/image-list'
 
 const RatingIcon: FC<{ isLike: boolean }> = ({ isLike }) => {
   return isLike
@@ -90,7 +90,7 @@ const Answer: FC<AnswerProps> = ({
                 isFinished={!!item.observation || !isResponding}
               />
             )}
-            <ImageGallery items={item.files?.filter(f => f.type === 'image') || []} />
+            <ImageList data={item.files?.filter(f => f.type === 'image') || []} />
           </div>
         ))}
       </div>
@@ -98,8 +98,8 @@ const Answer: FC<AnswerProps> = ({
   }
 
   return (
-    <div key={id} data-id={id} className='answer w-full max-w-[600px] flex items-start py-1 motion-pulse'>
-      <div className={`${s.answerIcon} ml-2 w-10 h-10 shrink-0`}>
+    <div key={id} data-id={id} className='answer w-full max-w-[600px] flex items-start py-1 gap-2 motion-pulse'>
+      <div className={`${s.answerIcon} w-8 h-8 shrink-0`}>
         {isResponding
           ? (
             <motion.div
@@ -129,7 +129,7 @@ const Answer: FC<AnswerProps> = ({
         }
       </div>
       <div className={`${s.answer} grow relative text-sm`}>
-        <div className={`ml-2 py-3 px-3 bg-gray-100 rounded-tr-2xl rounded-b-2xl`}>
+        <div className={`py-2 px-2 bg-gray-100 rounded-xl`}>
           {APP_INFO.useWorkflow && workflow && (
             <WorkflowView data={workflow} />
           )}

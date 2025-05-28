@@ -4,21 +4,21 @@ import { useTranslation } from 'react-i18next'
 import { CircleX } from 'lucide-react'
 import { RefreshCcw } from 'lucide-react'
 import { AlertTriangle } from 'lucide-react'
-import type { UploadedFile } from '@/models'
+import type { Media, Upload } from '@/models'
 import ImagePreview from '@/components/upload/image-preview'
 import { LoaderCircle } from 'lucide-react'
 
 type ImageListProps = {
-  list: UploadedFile[]
+  data: Upload[]
   deletable?: boolean
-  onRemove?: (file: UploadedFile) => void
-  onReUpload?: (file: UploadedFile) => void
-  onImageLoad?: (file: UploadedFile) => void
-  onImageError?: (file: UploadedFile) => void
+  onRemove?: (file: Upload) => void
+  onReUpload?: (file: Upload) => void
+  onImageLoad?: (file: Upload) => void
+  onImageError?: (file: Upload) => void
 }
 
 const ImageList: FC<ImageListProps> = ({
-  list,
+  data,
   deletable,
   onRemove,
   onReUpload,
@@ -28,24 +28,38 @@ const ImageList: FC<ImageListProps> = ({
   const { t } = useTranslation()
   const [imagePreviewUrl, setImagePreviewUrl] = useState('')
 
-  const handleImageLoad = (item: UploadedFile) => {
-    if (item.type === 'remote' && onImageLoad && item.progress !== -1)
+  const handleImageLoad = (item: Upload) => {
+    if (item.transferMethod === 'remote' && onImageLoad && item.progress !== -1)
       onImageLoad(item)
   }
-  const handleImageError = (item: UploadedFile) => {
-    if (item.type === 'remote' && onImageError)
+  const handleImageError = (item: Upload) => {
+    if (item.transferMethod === 'remote' && onImageError)
       onImageError(item)
   }
 
+  const onClick = (item: Upload) => {
+    if (!item.url)
+      return
+    if (item.type === 'image') {
+      if (item.progress === void 0 || item.progress === 100) {
+        setImagePreviewUrl(item.url)
+        return
+      }
+    }
+    else if (item.type === 'pdf') {
+      window.open(item.url, '_blank')
+    }
+  }
+
   return (
-    <div className='flex flex-row flex-wrap p-2 -mb-2'>
+    <div className='flex flex-row flex-wrap gap-2 p-2'>
       {
-        list.map((item, index) => (
+        data.map((item, index) => (
           <div
             key={index}
-            className='group relative mr-1'>
+            className='group relative'>
             {
-              item.type === 'local' && item.progress !== 100 && (
+              item.transferMethod === 'local' && item.progress !== 100 && (
                 <>
                   <div
                     className='absolute inset-0 flex items-center justify-center z-1 bg-black/30'
@@ -65,7 +79,7 @@ const ImageList: FC<ImageListProps> = ({
               )
             }
             {
-              item.type === 'remote' && item.progress !== 100 && (
+              item.transferMethod === 'remote' && item.progress !== 100 && (
                 <div className={[
                   'absolute inset-0 flex items-center justify-center rounded-lg z-1 border',
                   item.progress === -1 ? 'bg-[#FEF0C7] border-[#DC6803]' : 'bg-black/[0.16] border-transparent'
@@ -83,14 +97,28 @@ const ImageList: FC<ImageListProps> = ({
                 </div>
               )
             }
-            <img
-              className='w-16 h-16 rounded-md object-cover cursor-pointer border'
+            {item.type === 'image' && <img
+              className={[
+                'w-16 h-16 rounded-md object-cover cursor-pointer border',
+                item.type === 'image' ? 'thumbnail' : 'file-icon'
+              ].join(' ')}
               alt=''
               onLoad={() => { console.log('ooooooo'); handleImageLoad(item) }}
               onError={() => handleImageError(item)}
-              src={item.url}
-              onClick={() => item.progress === 100 && setImagePreviewUrl(item.url!)}
-            />
+              src={item.type === 'image'
+                ? item.url
+                : `/icons/${item.type}.png`}
+              onClick={() => onClick(item)}
+            />}
+            {item.type !== 'image' && (
+              <div className={[
+                'w-16 h-16 rounded-md cursor-pointer border',
+                'bg-gray-100 bg-no-repeat bg-center bg-size-[50%]'
+              ].join(' ')}
+                style={{ backgroundImage: `url(/icons/${item.type}.png)` }}
+                title={item.name}>
+              </div>
+            )}
             {
               deletable !== false && (
                 <div

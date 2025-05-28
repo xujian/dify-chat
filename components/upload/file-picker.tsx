@@ -3,12 +3,12 @@
 import type { ChangeEvent, FC, JSX } from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { UploadedFile } from '@/models'
+import { getTypeFromExtension, type MediaType, type Upload } from '@/models'
 import { toast } from '@/components/toast'
 import { upload } from '@/service/base'
 import { CloudUpload } from 'lucide-react'
 
-const extensionMapping: Record<string, string> = {
+const extensionCategoryMapping: Record<string, string> = {
   'image': '.png, .jpg, .jpeg, .webp, .gif',
   'document': '.pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx',
   'video': '.mp4, .avi, .mov, .wmv, .flv, .mpeg, .mpg, .m4v, .webm, .mkv',
@@ -16,8 +16,8 @@ const extensionMapping: Record<string, string> = {
 }
 
 type FilePickerProps = {
-  children: (hovering: boolean) => JSX.Element
-  onUpload: (file: UploadedFile) => void
+  children?: (hovering: boolean) => JSX.Element
+  onUpload: (file: Upload) => void
   limit?: number
   disabled?: boolean
   accept?: string[]
@@ -34,10 +34,12 @@ const FilePicker: FC<FilePickerProps> = ({
   // const { notify } = Toast
   const { t } = useTranslation()
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const blob = e.target.files?.[0]
+  const handleChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
+    const [blob] = target.files!
     if (!blob)
       return
+    const ext = blob.name.split('.').pop()
+    const type = getTypeFromExtension(ext!)
     if (limit && blob.size > limit * 1024 * 1024) {
       toast({ type: 'error', message: t('common.imageUploader.uploadFromComputerLimit', { size: limit }) })
       return
@@ -46,13 +48,13 @@ const FilePicker: FC<FilePickerProps> = ({
     reader.addEventListener(
       'load',
       () => {
-        const uploaded: UploadedFile = {
+        const uploaded: Upload = {
           id: `${Date.now()}`,
           uploadId: '',
           url: reader.result as string,
           progress: 0,
           transferMethod: 'local',
-          type: 'image',
+          type,
         }
         onUpload(uploaded)
         const formData = new FormData()
@@ -105,7 +107,7 @@ const FilePicker: FC<FilePickerProps> = ({
         type='file'
         accept={
           accept
-            ? accept?.map(type => extensionMapping[type]).join(',')
+            ? accept?.map(type => extensionCategoryMapping[type]).join(',')
             : ''
         }
         onChange={handleChange}

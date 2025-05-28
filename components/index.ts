@@ -5,7 +5,6 @@ import Inputs from './inputs'
 import Welcome from './welcome'
 import CustomBlock from './custom-block'
 import { FormBlock, CardBlock } from './blocks'
-import ImageGallery, { ImageGalleryTest } from './image-gallery'
 import { Icon } from './icon'
 import Loading from './loading'
 
@@ -18,8 +17,6 @@ export {
   CustomBlock,
   FormBlock,
   CardBlock,
-  ImageGallery,
-  ImageGalleryTest,
   Icon,
   Loading,
 }

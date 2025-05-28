@@ -1,15 +1,15 @@
 import { useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { UploadedFile } from '@/models'
+import type { Upload } from '@/models'
 import { toast } from '../toast'
 import { upload } from '@/service/base'
 
 export const useUploadedFiles = () => {
   const { t } = useTranslation()
-  const [files, setFiles] = useState<UploadedFile[]>([])
-  const filesRef = useRef<UploadedFile[]>([])
+  const [files, setFiles] = useState<Upload[]>([])
+  const filesRef = useRef<Upload[]>([])
 
-  const handleUpload = (file: UploadedFile) => {
+  const handleUpload = (file: Upload) => {
     const files = filesRef.current
     const index = files.findIndex(f => f.id === file.id)
 
@@ -29,7 +29,7 @@ export const useUploadedFiles = () => {
       filesRef.current = newFiles
     }
   }
-  const handleRemove = (file: UploadedFile) => {
+  const handleRemove = (file: Upload) => {
     const files = filesRef.current
     const index = files.findIndex(f => f.id === file.id)
 
@@ -46,7 +46,7 @@ export const useUploadedFiles = () => {
       filesRef.current = newFiles
     }
   }
-  const onImageError = (file: UploadedFile) => {
+  const onImageError = (file: Upload) => {
     const files = filesRef.current
     const index = files.findIndex(f => f.id === file.id)
 
@@ -61,7 +61,7 @@ export const useUploadedFiles = () => {
       setFiles(newFiles)
     }
   }
-  const onImageLoad = (file: UploadedFile) => {
+  const onImageLoad = (file: Upload) => {
     const files = filesRef.current
     const index = files.findIndex(f => f.id === file.id)
 
@@ -76,7 +76,7 @@ export const useUploadedFiles = () => {
       setFiles(newFiles)
     }
   }
-  const handleReUpload = (file: UploadedFile) => {
+  const handleReUpload = (file: Upload) => {
     const files = filesRef.current
     const index = files.findIndex(f => f.id === file.id)
 

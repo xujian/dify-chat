@@ -9,11 +9,11 @@ import {
 import FilePicker from './file-picker'
 import RemoteUploader from './remote-uploader'
 import { ImageUp } from 'lucide-react'
-import type { UploadedFile } from '@/models'
+import type { Upload } from '@/models'
 import { Button } from '../ui'
 
 type FileUploaderProps = {
-  onUpload: (file: UploadedFile) => void
+  onUpload: (file: Upload) => void
   disabled?: boolean
   limit?: number
   accept?: string[]
@@ -27,7 +27,7 @@ const FileUploader: FC<FileUploaderProps> = ({
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
 
-  const handleUpload = (file: UploadedFile) => {
+  const handleUpload = (file: Upload) => {
     setOpen(false)
     onUpload(file)
   }

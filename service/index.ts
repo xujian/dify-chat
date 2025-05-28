@@ -12,12 +12,12 @@ import type {
   OnWorkflowStarted
 } from './base'
 import { get, post, ssePost, remove } from './base'
-import type { Media, Feedback, ServerConfig } from '@/models'
+import { type Media, type Feedback, type ServerConfig, type Upload, type MediaCategory, type MediaType, getCategoryFromType } from '@/models'
 
 export type SendChatMessageData = {
   conversationId: string
   query: string
-  files?: Media[]
+  files?: Upload[]
   inputs?: Record<string, any>
 }
 
@@ -71,12 +71,12 @@ export const sendChatMessage = async (
     files: data.files?.map(f =>
       f.transferMethod === 'local'
         ? {
-          type: f.type,
+          type: getCategoryFromType(f.type),
           upload_file_id: f.uploadId,
           transfer_method: 'local_file'
         }
         : {
-          type: f.type,
+          type: getCategoryFromType(f.type),
           transfer_method: 'remote_url',
           url: f.url
         }
