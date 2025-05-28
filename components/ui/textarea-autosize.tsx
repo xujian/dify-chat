@@ -46,7 +46,7 @@ export const TextareaAutosize: FC<TextareaAutosizeProps> = ({
           'w-full',
           'resize-none',
           'rounded-md',
-          'px-3',
+          'px-2',
           'py-2',
           'text-sm',
           'focus-visible:outline-hidden',

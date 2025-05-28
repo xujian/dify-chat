@@ -328,13 +328,15 @@ const InputBox: FC<InputBoxProps> = () => {
       {APP_INFO.useSuggestions && <Suggestions onPick={handleSuggestionPick} />}
       <div className="w-full flex flex-col justify-between border rounded-lg focus-within:outline-none focus-within:ring-1 focus-within:ring-ring z-10">
         {files.length > 0 && (
-          <ImageList
-            list={files}
-            onRemove={onRemove}
-            onReUpload={onReUpload}
-            onImageLoad={onImageLoad}
-            onImageError={onImageError}
-          />
+          <div className='-mb-2'>
+            <ImageList
+              data={files}
+              onRemove={onRemove}
+              onReUpload={onReUpload}
+              onImageLoad={onImageLoad}
+              onImageError={onImageError}
+            />
+          </div>
         )}
         <TextareaAutosize
           className={cn(
