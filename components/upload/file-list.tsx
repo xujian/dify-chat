@@ -46,7 +46,7 @@ const FileList: FC<FileListProps> = ({
         return
       }
     }
-    else if (item.type === 'pdf') {
+    else if (['pdf', 'doc', 'xls', 'ppt', 'video', 'audio'].includes(item.type)) {
       window.open(item.url, '_blank')
     }
   }
@@ -116,7 +116,8 @@ const FileList: FC<FileListProps> = ({
                 'bg-gray-100 bg-no-repeat bg-center bg-size-[50%]'
               ].join(' ')}
                 style={{ backgroundImage: `url(/icons/${item.type}.png)` }}
-                title={item.name}>
+                title={item.name}
+                onClick={() => onClick(item)}>
               </div>
             )}
             {
