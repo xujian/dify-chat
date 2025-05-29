@@ -15,7 +15,7 @@ import CustomBlock from '../custom-block'
 import { FeedbackHandler, Message, MessageRating } from '@/models'
 import { TooltipContent, TooltipPortal } from '@radix-ui/react-tooltip'
 import { APP_INFO } from '@/config'
-import ImageList from '../upload/image-list'
+import FileList from '../upload/file-list'
 
 const RatingIcon: FC<{ isLike: boolean }> = ({ isLike }) => {
   return isLike
@@ -90,7 +90,7 @@ const Answer: FC<AnswerProps> = ({
                 isFinished={!!item.observation || !isResponding}
               />
             )}
-            <ImageList data={item.files?.filter(f => f.type === 'image') || []} />
+            <FileList data={item.files?.filter(f => f.type === 'image') || []} />
           </div>
         ))}
       </div>

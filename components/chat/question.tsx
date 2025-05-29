@@ -5,7 +5,7 @@ import type { Media, Upload } from '@/models'
 import s from './style.module.css'
 
 import { Markdown } from '@/components/markdown'
-import ImageList from '@/components/upload/image-list'
+import FileList from '@/components/upload/file-list'
 
 type QuestionProps = {
   id: string
@@ -20,7 +20,7 @@ const Question: FC<QuestionProps> = ({ id, content, files }) => {
       <div className={`${s.question} text-s bg-primary text-primary-foreground rounded-xl`}>
         {files && files.length > 0 && (
           <div className='-mb-2'>
-            <ImageList data={files as Upload[]} deletable={false} />
+            <FileList data={files as Upload[]} deletable={false} />
           </div>
         )}
         <div className='p-2'>

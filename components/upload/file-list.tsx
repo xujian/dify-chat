@@ -8,7 +8,7 @@ import type { Media, Upload } from '@/models'
 import ImagePreview from '@/components/upload/image-preview'
 import { LoaderCircle } from 'lucide-react'
 
-type ImageListProps = {
+type FileListProps = {
   data: Upload[]
   deletable?: boolean
   onRemove?: (file: Upload) => void
@@ -17,7 +17,7 @@ type ImageListProps = {
   onImageError?: (file: Upload) => void
 }
 
-const ImageList: FC<ImageListProps> = ({
+const FileList: FC<FileListProps> = ({
   data,
   deletable,
   onRemove,
@@ -26,7 +26,7 @@ const ImageList: FC<ImageListProps> = ({
   onImageError,
 }) => {
   const { t } = useTranslation()
-  const [imagePreviewUrl, setImagePreviewUrl] = useState('')
+  const [previewUrl, setPreviewUrl] = useState('')
 
   const handleImageLoad = (item: Upload) => {
     if (item.transferMethod === 'remote' && onImageLoad && item.progress !== -1)
@@ -42,7 +42,7 @@ const ImageList: FC<ImageListProps> = ({
       return
     if (item.type === 'image') {
       if (item.progress === void 0 || item.progress === 100) {
-        setImagePreviewUrl(item.url)
+        setPreviewUrl(item.url)
         return
       }
     }
@@ -137,10 +137,10 @@ const ImageList: FC<ImageListProps> = ({
         ))
       }
       {
-        imagePreviewUrl && (
+        previewUrl && (
           <ImagePreview
-            url={imagePreviewUrl}
-            onCancel={() => setImagePreviewUrl('')}
+            url={previewUrl}
+            onCancel={() => setPreviewUrl('')}
           />
         )
       }
@@ -148,4 +148,4 @@ const ImageList: FC<ImageListProps> = ({
   )
 }
 
-export default ImageList
+export default FileList

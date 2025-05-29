@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next"
 import { TextareaAutosize } from "../ui/textarea-autosize"
 import { Camera, CircleStop, SendHorizonal } from 'lucide-react'
 import FileUploader from '@/components/upload/file-uploader'
-import ImageList from '@/components/upload/image-list'
+import FileList from '@/components/upload/file-list'
 import { useUploadedFiles } from '../upload/hooks'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '@/store'
@@ -329,7 +329,7 @@ const InputBox: FC<InputBoxProps> = () => {
       <div className="w-full flex flex-col justify-between border rounded-lg focus-within:outline-none focus-within:ring-1 focus-within:ring-ring z-10">
         {files.length > 0 && (
           <div className='-mb-2'>
-            <ImageList
+            <FileList
               data={files}
               onRemove={onRemove}
               onReUpload={onReUpload}
