@@ -33,7 +33,7 @@ export function Markdown(props: { content: string }) {
   }, [props.content])
 
   return (
-    <div className="markdown-body leading-[1.2]">
+    <div className="markdown-body">
       {thoughts.map((t, index) => (
         <div className='thought' key={index}>
           <div dangerouslySetInnerHTML={{ __html: t }} />

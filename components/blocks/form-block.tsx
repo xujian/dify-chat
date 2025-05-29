@@ -24,7 +24,7 @@ const FormBlock: React.FC<CustomBlockProps> = ({ data }) => {
         ? <Component data={data} />
         : <Inputs fields={data.fields} />
       }
-      <Button type="submit" className='bg-primary text-primary-foreground'>提交</Button>
+      <Button type="submit" className='bg-primary text-primary-foreground max-w-sm'>提交</Button>
     </form>
   )
 }

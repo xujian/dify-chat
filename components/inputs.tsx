@@ -1,21 +1,21 @@
-import { FC, useState, useEffect } from 'react'
+import { FC, useState } from 'react'
 import fieldComponents from '@/components/fields'
 import type { Field, Variable } from '@/models'
 import { useSelector, useDispatch } from 'react-redux'
 import type { RootState } from '@/store'
-import { setVariable, startChat } from '@/store/session'
+import { setVariable } from '@/store/session'
 import { useVariables } from '@/hooks/use-variables'
-import { useServer } from '@/context/server'
 
-const Inputs: FC = () => {
+export type InputsProps = {
+  fields: Variable[]
+}
+
+const Inputs: FC<InputsProps> = ({ fields }) => {
   const session = useSelector((state: RootState) => state.session)
   const dispatch = useDispatch()
 
-  const [fields, setFields] = useState<Variable[]>([])
-  const { variables } = useVariables()
-
   return (
-    <div className='flex flex-col gap-4'>
+    <div className='flex flex-col gap-2'>
       {fields
         .filter((field) => field.origin !== 'url')
         .map((field) => {
