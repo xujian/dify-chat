@@ -57,7 +57,7 @@ const FileList: FC<FileListProps> = ({
         data.map((item, index) => (
           <div
             key={index}
-            className='group relative'>
+            className='group bg-gray-100 rounded-md relative'>
             {
               item.transferMethod === 'local' && item.progress !== 100 && (
                 <>
