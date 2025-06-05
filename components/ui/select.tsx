@@ -56,7 +56,7 @@ function SelectTrigger({
           "rounded-md",
           "border",
           "bg-transparent",
-          "px-3",
+          "px-1",
           "py-2",
           "text-sm",
           "whitespace-nowrap",
