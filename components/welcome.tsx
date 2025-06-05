@@ -10,6 +10,7 @@ import { greet } from '@/store/messages'
 import Inputs from './inputs'
 import { useServer } from '@/context/server'
 import { APP_INFO } from '@/config'
+import { useVariables } from '@/context/variables'
 
 const Welcome: FC = () => {
 
@@ -17,6 +18,7 @@ const Welcome: FC = () => {
 
   const dispatch = useDispatch()
   const { config } = useServer()
+  const { variables } = useVariables()
 
   const handleStartChat = () => {
     dispatch(createConversation())
@@ -34,7 +36,7 @@ const Welcome: FC = () => {
   return (
     <div className='welcome h-full flex flex-col items-center justify-center min-h-[200px]'>
       <div className='mx-auto'>
-        <Inputs />
+        <Inputs fields={variables} />
         <Button className='my-3'
           onClick={handleStartChat}>开始对话</Button>
       </div>

@@ -18,7 +18,7 @@ export type Variable = {
   required?: boolean
   length?: number
   type: string,
-  origin?: 'url' | 'session'
+  origin?: VariableOrigin
 }
 
 export type TextTypeFormItem = {

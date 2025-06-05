@@ -12,7 +12,7 @@ import type {
   OnWorkflowStarted
 } from './base'
 import { get, post, ssePost, remove } from './base'
-import { type Media, type Feedback, type ServerConfig, type Upload, type MediaCategory, type MediaType, getCategoryFromType } from '@/models'
+import { type Feedback, type ServerConfig, type Upload, getCategoryFromType } from '@/models'
 
 export type SendChatMessageData = {
   conversationId: string

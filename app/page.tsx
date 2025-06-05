@@ -5,6 +5,7 @@ import type { AppProps } from './app'
 import App from './app'
 import { StoreProvider } from '../store/index'
 import { ServerProvider } from '@/context/server'
+import { VariablesProvider } from '@/context/variables'
 
 const Page: FC<AppProps> = ({
   params,
@@ -12,7 +13,9 @@ const Page: FC<AppProps> = ({
   return (
     <ServerProvider>
       <StoreProvider>
-        <App params={params} />
+        <VariablesProvider>
+          <App params={params} />
+        </VariablesProvider>
       </StoreProvider>
     </ServerProvider>
   )
