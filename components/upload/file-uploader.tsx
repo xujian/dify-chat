@@ -35,8 +35,8 @@ const FileUploader: FC<FileUploaderProps> = ({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button size="icon" variant="ghost" title='上传文件'>
-          <ImageUp className='w-4 h-4' />
+        <Button size="icon" variant="ghost" title='上传文件' className='w-9 h-9'>
+          <ImageUp />
         </Button>
       </PopoverTrigger>
       <PopoverContent className='rounded-lg gap-4 flex flex-col'>

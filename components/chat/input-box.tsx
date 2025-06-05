@@ -359,7 +359,7 @@ const InputBox: FC<InputBoxProps> = () => {
           maxRows={4}
         />
       </div>
-      <div className="flex flex-row border border-t-0 bg-gray-50 rounded-b-lg mx-2 p-1">
+      <div className="flex flex-row border border-t-0 bg-gray-50 rounded-b-lg mx-2 px-2 gap-2">
         <FileUploader
           accept={config.upload.accept}
           onUpload={onUpload}
@@ -367,8 +367,9 @@ const InputBox: FC<InputBoxProps> = () => {
         />
         <Button size='icon' variant='ghost'
           title='截图'
-          onClick={handleCapture}>
-          <Camera className='w-4 h-4' />
+          onClick={handleCapture}
+          className='w-9 h-9'>
+          <Camera className='w-6 h-6' size={6} />
         </Button>
         <div className="flex flex-row grow justify-end"></div>
         <div className="flex items-center justify-center cursor-pointer hover:bg-gray-50 w-8 h-8">
@@ -381,18 +382,20 @@ const InputBox: FC<InputBoxProps> = () => {
               />
             )
             : (
-              <SendHorizonal
-                className={cn(
-                  'w-4 h-4',
-                  !query && 'cursor-not-allowed',
-                  'text-gray-500'
-                )}
+              <Button size='icon' variant='ghost'
+                title='发送'
                 onClick={() => {
                   if (!query) return
                   send(query)
                 }}
-                size={30}
-              />
+                className='w-9 h-9'>
+                <SendHorizonal
+                  className={cn(
+                    !query && 'cursor-not-allowed',
+                    'text-gray-500'
+                  )}
+                />
+              </Button>
             )}
         </div>
       </div>
