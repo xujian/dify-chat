@@ -1,6 +1,6 @@
 'use client'
 import { cn } from '@/lib/utils'
-import { FC, useRef, useState, KeyboardEvent as ReactKeyboardEvent } from 'react'
+import { FC, useRef, useState, KeyboardEvent as ReactKeyboardEvent, useMemo } from 'react'
 import { useTranslation } from "react-i18next"
 import { TextareaAutosize } from "../ui/textarea-autosize"
 import { Camera, CircleStop, SendHorizonal } from 'lucide-react'
@@ -25,6 +25,7 @@ import Suggestions from '../suggestions'
 interface InputBoxProps { }
 
 const InputBox: FC<InputBoxProps> = () => {
+
   const { config } = useServer()
   const { t } = useTranslation()
   const session = useSelector((state: RootState) => state.session)
@@ -46,6 +47,10 @@ const InputBox: FC<InputBoxProps> = () => {
     onImageError,
     onClear: clearUploadedFiles,
   } = useUploadedFiles()
+
+  const isWeixin = useMemo(() => {
+    return window.navigator.userAgent.includes('MicroMessenger')
+  }, [])
 
   const handleInputChange = (value: string) => {
     setQuery(value)
@@ -365,12 +370,13 @@ const InputBox: FC<InputBoxProps> = () => {
           onUpload={onUpload}
           disabled={files.length >= 2}
         />
-        <Button size='icon' variant='ghost'
+        {!isWeixin && <Button size='icon' variant='ghost'
           title='截图'
           onClick={handleCapture}
           className='w-9 h-9'>
           <Camera className='w-6 h-6' size={6} />
         </Button>
+        }
         <div className="flex flex-row grow justify-end"></div>
         <div className="flex items-center justify-center cursor-pointer hover:bg-gray-50 w-8 h-8">
           {session.responding
